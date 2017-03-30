@@ -4,6 +4,7 @@ description: A new flutter project.
 dependencies:
   flutter:
     sdk: flutter
+  intl: '^0.14.0'
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

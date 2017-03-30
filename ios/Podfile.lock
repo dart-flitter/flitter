@@ -1,3 +1,16 @@
-PODFILE CHECKSUM: fe68fbd35e5bc75c5acdec41319edc0cdaebd038
+PODS:
+  - Flutter (1.0.0)
 
-COCOAPODS: 1.0.1
+DEPENDENCIES:
+  - Flutter (from `/Users/lejard_h/flutter/bin/cache/artifacts/engine/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: /Users/lejard_h/flutter/bin/cache/artifacts/engine/ios
+
+SPEC CHECKSUMS:
+  Flutter: d674e78c937094a75ac71dd77e921e840bea3dbf
+
+PODFILE CHECKSUM: cc70c01bca487bebd110b87397f017f3b76a89f1
+
+COCOAPODS: 1.2.0
