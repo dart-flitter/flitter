@@ -11,6 +11,8 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(title: new Text(intl.allConversations())),
+        body: new ChatRoomWidget(),
+        bottomNavigationBar: new ChatInput(onSaved: (InputValue v) {}),
         drawer: new FlitterDrawer());
   }
 }
