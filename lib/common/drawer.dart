@@ -12,13 +12,21 @@ class FlitterDrawer extends StatelessWidget {
           leading: new Icon(Icons.home),
           title: new Text(intl.allConversations()),
           onTap: () {
-            Navigator.popAndPushNamed(context, Home.path);
+            Navigator.of(context).pushReplacement(new PageRouteBuilder(
+                opaque: false,
+                pageBuilder: (BuildContext context, _, __) {
+                  return new Home();
+                }));
           }),
       new ListTile(
           leading: new Icon(Icons.person),
           title: new Text(intl.people()),
           onTap: () {
-            Navigator.popAndPushNamed(context, PeoplePage.path);
+            Navigator.of(context).pushReplacement(new PageRouteBuilder(
+                opaque: false,
+                pageBuilder: (BuildContext context, _, __) {
+                  return new PeoplePage();
+                }));
           }),
       new Divider(),
     ]));
