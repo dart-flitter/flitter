@@ -13,7 +13,7 @@ void main() {
 class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(routes: kRoutes, theme: kTheme);
+    return new MaterialApp(routes: kRoutes, theme: kTheme, title: "Flitter");
   }
 }
 
