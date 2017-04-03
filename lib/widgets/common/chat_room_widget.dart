@@ -88,7 +88,8 @@ class ChatMessageWidget extends StatelessWidget {
     children.add(new Expanded(child: content));
     return new Column(children: [
       new Padding(
-          child: new Row(children: children, crossAxisAlignment: CrossAxisAlignment.start),
+          child: new Row(
+              children: children, crossAxisAlignment: CrossAxisAlignment.start),
           padding: new EdgeInsets.only(bottom: 8.0, top: 8.0, right: 12.0)),
       new Divider(height: 1.0)
     ]);

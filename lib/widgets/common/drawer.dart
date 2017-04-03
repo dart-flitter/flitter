@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:flitter/routes.dart';
+import 'package:flitter/common.dart';
 
 class FlitterDrawer extends StatelessWidget {
   @override
@@ -12,21 +13,13 @@ class FlitterDrawer extends StatelessWidget {
           leading: new Icon(Icons.home),
           title: new Text(intl.allConversations()),
           onTap: () {
-            Navigator.of(context).pushReplacement(new PageRouteBuilder(
-                opaque: false,
-                pageBuilder: (BuildContext context, _, __) {
-                  return new Home();
-                }));
+            navigateTo(context, new HomeView(), replace: true);
           }),
       new ListTile(
           leading: new Icon(Icons.person),
           title: new Text(intl.people()),
           onTap: () {
-            Navigator.of(context).pushReplacement(new PageRouteBuilder(
-                opaque: false,
-                pageBuilder: (BuildContext context, _, __) {
-                  return new PeoplePage();
-                }));
+            navigateTo(context, new PeopleView(), replace: true);
           }),
       new Divider(),
     ]));

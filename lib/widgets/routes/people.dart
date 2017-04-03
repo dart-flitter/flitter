@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:flitter/common.dart';
 
-class PeoplePage extends StatelessWidget {
+class PeopleView extends StatelessWidget {
   static const path = "/people";
 
-  static PeoplePage builder(BuildContext _) => new PeoplePage();
+  static PeopleView builder(BuildContext _) => new PeopleView();
 
   @override
   Widget build(BuildContext context) {

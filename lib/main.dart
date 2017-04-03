@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flitter/common/theme.dart';
+import 'package:flitter/theme.dart';
 import 'routes.dart';
 
 void main() {

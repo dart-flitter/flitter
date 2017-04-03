@@ -1,12 +1,15 @@
 library flitter.routes;
 
-import 'routes/home/route.dart';
-import 'routes/people/route.dart';
+import 'widgets/routes/home.dart';
+import 'widgets/routes/people.dart';
+import 'widgets/routes/room.dart';
 
-export 'routes/home/route.dart';
-export 'routes/people/route.dart';
+export 'widgets/routes/home.dart';
+export 'widgets/routes/people.dart';
+export 'widgets/routes/room.dart';
 
 const kRoutes = const {
-  Home.path: Home.builder,
-  PeoplePage.path: PeoplePage.builder
+  HomeView.path: HomeView.builder,
+  PeopleView.path: PeopleView.builder,
+  RoomView.path: RoomView.builder
 };
