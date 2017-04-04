@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:flitter/common.dart';
 import 'package:flitter/models.dart';
+import 'package:flitter/services/gitter/src/models/room.dart';
 
 class RoomView extends StatelessWidget {
   static const path = "/room";

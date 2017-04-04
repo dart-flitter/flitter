@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flitter/models.dart';
+import 'package:flitter/services/gitter/src/models/room.dart';
 import 'package:flitter/common.dart';
 import 'package:flitter/routes.dart';
 
@@ -19,7 +19,7 @@ class ListRoomWidget extends StatelessWidget {
     final children = <Widget>[new Expanded(child: new Text(room.name))];
 
     // todo: if notif
-    children.add(new Chip(label: new Text("42")));
+    //children.add(new Chip(label: new Text("42")));
 
     return new Row(children: children);
   }
@@ -28,7 +28,7 @@ class ListRoomWidget extends StatelessWidget {
       .map((Room room) => new ListTile(
           dense: false,
           title: _titleForRoom(room),
-          leading: new Image.network(room.logoUrl),
+          leading: new Image.network(room.url),
           onTap: () {
             navigateTo(context, new RoomView(room), opaque: true);
           }))

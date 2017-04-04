@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flitter/theme.dart';
 import 'package:flutter/services.dart';
 import 'routes.dart';
+import 'app_state.dart';
 
 Future<Token> auth() async {
   String dir = (await PathProvider.getApplicationDocumentsDirectory()).path;
@@ -28,16 +29,10 @@ Future<Token> auth() async {
 Future main() async {
   runApp(new Splash());
 
-  // TODO: do stuffs like getting token, user, cache ...
-
-  Token token = await auth();
-  print(token);
-
-//  GitterApi gApi = new GitterApi(token);
-//  List<Room> rooms = await gApi.user.me.rooms();
-//  print(rooms);
-//  User user = await gApi.user.me.get();
-//  print(user);
+  final appState = new AppState();
+  appState.token = await auth();
+  appState.gApi = new GitterApi(appState.token);
+  appState.user = await appState.gApi.user.me.get();
 
   runApp(new Main());
 }

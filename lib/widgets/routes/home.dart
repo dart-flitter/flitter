@@ -1,29 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:flitter/common.dart';
-import 'package:flitter/models.dart';
+import 'package:flitter/services/gitter/src/models/room.dart';
+import 'package:flitter/app_state.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   static const path = "/";
 
   static HomeView builder(BuildContext _) => new HomeView();
 
+  final AppState appState = new AppState();
+
+  @override
+  _HomeViewState createState() => new _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+
   @override
   Widget build(BuildContext context) {
+    var body;
+
+    if (config.appState.rooms == null) {
+      body = new Center(child: new CircularProgressIndicator());
+    } else {
+      body = new ListRoomWidget(config.appState.rooms);
+    }
+
     return new Scaffold(
         appBar: new AppBar(title: new Text(intl.allConversations())),
-        body: new ListRoomWidget(_listRooms()),
+        body: body,
         drawer: new FlitterDrawer());
   }
 
-  ////////////////
-
-  List<Room> _listRooms() => [
-        new Room("flutter/flutter",
-            "https://avatars3.githubusercontent.com/u/14101776?v=3&s=200"),
-        new Room("dart-lang/sdk",
-            "https://avatars3.githubusercontent.com/u/1609975?v=3&s=200"),
-        new Room("dart-lang/server",
-            "https://avatars3.githubusercontent.com/u/1609975?v=3&s=200")
-      ];
+  @override
+  void initState() {
+    super.initState();
+    config.appState.gApi.user.me.rooms().then((List rooms) {
+      setState(() {
+        config.appState.rooms = rooms;
+      });
+    });
+  }
 }
