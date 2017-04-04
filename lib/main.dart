@@ -18,8 +18,11 @@ Future<Token> auth() async {
   }
   final String content = await tokenFile.readAsString();
   if (content.isEmpty) {
-    token = await getToken("26258fa3ccd13c487dd8b5ed7e2acbeb087d14eb",
-        "9c2239a87cfcf51d43c2abb30eae7e1878e5f268");
+    final String redirectUri = "http://localhost:8080/";
+    final String appId = "26258fa3ccd13c487dd8b5ed7e2acbeb087d14eb";
+    final String appSecret = "9c2239a87cfcf51d43c2abb30eae7e1878e5f268";
+    final String code = await getCode(appId, redirectUri);
+    token = await getToken(code, appId, appSecret, redirectUri);
     tokenFile.writeAsStringSync(JSON.encode(token.toMap()));
     return token;
   }
