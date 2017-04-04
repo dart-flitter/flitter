@@ -30,12 +30,10 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
   }
 }
 
-InputValue _chatTypeMessageValue = const InputValue();
-
 class ChatInput extends StatefulWidget {
-  final ValueChanged<InputValue> onSaved;
+  final ValueChanged<String> onChanged;
 
-  ChatInput({@required this.onSaved});
+  ChatInput({@required this.onChanged});
 
   @override
   _ChatInputState createState() => new _ChatInputState();
@@ -46,9 +44,11 @@ class _ChatInputState extends State<ChatInput> {
   Widget build(BuildContext context) {
     return new Form(
         child: new Container(
-            padding: new EdgeInsets.only(left: 8.0, right: 8.0),
-            child: new TextField(
-                hintText: intl.typeChatMessage(), onSaved: config.onSaved)));
+      padding: new EdgeInsets.only(left: 8.0, right: 8.0),
+      child: new TextField(
+          decoration: new InputDecoration(hintText: intl.typeChatMessage()),
+          onChanged: config.onChanged),
+    ));
   }
 }
 
