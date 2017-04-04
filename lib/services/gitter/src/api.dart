@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:flitter/services/gitter/src/models/room.dart';
 import 'package:flitter/services/gitter/src/models/user.dart';
 import 'package:http/http.dart' as http;
-import 'package:flitter/services/gitter/src/token.dart';
+import 'package:flitter/services/gitter/src/models/token.dart';
 
 Map<String, String> _getHeaders(Token token) {
   return {

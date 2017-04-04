@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flitter/services/gitter/src/token.dart';
+import 'package:flitter/services/gitter/src/models/token.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
