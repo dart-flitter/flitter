@@ -10,6 +10,8 @@ class Token {
       : access = json['access_token'],
         type = json['token_type'];
 
+  Map<String, String> toMap() => {"access_token": access, "token_type": type};
+
   @override
   String toString() => "$access $type";
 }
