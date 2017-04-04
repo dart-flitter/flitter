@@ -10,11 +10,13 @@ Future main() async {
 
   // TODO: do stuffs like getting token, user, cache ...
 
-//  Token token = await getToken("26258fa3ccd13c487dd8b5ed7e2acbeb087d14eb",
-//      "9c2239a87cfcf51d43c2abb30eae7e1878e5f268");
-//  GitterApi gApi = new GitterApi(token);
-//  User user = await gApi.user.getMe();
-//  print(user);
+  Token token = await getToken("26258fa3ccd13c487dd8b5ed7e2acbeb087d14eb",
+      "9c2239a87cfcf51d43c2abb30eae7e1878e5f268");
+  GitterApi gApi = new GitterApi(token);
+  List<Room> rooms = await gApi.user.me.rooms();
+  print(rooms);
+  User user = await gApi.user.me.get();
+  print(user);
 
   runApp(new Main());
 }
