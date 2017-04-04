@@ -18,7 +18,6 @@ class RoomView extends StatelessWidget {
           appBar: new AppBar(),
           body: new Center(child: new CircularProgressIndicator()));
     }
-    return new Scaffold(
-        appBar: new AppBar(title: new Text(room.name)));
+    return new Scaffold(appBar: new AppBar(title: new Text(room.name)));
   }
 }
