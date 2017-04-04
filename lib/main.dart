@@ -1,11 +1,20 @@
+import 'dart:async';
+
+import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/theme.dart';
 import 'routes.dart';
 
-void main() {
+Future main() async {
   runApp(new Splash());
 
   // TODO: do stuffs like getting token, user, cache ...
+
+//  Token token = await getToken("26258fa3ccd13c487dd8b5ed7e2acbeb087d14eb",
+//      "9c2239a87cfcf51d43c2abb30eae7e1878e5f268");
+//  GitterApi gApi = new GitterApi(token);
+//  User user = await gApi.user.getMe();
+//  print(user);
 
   runApp(new Main());
 }
