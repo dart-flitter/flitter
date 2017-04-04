@@ -23,13 +23,13 @@ class MeApi {
 
   Future<User> get() async {
     final http.Response response =
-        await http.get("$_baseUrl/me", headers: _getHeaders(token));
+        await http.get("$_baseUrl/", headers: _getHeaders(token));
     return new User.fromJson(JSON.decode(response.body));
   }
 
   Future<List<Room>> rooms() async {
     final http.Response response =
-        await http.get("$_baseUrl/me/rooms", headers: _getHeaders(token));
+        await http.get("$_baseUrl/rooms", headers: _getHeaders(token));
     final List<Map> json = JSON.decode(response.body);
     return json.map((map) => new Room.fromJson(map)).toList();
   }
@@ -41,7 +41,7 @@ class UserApi {
 
   MeApi me;
 
-  UserApi(String baseUrl, this._token) : _baseUrl = "$baseUrl/user/" {
+  UserApi(String baseUrl, this._token) : _baseUrl = "$baseUrl/user" {
     me = new MeApi(_baseUrl, _token);
   }
 
@@ -52,7 +52,7 @@ class UserApi {
 }
 
 class GitterApi {
-  final String _baseUrl = "https://api.gitter.im/v1/";
+  final String _baseUrl = "https://api.gitter.im/v1";
 
   Token _token;
   UserApi user;
