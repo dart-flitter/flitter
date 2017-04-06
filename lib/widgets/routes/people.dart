@@ -42,6 +42,6 @@ class _PeopleViewState extends State<PeopleView> {
     final token = await auth();
     final api = new GitterApi(token);
     final rooms = await api.user.me.rooms();
-    return rooms.where((Room room) => room.githubType == "ONETOONE").toList();
+    return rooms.where((Room room) => room.oneToOne).toList();
   }
 }
