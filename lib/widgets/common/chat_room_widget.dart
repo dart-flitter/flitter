@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:flitter/common.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
 
 class ChatRoomWidget extends StatefulWidget {

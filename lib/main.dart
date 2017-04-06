@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flitter/theme.dart';
 import 'package:flutter/services.dart';
 import 'routes.dart';
-import 'app_state.dart';
 
 Future<GitterToken> auth() async {
   String dir = (await PathProvider.getApplicationDocumentsDirectory()).path;
@@ -34,15 +33,13 @@ Future<GitterToken> auth() async {
 Future main() async {
   runApp(new Splash());
 
-  final appState = new AppState();
-  appState.token = await auth();
-  appState.gApi = new GitterApi(appState.token);
-  appState.user = await appState.gApi.user.me.get();
+  await auth();
 
-  runApp(new Main());
+  runApp(new App());
 }
 
-class Main extends StatelessWidget {
+class App extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(routes: kRoutes, theme: kTheme, title: "Flitter");
