@@ -66,6 +66,16 @@ class RoomApi {
     final List<Map> json = JSON.decode(response.body);
     return json.map((Map message) => new Message.fromJson(message));
   }
+
+  Future<Message> sendMessageToRoomId(String id, String message) async {
+    final Map<String, String> json = {"message": message};
+    final http.Response response = await http.post(
+      "$_baseUrl/$id/chatMessages",
+      body: JSON.encode(json),
+      headers: _getHeaders(token),
+    );
+    return new Message.fromJson(JSON.decode(response.body));
+  }
 }
 
 class GitterApi {
