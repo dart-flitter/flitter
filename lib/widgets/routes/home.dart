@@ -4,7 +4,7 @@ import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:flitter/common.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/services/gitter/src/models/room.dart';
-import 'package:flitter/main.dart';
+import 'package:flitter/auth.dart';
 
 class HomeView extends StatefulWidget {
   static const path = "/";
