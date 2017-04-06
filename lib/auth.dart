@@ -16,9 +16,9 @@ Future<GitterToken> auth() async {
   final String content = await tokenFile.readAsString();
   if (content.isEmpty) {
     final GitterOAuth gitterOAuth = new GitterOAuth(new AppInformations(
-        "26258fa3ccd13c487dd8b5ed7e2acbeb087d14eb",
-        "9c2239a87cfcf51d43c2abb30eae7e1878e5f268",
-        "http://localhost:8080/",
+      "26258fa3ccd13c487dd8b5ed7e2acbeb087d14eb",
+      "9c2239a87cfcf51d43c2abb30eae7e1878e5f268",
+      "http://localhost:8080/",
     ));
     token = await gitterOAuth.signIn();
     tokenFile.writeAsStringSync(JSON.encode(token.toMap()));

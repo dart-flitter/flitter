@@ -18,6 +18,7 @@ class Room {
   final String githubType;
   final List<String> tags;
   final num v;
+  final String avatarUrl;
 
   Room.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -35,6 +36,7 @@ class Room {
         url = json['url'],
         githubType = json['githubType'],
         tags = json.containsKey('tags') ? json['tags'] : [],
+        avatarUrl = json['avatarUrl'],
         v = json['v'];
 
   @override

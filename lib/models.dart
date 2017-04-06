@@ -1,2 +1,1 @@
 library flitter.models;
-

@@ -33,7 +33,10 @@ class _PeopleViewState extends State<PeopleView> {
       body = new ListRoomWidget(_rooms);
     }
 
-    return new Scaffold(appBar: new AppBar(title: new Text(intl.people())), body: body, drawer: new FlitterDrawer());
+    return new Scaffold(
+        appBar: new AppBar(title: new Text(intl.people())),
+        body: body,
+        drawer: new FlitterDrawer());
   }
 
   ////////

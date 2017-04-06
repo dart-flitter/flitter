@@ -5,7 +5,8 @@ class User {
   final String username;
   final String displayName;
   final String url;
-  final String avatarUrl;
+  final String avatarUrlSmall;
+  final String avatarUrlMedium;
   final bool staff;
   final List<String> providers;
   final num v;
@@ -16,7 +17,8 @@ class User {
         username = json['username'],
         displayName = json['displayName'],
         url = json['url'],
-        avatarUrl = json['avatarUrl'],
+        avatarUrlMedium = json['avatarUrlMedium'],
+        avatarUrlSmall = json['avatarUrlSmall'],
         staff = json['staff'],
         providers = json['providers'],
         v = json['v'],

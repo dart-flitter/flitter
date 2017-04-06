@@ -28,7 +28,7 @@ class ListRoomWidget extends StatelessWidget {
       .map((Room room) => new ListTile(
           dense: false,
           title: _titleForRoom(room),
-         // leading: new Image.network(room.url),
+          leading: new Image.network(room.avatarUrl),
           onTap: () {
             navigateTo(context, new RoomView(room), opaque: true);
           }))

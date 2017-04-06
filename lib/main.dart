@@ -14,7 +14,6 @@ Future main() async {
 }
 
 class App extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(routes: kRoutes, theme: kTheme, title: "Flitter");
