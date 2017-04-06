@@ -3,12 +3,12 @@ library gitter.api;
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/services/gitter/src/models/room.dart';
 import 'package:flitter/services/gitter/src/models/user.dart';
 import 'package:http/http.dart' as http;
-import 'package:flitter/services/gitter/src/models/token.dart';
 
-Map<String, String> _getHeaders(Token token) {
+Map<String, String> _getHeaders(GitterToken token) {
   return {
     "Accept": "application/json",
     "Authorization": "Bearer ${token.access}"
@@ -17,7 +17,7 @@ Map<String, String> _getHeaders(Token token) {
 
 class MeApi {
   final String _baseUrl;
-  Token token;
+  GitterToken token;
 
   MeApi(String baseUrl, this.token) : _baseUrl = "$baseUrl/me";
 
@@ -37,7 +37,7 @@ class MeApi {
 
 class UserApi {
   final String _baseUrl;
-  Token _token;
+  GitterToken _token;
 
   MeApi me;
 
@@ -45,7 +45,7 @@ class UserApi {
     me = new MeApi(_baseUrl, _token);
   }
 
-  void set token(Token value) {
+  void set token(GitterToken value) {
     _token = value;
     me.token = value;
   }
@@ -54,14 +54,14 @@ class UserApi {
 class GitterApi {
   final String _baseUrl = "https://api.gitter.im/v1";
 
-  Token _token;
+  GitterToken _token;
   UserApi user;
 
   GitterApi(this._token) {
     user = new UserApi(_baseUrl, _token);
   }
 
-  void set token(Token value) {
+  void set token(GitterToken value) {
     _token = value;
     user.token = value;
   }

@@ -1,17 +1,17 @@
 library gitter.token;
 
-class Token {
-  final String access;
-  final String type;
+import 'package:flitter/services/oauth/oauth.dart';
 
-  Token(this.access, this.type);
+class GitterToken implements Token {
+  @override
+  String access;
 
-  Token.fromJson(Map<String, String> json)
+  @override
+  String type;
+
+  GitterToken.fromJson(Map<String, String> json)
       : access = json['access_token'],
         type = json['token_type'];
 
   Map<String, String> toMap() => {"access_token": access, "token_type": type};
-
-  @override
-  String toString() => "$access $type";
 }

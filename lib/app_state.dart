@@ -4,7 +4,7 @@ import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/services/gitter/src/models/room.dart';
 
 class AppState {
-  Token token;
+  GitterToken token;
   GitterApi gApi;
   User user;
   List<Room> rooms;
