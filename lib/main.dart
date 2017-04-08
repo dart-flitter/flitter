@@ -39,7 +39,6 @@ class _AppState extends State<App> {
     if (config.token != null) {
       GitterApi _api = new GitterApi(config.token);
       _api.user.me.rooms().then((List<Room> _rooms) {
-        _rooms.removeWhere((Room room) => room.lastAccessTime == null);
         sortRooms(_rooms);
         setState(() {
           rooms = _rooms;
@@ -49,7 +48,7 @@ class _AppState extends State<App> {
     }
   }
 
-  _onTapLoginButton() async {
+  Future<Null> _onTapLoginButton() async {
     GitterToken _token = await auth();
     GitterApi _api = new GitterApi(_token);
     List<Room> _rooms = await _api.user.me.rooms();

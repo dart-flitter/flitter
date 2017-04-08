@@ -44,13 +44,12 @@ class _PeopleViewState extends State<PeopleView> {
       appBar: new AppBar(title: new Text(intl.people())),
       body: body,
       drawer: new FlitterDrawer(() {
-        PageRouteBuilder builder = new PageRouteBuilder(
-          settings: new RouteSettings(name: HomeView.path),
-          pageBuilder: (_, __, ___) {
-            return new HomeView(config.api, config.rooms);
-          },
+        navigateTo(
+          context,
+          new HomeView(config.api, config.rooms),
+          path: HomeView.path,
+          replace: true,
         );
-        Navigator.of(context).pushReplacement(builder);
       }, () {
         Navigator.pop(context);
       }),

@@ -21,11 +21,10 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-
   Future<Null> onRefresh() async {
     List<Room> rooms = await config.api.user.me.rooms();
+    sortRooms(rooms);
     setState(() {
-      sortRooms(rooms);
       config.rooms = rooms;
     });
   }
@@ -33,7 +32,6 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     Widget body;
-
     if (config.rooms == null) {
       body = new Center(child: new CircularProgressIndicator());
     } else {
@@ -49,14 +47,12 @@ class _HomeViewState extends State<HomeView> {
       drawer: new FlitterDrawer(() {
         Navigator.pop(context);
       }, () {
-        PageRouteBuilder builder = new PageRouteBuilder(
-          settings: new RouteSettings(name: PeopleView.path),
-          pageBuilder: (_, __, ___) {
-            return new PeopleView(
-                config.api, config.rooms);
-          },
+        navigateTo(
+          context,
+          new PeopleView(config.api, config.rooms),
+          path: PeopleView.path,
+          replace: true,
         );
-        Navigator.of(context).pushReplacement(builder);
       }),
       body: body,
     );

@@ -1,3 +1,4 @@
+import 'package:flitter/common.dart';
 import 'package:flitter/widgets/routes/room.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/services/gitter/src/models/room.dart';
@@ -33,11 +34,7 @@ class ListRoomWidget extends StatelessWidget {
           ? new Chip(label: new Text("${room.unreadItems}"))
           : null,
       onTap: () {
-        MaterialPageRoute route = new MaterialPageRoute(
-          settings: new RouteSettings(name: RoomView.path),
-          builder: (BuildContext context) => new RoomView(room),
-        );
-        Navigator.push(context, route);
+        materialNavigateTo(context, new RoomView(room), path: RoomView.path);
       },
     );
   }
