@@ -33,19 +33,25 @@ class _AppState extends State<App> {
   GitterApi api;
   List<Room> rooms;
 
+  Future<Null> _initState() async {
+    if (config.token != null) {
+      GitterApi _api = new GitterApi(config.token);
+      List<Room> _rooms = await _api.user.me.rooms();
+      sortRooms(_rooms);
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        rooms = _rooms;
+        api = _api;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    if (config.token != null) {
-      GitterApi _api = new GitterApi(config.token);
-      _api.user.me.rooms().then((List<Room> _rooms) {
-        sortRooms(_rooms);
-        setState(() {
-          rooms = _rooms;
-          api = _api;
-        });
-      });
-    }
+    _initState();
   }
 
   Future<Null> _onTapLoginButton() async {
@@ -53,6 +59,9 @@ class _AppState extends State<App> {
     GitterApi _api = new GitterApi(_token);
     List<Room> _rooms = await _api.user.me.rooms();
     sortRooms(_rooms);
+    if (!mounted) {
+      return;
+    }
     setState(() {
       config.token = _token;
       rooms = _rooms;

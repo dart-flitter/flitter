@@ -24,6 +24,9 @@ class _HomeViewState extends State<HomeView> {
   Future<Null> onRefresh() async {
     List<Room> rooms = await config.api.user.me.rooms();
     sortRooms(rooms);
+    if (!mounted) {
+      return;
+    }
     setState(() {
       config.rooms = rooms;
     });
