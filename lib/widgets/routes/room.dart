@@ -32,9 +32,14 @@ class _RoomViewState extends State<RoomView> {
         future: config.api.room.messagesFromRoomId(config.room.id),
         builder: (BuildContext context, AsyncSnapshot<List<Message>> snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
-            return new Center(child: new CircularProgressIndicator());
+            if (_messages == null) {
+              return new Center(child: new CircularProgressIndicator());
+            } else {
+              return new ChatRoomWidget(_messages);
+            }
           }
           final List<Message> messages = snapshot.data.reversed.toList();
+          _messages = messages;
           return new ChatRoomWidget(messages);
         },
       ),
