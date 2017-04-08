@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 Map<String, String> _getHeaders(GitterToken token) {
   return {
     "Accept": "application/json",
+    "Content-Type": "application/json",
     "Authorization": "Bearer ${token.access}"
   };
 }
@@ -73,16 +74,20 @@ class RoomApi {
         "$_baseUrl/$id/chatMessages?skip=$skip&limit=$limit",
         headers: _getHeaders(token));
     final List<Map> json = JSON.decode(response.body);
-    return json.map((Map message) => new Message.fromJson(message));
+    return json
+        .map<Message>((Map message) => new Message.fromJson(message))
+        .toList();
   }
 
   Future<Message> sendMessageToRoomId(String id, String message) async {
-    final Map<String, String> json = {"message": message};
+    final Map<String, String> json = {"text": message};
+    print("$_baseUrl/$id/chatMessages");
     final http.Response response = await http.post(
       "$_baseUrl/$id/chatMessages",
       body: JSON.encode(json),
       headers: _getHeaders(token),
     );
+    print(response.body);
     return new Message.fromJson(JSON.decode(response.body));
   }
 }

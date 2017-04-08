@@ -42,7 +42,7 @@ class _HomeViewState extends State<HomeView> {
     if (config.rooms == null) {
       body = new Center(child: new CircularProgressIndicator());
     } else {
-      body = new ListRoomWidget(config.rooms, onRefresh);
+      body = new ListRoomWidget(config.api, config.rooms, onRefresh);
     }
 
     return new Scaffold(

@@ -36,10 +36,12 @@ class Message {
         mentions = json.containsKey('mentions')
             ? (json['mentions'] as List<Map>)
                 .map((Map json) => new Mention.fromJson(json))
+                .toList()
             : [],
         issues = json.containsKey('issues')
             ? (json['issues'] as List<Map>)
                 .map((Map json) => new Issue.fromJson(json))
+                .toList()
             : [],
         v = json['v'];
 }

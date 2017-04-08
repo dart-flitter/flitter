@@ -38,7 +38,7 @@ class _PeopleViewState extends State<PeopleView> {
     if (config.rooms == null) {
       body = new Center(child: new CircularProgressIndicator());
     } else {
-      body = new ListRoomWidget(
+      body = new ListRoomWidget(config.api,
           config.rooms.where((Room room) => room.oneToOne).toList(), onRefresh);
     }
 

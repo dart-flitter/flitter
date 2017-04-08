@@ -1,53 +1,61 @@
+import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
 
-class ChatRoomWidget extends StatefulWidget {
-  @override
-  _ChatRoomWidgetState createState() => new _ChatRoomWidgetState();
-}
+class ChatRoomWidget extends StatelessWidget {
+  final List<Message> messages;
 
-class _ChatRoomWidgetState extends State<ChatRoomWidget> {
+  ChatRoomWidget(this.messages);
+
   @override
   Widget build(BuildContext context) {
     return new Container(
-        color: Colors.white,
-        child: new ListView(shrinkWrap: true, children: [
-          new ChatMessageWidget(
-              leading: new Icon(Icons.person),
-              title: "user 1",
-              body: new Text(
-                  "dfk djfkldsj fjdsl;f jl;kdsf;j dkfdlsk fl;dks l;fkdsl;kf l;dskfl; kdls;kfl;d sklfk ;ldskfl;k dsl;kfl ;dskl;f kl;dskf l;ksl;d kfl;kds l;f;slgjdks;lg sdfljd skjfkl sjfklj dsljf jdslfjk sdjfklj sdkljfkljdkl sjfkl",
-                  softWrap: true)),
-          new ChatMessageWidget(
-              leading: new Icon(Icons.person),
-              title: "user 2",
-              body: new Text(
-                  "dfk djfkldsj fjdsl;f jl;kdsf;j dkfdlsk fl;dks l;fkdsl;kf l;dskfl; kdls;kfl;d sklfk ;ldskfl;k dsl;kfl ;dskl;f kl;dskf l;ksl;d kfl;kds l;f;slgjdks;lg sdfljd skjfkl sjfklj dsljf jdslfjk sdjfklj sdkljfkljdkl sjfkl",
-                  softWrap: true))
-        ]));
+      color: Colors.white,
+      child: new ListView.builder(
+        reverse: true,
+        itemCount: messages.length,
+        itemBuilder: (BuildContext context, int index) {
+          Message message = messages[index];
+          return new ChatMessageWidget(
+            leading: new Image.network(message.fromUser.avatarUrlSmall),
+            body: new Text(message.text, softWrap: true),
+            title:
+                "${message.fromUser.displayName} - @${message.fromUser.username}",
+          );
+        },
+      ),
+    );
   }
 }
 
 class ChatInput extends StatefulWidget {
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String> onSubmit;
 
-  ChatInput({@required this.onChanged});
+  ChatInput({@required this.onSubmit});
 
   @override
   _ChatInputState createState() => new _ChatInputState();
 }
 
 class _ChatInputState extends State<ChatInput> {
+  TextEditingController textController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return new Form(
-        child: new Container(
-      padding: new EdgeInsets.only(left: 8.0, right: 8.0),
-      child: new TextField(
+      child: new Container(
+        padding: new EdgeInsets.only(left: 8.0, right: 8.0),
+        child: new TextField(
+          controller: textController,
           decoration: new InputDecoration(hintText: intl.typeChatMessage()),
-          onChanged: config.onChanged),
-    ));
+          onSubmitted: (String value) {
+            textController.clear();
+            config.onSubmit(value);
+          },
+        ),
+      ),
+    );
   }
 }
 
