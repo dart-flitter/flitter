@@ -6,19 +6,13 @@ class RoomView extends StatelessWidget {
 
   final Room room;
 
-  RoomView(this.room);
+  RoomView({this.room});
 
   @override
   Widget build(BuildContext context) {
     if (room == null) {
       return new Scaffold(
         appBar: new AppBar(
-//          leading: new IconButton(
-//            icon: new Icon(Icons.menu),
-//            onPressed: () {
-//              Navigator.pop(context);
-//            },
-//          ),
           title: new Text("Unknown"),
         ),
         body: new Center(

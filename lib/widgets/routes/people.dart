@@ -23,7 +23,6 @@ class PeopleView extends StatefulWidget {
 class _PeopleViewState extends State<PeopleView> {
   Future<Null> onRefresh() async {
     List<Room> rooms = await config.api.user.me.rooms();
-    sortRooms(rooms);
     if (!mounted) {
       return;
     }

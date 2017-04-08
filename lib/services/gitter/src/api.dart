@@ -3,6 +3,7 @@ library gitter.api;
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flitter/common.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/services/gitter/src/models/message.dart';
 import 'package:flitter/services/gitter/src/models/room.dart';
@@ -32,7 +33,15 @@ class MeApi {
     final http.Response response =
         await http.get("$_baseUrl/rooms", headers: _getHeaders(token));
     final List<Map> json = JSON.decode(response.body);
-    return json.map((map) => new Room.fromJson(map)).toList();
+    List<Room> rooms = json.map((map) => new Room.fromJson(map)).toList();
+    // TODO: better sort
+    rooms
+      ..removeWhere((Room room) => room.lastAccessTime == null)
+      ..sort((Room prev, Room next) => parseLastAccessTime(next.lastAccessTime)
+          .compareTo(parseLastAccessTime(prev.lastAccessTime)))
+      ..sort((Room prev, Room next) =>
+          next.unreadItems.compareTo(prev.unreadItems));
+    return rooms;
   }
 }
 

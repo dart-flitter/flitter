@@ -1,6 +1,5 @@
 library flitter.widgets;
 
-import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -16,17 +15,6 @@ DateTime parseLastAccessTime(String lastAccessTime) {
     int.parse(match.group(5)),
     int.parse(match.group(6)),
   );
-}
-
-//  TODO: improve the sort to have better performance
-//  use only one sort
-void sortRooms(List<Room> rooms) {
-  rooms
-    ..removeWhere((Room room) => room.lastAccessTime == null)
-    ..sort((Room prev, Room next) => parseLastAccessTime(next.lastAccessTime)
-        .compareTo(parseLastAccessTime(prev.lastAccessTime)))
-    ..sort(
-        (Room prev, Room next) => next.unreadItems.compareTo(prev.unreadItems));
 }
 
 void navigateTo(BuildContext context, Widget widget,

@@ -16,6 +16,7 @@ class ListRoomWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return new RefreshIndicator(
       child: new ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
         key: _refreshIndicatorKey,
         itemCount: rooms.length,
         itemBuilder: _buildListTile,
@@ -34,7 +35,7 @@ class ListRoomWidget extends StatelessWidget {
           ? new Chip(label: new Text("${room.unreadItems}"))
           : null,
       onTap: () {
-        materialNavigateTo(context, new RoomView(room), path: RoomView.path);
+        materialNavigateTo(context, new RoomView(room: room), path: RoomView.path);
       },
     );
   }
