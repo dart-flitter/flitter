@@ -3,7 +3,6 @@ import 'package:flitter/services/gitter/src/models/room.dart';
 
 class RoomView extends StatelessWidget {
   static const path = "/room";
-  static RoomView builder(BuildContext _) => new RoomView(null);
 
   final Room room;
 
@@ -13,8 +12,19 @@ class RoomView extends StatelessWidget {
   Widget build(BuildContext context) {
     if (room == null) {
       return new Scaffold(
-          appBar: new AppBar(),
-          body: new Center(child: new CircularProgressIndicator()));
+        appBar: new AppBar(
+//          leading: new IconButton(
+//            icon: new Icon(Icons.menu),
+//            onPressed: () {
+//              Navigator.pop(context);
+//            },
+//          ),
+          title: new Text("Unknown"),
+        ),
+        body: new Center(
+          child: new CircularProgressIndicator(),
+        ),
+      );
     }
     return new Scaffold(appBar: new AppBar(title: new Text(room.name)));
   }

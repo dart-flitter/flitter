@@ -1,50 +1,59 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:flitter/intl/messages_all.dart' as intl;
+
 import 'package:flitter/common.dart';
 import 'package:flitter/services/gitter/gitter.dart';
-import 'package:flitter/services/gitter/src/models/room.dart';
-import 'package:flitter/auth.dart';
+import 'package:flitter/widgets/common/drawer.dart';
+import 'package:flitter/widgets/common/list_room.dart';
+import 'package:flitter/widgets/routes/home.dart';
+import 'package:flutter/material.dart';
+import 'package:flitter/intl/messages_all.dart' as intl;
 
 class PeopleView extends StatefulWidget {
-  static const path = "/people";
+  static const String path = "/people";
 
-  static PeopleView builder(BuildContext _) => new PeopleView();
+  GitterApi api;
+  List<Room> rooms;
+
+  PeopleView(this.api, this.rooms);
 
   @override
   _PeopleViewState createState() => new _PeopleViewState();
 }
 
 class _PeopleViewState extends State<PeopleView> {
-  List<Room> _rooms;
+  Future<Null> onRefresh() async {
+    List<Room> rooms = await config.api.user.me.rooms();
+    sortRooms(rooms);
+    setState(() {
+      config.rooms = rooms;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     var body;
 
-    if (_rooms == null) {
-      _fetchRooms().then((List rooms) {
-        setState(() {
-          _rooms = rooms;
-        });
-      });
+    if (config.rooms == null) {
       body = new Center(child: new CircularProgressIndicator());
     } else {
-      body = new ListRoomWidget(_rooms);
+      body = new ListRoomWidget(
+          config.rooms.where((Room room) => room.oneToOne).toList(), onRefresh);
     }
 
     return new Scaffold(
-        appBar: new AppBar(title: new Text(intl.people())),
-        body: body,
-        drawer: new FlitterDrawer());
-  }
-
-  ////////
-
-  Future<List<Room>> _fetchRooms() async {
-    final token = await auth();
-    final api = new GitterApi(token);
-    final rooms = await api.user.me.rooms();
-    return rooms.where((Room room) => room.oneToOne).toList();
+      appBar: new AppBar(title: new Text(intl.people())),
+      body: body,
+      drawer: new FlitterDrawer(() {
+        PageRouteBuilder builder = new PageRouteBuilder(
+          settings: new RouteSettings(name: HomeView.path),
+          pageBuilder: (_, __, ___) {
+            return new HomeView(config.api, config.rooms);
+          },
+        );
+        Navigator.of(context).pushReplacement(builder);
+      }, () {
+        Navigator.pop(context);
+      }),
+    );
   }
 }

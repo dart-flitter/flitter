@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 abstract class OAuth {
   final AppInformations appInformations;
   final CodeInformations _codeInformations;
+
   String code;
   Map<String, dynamic> token;
 
