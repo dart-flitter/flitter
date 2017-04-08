@@ -48,8 +48,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     final HomeView homeView = new HomeView(config.api, config.rooms);
-    final PeopleView peopleView = new PeopleView(
-        config.api, config.rooms.where((Room room) => room.oneToOne).toList());
+    final PeopleView peopleView = new PeopleView(config.api, config.rooms);
 
     return new MaterialApp(
       theme: kTheme,
