@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 class LoginView extends StatelessWidget {
-  static final String path = "/";
+  static final String path = "/login";
 
   VoidCallback onLogin;
 

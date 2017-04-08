@@ -43,7 +43,6 @@ class _AppState extends State<App> {
       config.rooms = _rooms;
       config.api = _api;
     });
-    Navigator.pushReplacementNamed(context, HomeView.path);
   }
 
   @override
@@ -58,8 +57,10 @@ class _AppState extends State<App> {
             new HomeView(config.api, config.rooms),
         PeopleView.path: (BuildContext context) => new PeopleView(
             config.api, config.rooms.where((Room room) => room.oneToOne)),
-//        RoomView.path: (BuildContext context) => new RoomView(),
       },
+      home: config.api != null
+          ? new HomeView(config.api, config.rooms)
+          : new LoginView(onLogin: () => _onTapLoginButton(context)),
     );
   }
 }
