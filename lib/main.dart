@@ -49,7 +49,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     final HomeView homeView = new HomeView(config.api, config.rooms);
     final PeopleView peopleView = new PeopleView(
-        config.api, config.rooms.where((Room room) => room.oneToOne));
+        config.api, config.rooms.where((Room room) => room.oneToOne).toList());
 
     return new MaterialApp(
       theme: kTheme,
@@ -58,8 +58,7 @@ class _AppState extends State<App> {
         LoginView.path: (BuildContext context) =>
             new LoginView(onLogin: () => _onTapLoginButton(context)),
         HomeView.path: (BuildContext context) => homeView,
-        PeopleView.path: (BuildContext context) => new PeopleView(
-            config.api, config.rooms.where((Room room) => room.oneToOne)),
+        PeopleView.path: (BuildContext context) => peopleView,
       },
       home: config.api != null ? homeView : peopleView,
     );
