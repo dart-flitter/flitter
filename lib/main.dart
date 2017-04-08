@@ -47,20 +47,21 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    final HomeView homeView = new HomeView(config.api, config.rooms);
+    final PeopleView peopleView = new PeopleView(
+        config.api, config.rooms.where((Room room) => room.oneToOne));
+
     return new MaterialApp(
       theme: kTheme,
       title: "Flitter",
       routes: {
         LoginView.path: (BuildContext context) =>
             new LoginView(onLogin: () => _onTapLoginButton(context)),
-        HomeView.path: (BuildContext context) =>
-            new HomeView(config.api, config.rooms),
+        HomeView.path: (BuildContext context) => homeView,
         PeopleView.path: (BuildContext context) => new PeopleView(
             config.api, config.rooms.where((Room room) => room.oneToOne)),
       },
-      home: config.api != null
-          ? new HomeView(config.api, config.rooms)
-          : new LoginView(onLogin: () => _onTapLoginButton(context)),
+      home: config.api != null ? homeView : peopleView,
     );
   }
 }
