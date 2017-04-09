@@ -47,6 +47,7 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    final LoginView loginView = new LoginView(onLogin: () => _onTapLoginButton(context));
     final HomeView homeView = new HomeView(config.api, config.rooms);
     final PeopleView peopleView = new PeopleView(config.api, config.rooms);
 
@@ -54,12 +55,11 @@ class _AppState extends State<App> {
       theme: kTheme,
       title: "Flitter",
       routes: {
-        LoginView.path: (BuildContext context) =>
-            new LoginView(onLogin: () => _onTapLoginButton(context)),
+        LoginView.path: (BuildContext context) => loginView,
         HomeView.path: (BuildContext context) => homeView,
         PeopleView.path: (BuildContext context) => peopleView,
       },
-      home: config.api != null ? homeView : peopleView,
+      home: config.api != null ? homeView : loginView,
     );
   }
 }

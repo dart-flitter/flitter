@@ -17,6 +17,11 @@ class RoomView extends StatefulWidget {
 class _RoomViewState extends State<RoomView> {
   List<Message> _messages;
 
+  void initState() {
+    super.initState();
+    _messages = [];
+  }
+
   @override
   Widget build(BuildContext context) {
     if (config.room == null) {
@@ -26,9 +31,9 @@ class _RoomViewState extends State<RoomView> {
         ),
       );
     }
-    return new Scaffold(
-      appBar: new AppBar(title: new Text(config.room.name)),
-      body: new FutureBuilder<List<Message>>(
+    Widget body;
+    if (_messages.isEmpty) {
+      body = new FutureBuilder<List<Message>>(
         future: config.api.room.messagesFromRoomId(config.room.id),
         builder: (BuildContext context, AsyncSnapshot<List<Message>> snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
@@ -38,15 +43,24 @@ class _RoomViewState extends State<RoomView> {
               return new ChatRoomWidget(_messages);
             }
           }
-          final List<Message> messages = snapshot.data.reversed.toList();
+          final List<Message> messages = snapshot.data.toList();
           _messages = messages;
-          return new ChatRoomWidget(messages);
+          return new ChatRoomWidget(_messages.reversed.toList());
         },
-      ),
+      );
+    } else {
+      body = new ChatRoomWidget(_messages.reversed.toList());
+    }
+    return new Scaffold(
+      appBar: new AppBar(title: new Text(config.room.name)),
+      body: body,
       bottomNavigationBar: new ChatInput(
         onSubmit: (String value) async {
-          await config.api.room.sendMessageToRoomId(config.room.id, value);
-          setState(() {});
+          final Message message =
+              await config.api.room.sendMessageToRoomId(config.room.id, value);
+          setState(() {
+            _messages.add(message);
+          });
         },
       ),
     );
