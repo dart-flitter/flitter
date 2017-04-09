@@ -48,7 +48,7 @@ class _PeopleViewState extends State<PeopleView> {
       drawer: new FlitterDrawer(() {
         navigateTo(
           context,
-          new HomeView(config.api, config.rooms),
+          new HomeView(api: config.api, rooms: config.rooms),
           path: HomeView.path,
           replace: true,
         );
