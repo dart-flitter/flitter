@@ -11,28 +11,49 @@ import 'auth.dart';
 
 Future main() async {
   GitterApi api;
-  List<Room> rooms;
   if (await isAuth()) {
     final GitterToken token = await getSavedToken();
     api = new GitterApi(token);
-    rooms = await api.user.me.rooms();
   }
 
-  runApp(new App(api, rooms));
+  runApp(new App(api));
+}
+
+class Splash extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      body: new Center(
+        child: new CircularProgressIndicator(),
+      ),
+    );
+  }
 }
 
 class App extends StatefulWidget {
   GitterApi api;
-  List<Room> rooms;
 
-  App(this.api, this.rooms);
+  App(this.api);
 
   @override
   _AppState createState() => new _AppState();
 }
 
 class _AppState extends State<App> {
+  bool isLoading;
+  List<Room> rooms;
+
+  @override
+  void initState() {
+    super.initState();
+    rooms = [];
+    isLoading = false;
+  }
+
   Future<Null> _onTapLoginButton(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
     final GitterToken token = await auth();
     final GitterApi _api = new GitterApi(token);
     final List<Room> _rooms = await _api.user.me.rooms();
@@ -40,26 +61,50 @@ class _AppState extends State<App> {
       return;
     }
     setState(() {
-      config.rooms = _rooms;
+      isLoading = false;
+      rooms = _rooms;
       config.api = _api;
     });
   }
 
+  Widget getRoomsAndBuidlHome(BuildContext context) {
+    return new FutureBuilder<List<Room>>(
+      future: config.api.user.me.rooms(),
+      builder: (BuildContext context, AsyncSnapshot<List<Room>> snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return new Splash();
+        }
+        rooms = snapshot.data;
+        return new HomeView(api: config.api, rooms: rooms);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final LoginView loginView = new LoginView(onLogin: () => _onTapLoginButton(context));
-    final HomeView homeView = new HomeView(config.api, config.rooms);
-    final PeopleView peopleView = new PeopleView(config.api, config.rooms);
+    final LoginView loginView =
+        new LoginView(onLogin: () => _onTapLoginButton(context));
+
+    Widget home;
+    if (config.api != null && rooms.isEmpty) {
+      home = getRoomsAndBuidlHome(context);
+    } else if (config.api != null && rooms.isNotEmpty) {
+      home = new HomeView(api: config.api, rooms: rooms);
+    } else {
+      home = loginView;
+    }
 
     return new MaterialApp(
       theme: kTheme,
       title: "Flitter",
       routes: {
         LoginView.path: (BuildContext context) => loginView,
-        HomeView.path: (BuildContext context) => homeView,
-        PeopleView.path: (BuildContext context) => peopleView,
+        HomeView.path: (BuildContext context) =>
+            new HomeView(api: config.api, rooms: rooms),
+        PeopleView.path: (BuildContext context) =>
+            new PeopleView(config.api, rooms),
       },
-      home: config.api != null ? homeView : loginView,
+      home: isLoading ? new Splash() : home,
     );
   }
 }

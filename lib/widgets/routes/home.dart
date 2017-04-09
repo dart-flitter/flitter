@@ -7,6 +7,7 @@ import 'package:flitter/widgets/routes/people.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:flitter/services/gitter/gitter.dart';
+import 'package:meta/meta.dart';
 
 class HomeView extends StatefulWidget {
   static final String path = "/home";
@@ -14,7 +15,7 @@ class HomeView extends StatefulWidget {
   GitterApi api;
   List<Room> rooms;
 
-  HomeView(this.api, this.rooms);
+  HomeView({@required this.api, this.rooms: const []});
 
   @override
   _HomeViewState createState() => new _HomeViewState();
@@ -38,13 +39,6 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    Widget body;
-    if (config.rooms == null) {
-      body = new Center(child: new CircularProgressIndicator());
-    } else {
-      body = new ListRoomWidget(config.api, config.rooms, onRefresh);
-    }
-
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(
@@ -61,7 +55,7 @@ class _HomeViewState extends State<HomeView> {
           replace: true,
         );
       }),
-      body: body,
+      body: new ListRoomWidget(config.api, config.rooms, onRefresh),
     );
   }
 }

@@ -81,13 +81,11 @@ class RoomApi {
 
   Future<Message> sendMessageToRoomId(String id, String message) async {
     final Map<String, String> json = {"text": message};
-    print("$_baseUrl/$id/chatMessages");
     final http.Response response = await http.post(
       "$_baseUrl/$id/chatMessages",
       body: JSON.encode(json),
       headers: _getHeaders(token),
     );
-    print(response.body);
     return new Message.fromJson(JSON.decode(response.body));
   }
 }
