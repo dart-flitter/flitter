@@ -8,14 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:meta/meta.dart';
+import 'package:flitter/app.dart';
 
 class HomeView extends StatefulWidget {
   static final String path = "/home";
 
-  GitterApi api;
-  List<Room> rooms;
+  final AppState app;
 
-  HomeView({@required this.api, this.rooms: const []});
+  HomeView({@required this.app});
 
   @override
   _HomeViewState createState() => new _HomeViewState();
@@ -23,12 +23,12 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   Future<Null> onRefresh() async {
-    List<Room> rooms = await config.api.user.me.rooms();
+    List<Room> rooms = await config.app.api.user.me.rooms();
     if (!mounted) {
       return;
     }
     setState(() {
-      config.rooms = rooms;
+      config.app.rooms = rooms;
     });
   }
 
@@ -50,12 +50,12 @@ class _HomeViewState extends State<HomeView> {
       }, () {
         navigateTo(
           context,
-          new PeopleView(config.api, config.rooms),
+          new PeopleView(app: config.app),
           path: PeopleView.path,
           replace: true,
         );
       }),
-      body: new ListRoomWidget(config.api, config.rooms, onRefresh),
+      body: new ListRoomWidget(config.app, config.app.rooms, onRefresh),
     );
   }
 }

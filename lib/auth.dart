@@ -1,3 +1,5 @@
+library flitter.auth;
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:convert';

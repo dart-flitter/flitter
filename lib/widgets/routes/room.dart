@@ -1,14 +1,15 @@
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/widgets/common/chat_room_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flitter/app.dart';
 
 class RoomView extends StatefulWidget {
   static const path = "/room";
 
-  final GitterApi api;
+  final AppState app;
   final Room room;
 
-  RoomView(this.api, {this.room});
+  RoomView(this.app, {this.room});
 
   @override
   _RoomViewState createState() => new _RoomViewState();
@@ -34,7 +35,7 @@ class _RoomViewState extends State<RoomView> {
     Widget body;
     if (_messages.isEmpty) {
       body = new FutureBuilder<List<Message>>(
-        future: config.api.room.messagesFromRoomId(config.room.id),
+        future: config.app.api.room.messagesFromRoomId(config.room.id),
         builder: (BuildContext context, AsyncSnapshot<List<Message>> snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             if (_messages == null) {
@@ -56,8 +57,8 @@ class _RoomViewState extends State<RoomView> {
       body: body,
       bottomNavigationBar: new ChatInput(
         onSubmit: (String value) async {
-          final Message message =
-              await config.api.room.sendMessageToRoomId(config.room.id, value);
+          final Message message = await config.app.api.room
+              .sendMessageToRoomId(config.room.id, value);
           setState(() {
             _messages.add(message);
           });

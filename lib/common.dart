@@ -1,4 +1,4 @@
-library flitter.widgets;
+library flitter.common;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
