@@ -13,22 +13,20 @@ import 'package:flitter/app.dart';
 class HomeView extends StatefulWidget {
   static final String path = "/home";
 
-  final AppState app;
-
-  HomeView({@required this.app});
+  HomeView();
 
   @override
   _HomeViewState createState() => new _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
-  Future<Null> onRefresh() async {
-    List<Room> rooms = await config.app.api.user.me.rooms();
+  Future<Null> onRefresh(BuildContext context) async {
+    List<Room> rooms = await App.of(context).api.user.me.rooms();
     if (!mounted) {
       return;
     }
     setState(() {
-      config.app.rooms = rooms;
+      App.of(context).rooms = rooms;
     });
   }
 
@@ -50,12 +48,16 @@ class _HomeViewState extends State<HomeView> {
       }, () {
         navigateTo(
           context,
-          new PeopleView(app: config.app),
+          new PeopleView(),
           path: PeopleView.path,
           replace: true,
         );
       }),
-      body: new ListRoomWidget(config.app, config.app.rooms, onRefresh),
+      body: new ListRoomWidget(
+          rooms: App.of(context).rooms,
+          onRefresh: () {
+            onRefresh(context);
+          }),
     );
   }
 }

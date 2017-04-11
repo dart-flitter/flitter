@@ -13,22 +13,20 @@ import 'package:flitter/app.dart';
 class PeopleView extends StatefulWidget {
   static const String path = "/people";
 
-  final AppState app;
-
-  PeopleView({@required this.app});
+  PeopleView();
 
   @override
   _PeopleViewState createState() => new _PeopleViewState();
 }
 
 class _PeopleViewState extends State<PeopleView> {
-  Future<Null> onRefresh() async {
-    List<Room> rooms = await config.app.api.user.me.rooms();
+  Future<Null> onRefresh(BuildContext context) async {
+    List<Room> rooms = await App.of(context).api.user.me.rooms();
     if (!mounted) {
       return;
     }
     setState(() {
-      config.app.rooms = rooms;
+      App.of(context).rooms = rooms;
     });
   }
 
@@ -36,13 +34,18 @@ class _PeopleViewState extends State<PeopleView> {
   Widget build(BuildContext context) {
     var body;
 
-    if (config.app.rooms == null) {
+    if (App.of(context).rooms == null) {
       body = new Center(child: new CircularProgressIndicator());
     } else {
       body = new ListRoomWidget(
-          config.app,
-          config.app.rooms.where((Room room) => room.oneToOne).toList(),
-          onRefresh);
+          rooms: App
+              .of(context)
+              .rooms
+              .where((Room room) => room.oneToOne)
+              .toList(),
+          onRefresh: () {
+            onRefresh(context);
+          });
     }
 
     return new Scaffold(
@@ -51,7 +54,7 @@ class _PeopleViewState extends State<PeopleView> {
       drawer: new FlitterDrawer(() {
         navigateTo(
           context,
-          new HomeView(app: config.app),
+          new HomeView(),
           path: HomeView.path,
           replace: true,
         );

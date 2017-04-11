@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:flitter/common.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/widgets/routes/room.dart';
@@ -8,11 +9,10 @@ class ListRoomWidget extends StatelessWidget {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
-  final AppState app;
   final List<Room> rooms;
   final RefreshCallback onRefresh;
 
-  ListRoomWidget(this.app, this.rooms, this.onRefresh);
+  ListRoomWidget({@required this.rooms, @required this.onRefresh});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class ListRoomWidget extends StatelessWidget {
           ? new Chip(label: new Text("${room.unreadItems}"))
           : null,
       onTap: () {
-        materialNavigateTo(context, new RoomView(app, room: room),
+        materialNavigateTo(context, new RoomView(room: room),
             path: RoomView.path);
       },
     );

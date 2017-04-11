@@ -2,15 +2,12 @@ library flitter.app;
 
 import 'dart:async';
 
+import 'package:meta/meta.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/services/gitter/gitter.dart';
-import 'package:flitter/widgets/routes/login.dart';
-import 'package:flitter/widgets/routes/home.dart';
-import 'package:flitter/widgets/routes/people.dart';
-import 'package:meta/meta.dart';
+import 'package:flitter/routes.dart';
 import 'package:flitter/theme.dart';
-
-import 'auth.dart';
+import 'package:flitter/auth.dart';
 
 class Splash extends StatelessWidget {
   @override
@@ -30,6 +27,9 @@ class App extends StatefulWidget {
 
   @override
   AppState createState() => new AppState(api: api);
+
+  static AppState of(BuildContext context) =>
+      context.ancestorStateOfType(const TypeMatcher<AppState>());
 }
 
 class AppState extends State<App> {
@@ -74,7 +74,7 @@ class AppState extends State<App> {
           return new Splash();
         }
         rooms = snapshot.data;
-        return new HomeView(app: this);
+        return new HomeView();
       },
     );
   }
@@ -88,7 +88,7 @@ class AppState extends State<App> {
     if (config.api != null && rooms.isEmpty) {
       home = getRoomsAndBuidlHome(context);
     } else if (config.api != null && rooms.isNotEmpty) {
-      home = new HomeView(app: this);
+      home = new HomeView();
     } else {
       home = loginView;
     }
@@ -98,8 +98,8 @@ class AppState extends State<App> {
       title: "Flitter",
       routes: {
         LoginView.path: (BuildContext context) => loginView,
-        HomeView.path: (BuildContext context) => new HomeView(app: this),
-        PeopleView.path: (BuildContext context) => new PeopleView(app: this),
+        HomeView.path: (BuildContext context) => new HomeView(),
+        PeopleView.path: (BuildContext context) => new PeopleView(),
       },
       home: isLoading ? new Splash() : home,
     );
