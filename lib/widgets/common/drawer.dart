@@ -34,9 +34,6 @@ class FlitterDrawer extends StatelessWidget {
     return new Drawer(child: new ListView(children: child));
   }
 
-  final _gitterBannerUrl =
-      "https://cdn02.gitter.im/_s/a321a0b/images/home/banner.jpg";
-
   ////////
 
   List<Widget> _drawerCommunities() {
@@ -71,7 +68,7 @@ class FlitterDrawer extends StatelessWidget {
                   new NetworkImage(App.of(context).user.avatarUrlMedium)),
           decoration: new BoxDecoration(
               backgroundImage: new BackgroundImage(
-                  image: new NetworkImage(_gitterBannerUrl),
+                  image: new AssetImage('assets/images/banner.jpg'),
                   fit: BoxFit.cover)));
 
   Widget _getUserAndBuildDrawerHeader(BuildContext context) {
