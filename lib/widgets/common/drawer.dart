@@ -45,9 +45,7 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
   List<Widget> _drawerCommunities(BuildContext context) {
     final communities = [
       new Divider(),
-      new Padding(
-          padding: new EdgeInsets.only(left: 8.0, bottom: 8.0),
-          child: new Text(intl.communities())),
+      new ListTile(title: new Text(intl.communities()), dense: true)
     ];
 
     communities.addAll(_getGroupsAndBuildCommunities(context));
@@ -87,7 +85,7 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
       future: App.of(context).api.user.me.get(),
       builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return new Drawer(
+          return new DrawerHeader(
               child: new Container(
                   child: new Center(child: new CircularProgressIndicator())));
         }
@@ -112,7 +110,7 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
     }).toList();
   }
 
-  List<Widget> _getGroupsAndBuildCommunities(BuildContext context) {
+  Iterable<Widget> _getGroupsAndBuildCommunities(BuildContext context) {
     if (App.of(context).groups != null) {
       return _buildCommunities(context);
     }
