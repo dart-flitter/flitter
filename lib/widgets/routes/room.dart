@@ -24,6 +24,8 @@ class _RoomViewState extends State<RoomView> {
   int _counter;
   List<Message> _m;
 
+  StreamSubscription<Message> _messageSubscription;
+
   @override
   void initState() {
     super.initState();
@@ -31,8 +33,15 @@ class _RoomViewState extends State<RoomView> {
     _counter = 0;
     messages = [];
     _m = [];
-    config.appState.api.room.onMessage.listen(_onMessage);
+    _messageSubscription = config.appState.api.room.onMessage.listen(_onMessage);
     config.appState.api.room.messagesFromRoomId(config.room.id, skip: _skip);
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    _messageSubscription.cancel();
   }
 
   void _onMessage(Message m) {
