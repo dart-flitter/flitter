@@ -49,7 +49,7 @@ class _PeopleViewState extends State<PeopleView> {
               .where((Room room) => room.oneToOne)
               .toList(),
           onRefresh: () {
-            onRefresh(context);
+            return onRefresh(context);
           });
     }
 

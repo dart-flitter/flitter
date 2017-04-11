@@ -32,7 +32,9 @@ class ListRoomWidget extends StatelessWidget {
     return new ListTile(
       dense: false,
       title: new Text(room.name),
-      leading: new Image.network(room.avatarUrl),
+      leading: new CircleAvatar(
+          backgroundImage: new NetworkImage(room.avatarUrl),
+          backgroundColor: Theme.of(context).canvasColor),
       trailing: room.unreadItems > 0
           ? new Chip(label: new Text("${room.unreadItems}"))
           : null,

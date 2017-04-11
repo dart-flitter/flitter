@@ -56,7 +56,7 @@ class _HomeViewState extends State<HomeView> {
       body: new ListRoomWidget(
           rooms: App.of(context).rooms,
           onRefresh: () {
-            onRefresh(context);
+            return onRefresh(context);
           }),
     );
   }

@@ -7,7 +7,7 @@ import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/auth.dart';
 import 'package:flitter/routes.dart';
 
-class FlitterDrawer extends StatelessWidget {
+class FlitterDrawer extends StatefulWidget {
   VoidCallback onTapAllConversation;
   VoidCallback onTapPeoples;
 
@@ -15,20 +15,25 @@ class FlitterDrawer extends StatelessWidget {
       {@required this.onTapAllConversation, @required this.onTapPeoples});
 
   @override
+  _FlitterDrawerState createState() => new _FlitterDrawerState();
+}
+
+class _FlitterDrawerState extends State<FlitterDrawer> {
+  @override
   Widget build(BuildContext context) {
     final child = [
       _getUserAndBuildDrawerHeader(context),
       new ListTile(
           leading: new Icon(Icons.home),
           title: new Text(intl.allConversations()),
-          onTap: onTapAllConversation),
+          onTap: config.onTapAllConversation),
       new ListTile(
           leading: new Icon(Icons.person),
           title: new Text(intl.people()),
-          onTap: onTapPeoples),
+          onTap: config.onTapPeoples),
     ];
 
-    child.addAll(_drawerCommunities());
+    child.addAll(_drawerCommunities(context));
     child.addAll(_drawerFooter(context));
 
     return new Drawer(child: new ListView(children: child));
@@ -36,13 +41,15 @@ class FlitterDrawer extends StatelessWidget {
 
   ////////
 
-  List<Widget> _drawerCommunities() {
+  List<Widget> _drawerCommunities(BuildContext context) {
     final communities = [
       new Divider(),
       new Padding(
           padding: new EdgeInsets.only(left: 8.0, bottom: 8.0),
           child: new Text(intl.communities())),
     ];
+
+    communities.addAll(_getGroupsAndBuildCommunities(context));
 
     return communities;
   }
@@ -87,5 +94,37 @@ class FlitterDrawer extends StatelessWidget {
         return _buildDrawerHeader(context);
       },
     );
+  }
+
+  List<Widget> _buildCommunities(BuildContext context) {
+    return App.of(context).groups.map((group) {
+      return new ListTile(
+          dense: false,
+          title: new Text(group.name),
+          leading: new CircleAvatar(
+              backgroundImage: new NetworkImage(group.avatarUrl),
+              backgroundColor: Theme.of(context).canvasColor),
+          trailing: null, //TODO: unread inside roomsOf(group)
+          onTap: () {
+            //TODO: Community view
+            /*materialNavigateTo(
+                context, new RoomView(appState: App.of(context), room: room),
+                path: RoomView.path);*/
+          });
+    }).toList();
+  }
+
+  List<Widget> _getGroupsAndBuildCommunities(BuildContext context) {
+    if (App.of(context).groups != null) {
+      return _buildCommunities(context);
+    }
+    App.of(context).api.group.get().then((groups) {
+      setState(() {
+        App.of(context).groups = groups;
+      });
+    });
+    return [
+      new Container(child: new Center(child: new CircularProgressIndicator()))
+    ];
   }
 }

@@ -1,13 +1,9 @@
 library flitter.app;
 
-import 'dart:async';
-
-import 'package:meta/meta.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/routes.dart';
 import 'package:flitter/theme.dart';
-import 'package:flitter/auth.dart';
 
 class Splash extends StatelessWidget {
   @override
@@ -36,6 +32,7 @@ class AppState extends State<App> {
   GitterApi get api => config.api;
   bool isLoading;
   List<Room> rooms;
+  List<Group> groups;
   User user;
 
   AppState();
@@ -44,6 +41,7 @@ class AppState extends State<App> {
   void initState() {
     super.initState();
     rooms = [];
+    groups = null;
     isLoading = false;
   }
 
@@ -65,6 +63,7 @@ class AppState extends State<App> {
       config.api = null;
       user = null;
       rooms = [];
+      groups = null;
     });
   }
 
