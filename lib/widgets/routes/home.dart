@@ -9,11 +9,16 @@ import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:meta/meta.dart';
 import 'package:flitter/app.dart';
+import 'package:flitter/auth.dart';
 
 class HomeView extends StatefulWidget {
   static final String path = "/home";
 
   HomeView();
+
+  static void go(BuildContext context, {bool replace: true}) {
+    navigateTo(context, new HomeView(), path: HomeView.path, replace: replace);
+  }
 
   @override
   _HomeViewState createState() => new _HomeViewState();
@@ -43,15 +48,10 @@ class _HomeViewState extends State<HomeView> {
           intl.allConversations(),
         ),
       ),
-      drawer: new FlitterDrawer(() {
+      drawer: new FlitterDrawer(onTapAllConversation: () {
         Navigator.pop(context);
-      }, () {
-        navigateTo(
-          context,
-          new PeopleView(),
-          path: PeopleView.path,
-          replace: true,
-        );
+      }, onTapPeoples: () {
+        PeopleView.go(context);
       }),
       body: new ListRoomWidget(
           rooms: App.of(context).rooms,

@@ -4,9 +4,11 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/services/oauth/oauth.dart';
 import 'package:flutter/services.dart';
+import 'package:flitter/app.dart';
 
 Future<File> getTokenFile() async {
   String dir = (await PathProvider.getApplicationDocumentsDirectory()).path;
@@ -22,7 +24,8 @@ Future<GitterToken> getSavedToken() async {
 }
 
 Future<bool> isAuth() async {
-  return (await getSavedToken()) != null ? true : false;
+  GitterToken token = await getSavedToken();
+  return token?.access?.isNotEmpty == true && token?.type?.isNotEmpty == true;
 }
 
 Future<GitterToken> auth() async {
@@ -35,4 +38,21 @@ Future<GitterToken> auth() async {
   File tokenFile = await getTokenFile();
   tokenFile.writeAsStringSync(JSON.encode(token.toMap()));
   return token;
+}
+
+Future<Null> saveToken(GitterToken token) async {
+  File tokenFile = await getTokenFile();
+  if (!tokenFile.existsSync()) {
+    await tokenFile.create(recursive: true);
+  }
+  if (token != null) {
+    return tokenFile.writeAsString(JSON.encode(token.toMap()));
+  }
+  return tokenFile.writeAsString(JSON.encode({}));
+}
+
+Future<Null> logout(BuildContext context) async {
+  App.of(context).rooms = [];
+  App.of(context).user = null;
+  return saveToken(null);
 }

@@ -26,44 +26,25 @@ class App extends StatefulWidget {
   App(this.api);
 
   @override
-  AppState createState() => new AppState(api: api);
+  AppState createState() => new AppState();
 
   static AppState of(BuildContext context) =>
       context.ancestorStateOfType(const TypeMatcher<AppState>());
 }
 
 class AppState extends State<App> {
-  final GitterApi api;
+  GitterApi get api => config.api;
   bool isLoading;
   List<Room> rooms;
   User user;
 
-  AppState({@required this.api});
+  AppState();
 
   @override
   void initState() {
     super.initState();
     rooms = [];
     isLoading = false;
-  }
-
-  Future<Null> _onTapLoginButton(BuildContext context) async {
-    setState(() {
-      isLoading = true;
-    });
-    final GitterToken token = await auth();
-    final GitterApi _api = new GitterApi(token);
-    final List<Room> _rooms = await _api.user.me.rooms();
-    final User _user = await _api.user.me.get();
-    if (!mounted) {
-      return;
-    }
-    setState(() {
-      isLoading = false;
-      rooms = _rooms;
-      config.api = _api;
-      user = _user;
-    });
   }
 
   Widget getRoomsAndBuildHome(BuildContext context) {
@@ -79,25 +60,42 @@ class AppState extends State<App> {
     );
   }
 
+  void onLogout() {
+    setState(() {
+      config.api = null;
+      user = null;
+      rooms = [];
+    });
+  }
+
+  void loading(bool state) {
+    isLoading = state;
+  }
+
+  void onLogin(List<Room> rooms, GitterApi api, User user) {
+    setState(() {
+      isLoading = false;
+      this.rooms = rooms;
+      config.api = api;
+      this.user = user;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final LoginView loginView =
-        new LoginView(onLogin: () => _onTapLoginButton(context));
-
     Widget home;
-    if (config.api != null && rooms.isEmpty) {
+    if (api != null && rooms.isEmpty) {
       home = getRoomsAndBuildHome(context);
     } else if (config.api != null && rooms.isNotEmpty) {
       home = new HomeView();
     } else {
-      home = loginView;
+      home = new LoginView();
     }
 
     return new MaterialApp(
       theme: kTheme,
       title: "Flitter",
       routes: {
-        LoginView.path: (BuildContext context) => loginView,
         HomeView.path: (BuildContext context) => new HomeView(),
         PeopleView.path: (BuildContext context) => new PeopleView(),
       },

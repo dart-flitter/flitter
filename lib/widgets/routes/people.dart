@@ -13,6 +13,11 @@ import 'package:flitter/app.dart';
 class PeopleView extends StatefulWidget {
   static const String path = "/people";
 
+  static void go(BuildContext context, {bool replace: true}) {
+    navigateTo(context, new PeopleView(),
+        path: PeopleView.path, replace: replace);
+  }
+
   PeopleView();
 
   @override
@@ -51,14 +56,9 @@ class _PeopleViewState extends State<PeopleView> {
     return new Scaffold(
       appBar: new AppBar(title: new Text(intl.people())),
       body: body,
-      drawer: new FlitterDrawer(() {
-        navigateTo(
-          context,
-          new HomeView(),
-          path: HomeView.path,
-          replace: true,
-        );
-      }, () {
+      drawer: new FlitterDrawer(onTapAllConversation: () {
+        HomeView.go(context);
+      }, onTapPeoples: () {
         Navigator.pop(context);
       }),
     );

@@ -1,12 +1,32 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
+import 'package:flitter/app.dart';
+import 'package:flitter/services/gitter/gitter.dart';
+import 'package:flitter/auth.dart';
 
-class LoginView extends StatelessWidget {
-  static final String path = "/login";
+class LoginView extends StatefulWidget {
+  static void go(BuildContext context) {
+    App.of(context).onLogout();
+  }
 
-  VoidCallback onLogin;
+  @override
+  _LoginViewState createState() => new _LoginViewState();
+}
 
-  LoginView({@required this.onLogin});
+class _LoginViewState extends State<LoginView> {
+  Future<Null> _onTapLoginButton(BuildContext context) async {
+    AppState appState = App.of(context);
+
+    appState.loading(true);
+    final GitterToken token = await auth();
+    final GitterApi _api = new GitterApi(token);
+    final List<Room> _rooms = await _api.user.me.rooms();
+    final User _user = await _api.user.me.get();
+    if (!mounted) {
+      return;
+    }
+    appState.onLogin(_rooms, _api, _user);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +49,9 @@ class LoginView extends StatelessWidget {
                   "Login",
                   style: new TextStyle(color: Colors.white),
                 ),
-                onPressed: onLogin,
+                onPressed: () {
+                  _onTapLoginButton(context);
+                },
               ),
             ),
           ),
