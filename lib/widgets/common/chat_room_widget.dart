@@ -1,12 +1,19 @@
+import 'dart:async';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
 
 class ChatRoomWidget extends StatelessWidget {
-  final List<Message> messages;
+  List<Message> messages;
+  final StreamController<Null> _onNeedData;
+  bool _alreadyFetchedData;
 
-  ChatRoomWidget(this.messages);
+  ChatRoomWidget({@required this.messages: const []})
+      : _alreadyFetchedData = false,
+        _onNeedData = new StreamController();
+
+  Stream<Null> get onNeedData => _onNeedData.stream;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +24,10 @@ class ChatRoomWidget extends StatelessWidget {
         itemCount: messages.length,
         itemBuilder: (BuildContext context, int index) {
           Message message = messages[index];
+          if (!_alreadyFetchedData && (index * 100) / messages.length > 80) {
+            _onNeedData.add(null);
+            _alreadyFetchedData = true;
+          }
           return new ChatMessageWidget(
             leading: new Image.network(message.fromUser.avatarUrlSmall),
             body: new Text(message.text, softWrap: true),

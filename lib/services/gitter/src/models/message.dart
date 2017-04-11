@@ -44,4 +44,7 @@ class Message {
                 .toList()
             : [],
         v = json['v'];
+
+  @override
+  String toString() => "$id ${fromUser.displayName}";
 }

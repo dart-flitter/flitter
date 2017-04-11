@@ -66,17 +66,27 @@ class RoomApi {
   final String _baseUrl;
   GitterToken token;
 
-  RoomApi(String baseUrl, this.token) : _baseUrl = "$baseUrl/rooms";
+  List<Message> messages;
 
-  Future<List<Message>> messagesFromRoomId(String id,
-      {int skip: 0, int limit: 50}) async {
+  StreamController<Message> _onMessage;
+
+  RoomApi(String baseUrl, this.token) : _baseUrl = "$baseUrl/rooms" {
+    messages = [];
+    _onMessage = new StreamController.broadcast();
+  }
+
+  Stream<Message> get onMessage => _onMessage.stream;
+
+  Future<Null> messagesFromRoomId(String id,
+      {int skip: 0, int limit: 50, bool clear: false}) async {
     final http.Response response = await http.get(
         "$_baseUrl/$id/chatMessages?skip=$skip&limit=$limit",
         headers: _getHeaders(token));
     final List<Map> json = JSON.decode(response.body);
-    return json
+    List<Message> m = json
         .map<Message>((Map message) => new Message.fromJson(message))
         .toList();
+    _onMessage.addStream(new Stream.fromIterable(m));
   }
 
   Future<Message> sendMessageToRoomId(String id, String message) async {
@@ -86,7 +96,9 @@ class RoomApi {
       body: JSON.encode(json),
       headers: _getHeaders(token),
     );
-    return new Message.fromJson(JSON.decode(response.body));
+    final Message m = new Message.fromJson(JSON.decode(response.body));
+    messages.add(m);
+    return m;
   }
 }
 

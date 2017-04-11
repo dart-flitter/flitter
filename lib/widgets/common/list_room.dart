@@ -37,7 +37,8 @@ class ListRoomWidget extends StatelessWidget {
           ? new Chip(label: new Text("${room.unreadItems}"))
           : null,
       onTap: () {
-        materialNavigateTo(context, new RoomView(room: room),
+        materialNavigateTo(
+            context, new RoomView(appState: App.of(context), room: room),
             path: RoomView.path);
       },
     );
