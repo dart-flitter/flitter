@@ -33,10 +33,10 @@ class _RoomViewState extends State<RoomView> {
     _counter = 0;
     messages = [];
     _m = [];
-    _messageSubscription = config.appState.api.room.onMessage.listen(_onMessage);
+    _messageSubscription =
+        config.appState.api.room.onMessage.listen(_onMessage);
     config.appState.api.room.messagesFromRoomId(config.room.id, skip: _skip);
   }
-
 
   @override
   void dispose() {

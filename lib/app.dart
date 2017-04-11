@@ -66,7 +66,7 @@ class AppState extends State<App> {
     });
   }
 
-  Widget getRoomsAndBuidlHome(BuildContext context) {
+  Widget getRoomsAndBuildHome(BuildContext context) {
     return new FutureBuilder<List<Room>>(
       future: config.api.user.me.rooms(),
       builder: (BuildContext context, AsyncSnapshot<List<Room>> snapshot) {
@@ -86,7 +86,7 @@ class AppState extends State<App> {
 
     Widget home;
     if (config.api != null && rooms.isEmpty) {
-      home = getRoomsAndBuidlHome(context);
+      home = getRoomsAndBuildHome(context);
     } else if (config.api != null && rooms.isNotEmpty) {
       home = new HomeView();
     } else {
