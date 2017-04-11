@@ -3,6 +3,10 @@ library flitter.common;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+export 'package:flitter/widgets/common/drawer.dart';
+export 'package:flitter/widgets/common/chat_room_widget.dart';
+export 'package:flitter/widgets/common/list_room.dart';
+
 DateTime parseLastAccessTime(String lastAccessTime) {
   RegExp regExp = new RegExp(
       r"^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})");

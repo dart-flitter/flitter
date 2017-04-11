@@ -30,7 +30,6 @@ class App extends StatefulWidget {
 
 class AppState extends State<App> {
   GitterApi get api => config.api;
-  bool isLoading;
   List<Room> rooms;
   List<Group> groups;
   User user;
@@ -42,7 +41,6 @@ class AppState extends State<App> {
     super.initState();
     rooms = [];
     groups = null;
-    isLoading = false;
   }
 
   Widget getRoomsAndBuildHome(BuildContext context) {
@@ -67,13 +65,8 @@ class AppState extends State<App> {
     });
   }
 
-  void loading(bool state) {
-    isLoading = state;
-  }
-
   void onLogin(List<Room> rooms, GitterApi api, User user) {
     setState(() {
-      isLoading = false;
       this.rooms = rooms;
       config.api = api;
       this.user = user;
@@ -97,8 +90,10 @@ class AppState extends State<App> {
       routes: {
         HomeView.path: (BuildContext context) => new HomeView(),
         PeopleView.path: (BuildContext context) => new PeopleView(),
+        GroupRoomView.path: (BuildContext context) =>
+            new GroupRoomView(appState: App.of(context), group: null),
       },
-      home: isLoading ? new Splash() : home,
+      home: home,
     );
   }
 }

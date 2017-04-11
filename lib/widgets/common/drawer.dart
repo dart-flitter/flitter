@@ -6,6 +6,7 @@ import 'package:flitter/app.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/auth.dart';
 import 'package:flitter/routes.dart';
+import 'package:flitter/common.dart';
 
 class FlitterDrawer extends StatefulWidget {
   VoidCallback onTapAllConversation;
@@ -106,10 +107,7 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
               backgroundColor: Theme.of(context).canvasColor),
           trailing: null, //TODO: unread inside roomsOf(group)
           onTap: () {
-            //TODO: Community view
-            /*materialNavigateTo(
-                context, new RoomView(appState: App.of(context), room: room),
-                path: RoomView.path);*/
+            GroupRoomView.go(context, group);
           });
     }).toList();
   }

@@ -17,7 +17,6 @@ class _LoginViewState extends State<LoginView> {
   Future<Null> _onTapLoginButton(BuildContext context) async {
     AppState appState = App.of(context);
 
-    appState.loading(true);
     final GitterToken token = await auth();
     final GitterApi _api = new GitterApi(token);
     final List<Room> _rooms = await _api.user.me.rooms();

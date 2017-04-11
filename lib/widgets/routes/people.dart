@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
 import 'package:flitter/common.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/widgets/common/drawer.dart';
-import 'package:flitter/widgets/common/list_room.dart';
 import 'package:flitter/widgets/routes/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;

@@ -9,6 +9,9 @@ import 'package:flitter/auth.dart';
 
 Future main() async {
   GitterApi api;
+
+  runApp(new Splash());
+
   if (await isAuth()) {
     final GitterToken token = await getSavedToken();
     api = new GitterApi(token);
