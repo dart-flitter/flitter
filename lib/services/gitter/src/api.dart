@@ -36,6 +36,7 @@ class MeApi {
     final List<Map> json = JSON.decode(response.body);
     List<Room> rooms = json.map((map) => new Room.fromJson(map)).toList();
     // TODO: better sort
+    // fixme: should we do that here ?
     rooms
       ..removeWhere((Room room) => room.lastAccessTime == null)
       ..sort((Room prev, Room next) => parseLastAccessTime(next.lastAccessTime)
@@ -108,15 +109,38 @@ class GitterApi {
   GitterToken _token;
   UserApi user;
   RoomApi room;
+  GroupApi group;
 
   GitterApi(this._token) {
     user = new UserApi(_baseUrl, _token);
     room = new RoomApi(_baseUrl, _token);
+    group = new GroupApi(_baseUrl, _token);
   }
 
   void set token(GitterToken value) {
     _token = value;
     user.token = value;
     room.token = value;
+  }
+}
+
+class GroupApi {
+  final String _baseUrl;
+  GitterToken token;
+
+  GroupApi(String baseUrl, this.token) : _baseUrl = "$baseUrl/groups";
+
+  Future<List<Group>> get() async {
+    final http.Response response =
+        await http.get("$_baseUrl/", headers: _getHeaders(token));
+    final List<Map> json = JSON.decode(response.body);
+    return json.map((map) => new Group.fromJson(map)).toList();
+  }
+
+  Future<List<Room>> roomsOf(String groupId) async {
+    final http.Response response =
+        await http.get("$_baseUrl/$groupId/rooms", headers: _getHeaders(token));
+    final List<Map> json = JSON.decode(response.body);
+    return json.map((map) => new Room.fromJson(map)).toList();
   }
 }

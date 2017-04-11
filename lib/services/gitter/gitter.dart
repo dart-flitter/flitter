@@ -11,3 +11,4 @@ export 'src/models/room.dart';
 export 'src/models/token.dart';
 export 'src/models/token_informations.dart';
 export 'src/models/user.dart';
+export 'src/models/group.dart';
