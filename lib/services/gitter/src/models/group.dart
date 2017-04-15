@@ -1,30 +1,43 @@
 library gitter.group;
 
-class Group {
-  final String id;
-  final String name;
-  final String uri;
-  final SecurityDescriptor backedBy;
-  final String avatarUrl;
+import 'package:jaguar_serializer/serializer.dart';
 
-  Group.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'],
-        uri = json['uri'],
-        backedBy = json.containsKey('backedBy')
-            ? new SecurityDescriptor.fromJson(json['backedBy'])
-            : null,
-        avatarUrl = json['avatarUrl'];
+part 'group.g.dart';
+
+@GenSerializer()
+@ProvideSerializer(SecurityDescriptor, SecurityDescriptorSerializer)
+class GroupSerializer extends Serializer<Group> with _$GroupSerializer {
+  Group createModel() => new Group();
+}
+
+@GenSerializer()
+class SecurityDescriptorSerializer extends Serializer<SecurityDescriptor>
+    with _$SecurityDescriptorSerializer {
+  SecurityDescriptor createModel() => new SecurityDescriptor();
+}
+
+class Group {
+  String id;
+  String name;
+  String uri;
+  SecurityDescriptor backedBy;
+  String avatarUrl;
+
+  Group();
+
+  factory Group.fromJson(Map<String, dynamic> json) =>
+      new GroupSerializer().fromMap(json);
 
   @override
   String toString() => "$id $name";
 }
 
 class SecurityDescriptor {
-  final String type;
-  final String linkPath;
+  String type;
+  String linkPath;
 
-  SecurityDescriptor.fromJson(Map<String, dynamic> json)
-      : type = json['type'],
-        linkPath = json['linkPath'];
+  SecurityDescriptor();
+
+  factory SecurityDescriptor.fromJson(Map<String, dynamic> json) =>
+      new SecurityDescriptorSerializer().fromMap(json);
 }

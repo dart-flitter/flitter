@@ -48,17 +48,17 @@ class ListRoomWidget extends StatelessWidget {
 }
 
 Widget roomTile(BuildContext context, Room room) => new ListTile(
-    dense: false,
-    title: new Text(room.name),
-    leading: new CircleAvatar(
-        backgroundImage: new NetworkImage(room.avatarUrl),
-        backgroundColor: Theme.of(context).canvasColor),
-    trailing: room.unreadItems > 0
-        ? new Chip(label: new Text("${room.unreadItems}"))
-        : null,
-    onTap: () {
-      materialNavigateTo(
-          context, new RoomView(appState: App.of(context), room: room),
-          path: RoomView.path);
-    },
-);
+      dense: false,
+      title: new Text(room.name),
+      leading: new CircleAvatar(
+          backgroundImage: new NetworkImage(room.avatarUrl),
+          backgroundColor: Theme.of(context).canvasColor),
+      trailing: room.unreadItems > 0
+          ? new Chip(label: new Text("${room.unreadItems}"))
+          : null,
+      onTap: () {
+        materialNavigateTo(
+            context, new RoomView(appState: App.of(context), room: room),
+            path: RoomView.path);
+      },
+    );

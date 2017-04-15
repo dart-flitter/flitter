@@ -1,0 +1,2 @@
+serializers:
+  - lib/services/gitter/src/models/group.dart
