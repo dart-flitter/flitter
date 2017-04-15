@@ -32,9 +32,6 @@ abstract class _$GroupSerializer implements Serializer<Group> {
       if (model.avatarUrl != null) {
         ret["avatarUrl"] = model.avatarUrl;
       }
-      if (model.id != null) {
-        ret["id"] = model.id;
-      }
       if (modelString() != null && withType) {
         ret[typeKey ?? defaultTypeInfoKey] = modelString();
       }

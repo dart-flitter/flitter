@@ -1,28 +1,31 @@
 library gitter.user;
 
-class User {
-  final String id;
-  final String username;
-  final String displayName;
-  final String url;
-  final String avatarUrlSmall;
-  final String avatarUrlMedium;
-  final bool staff;
-  final List<String> providers;
-  final num v;
-  final String gv;
+import 'package:jaguar_serializer/serializer.dart';
 
-  User.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        username = json['username'],
-        displayName = json['displayName'],
-        url = json['url'],
-        avatarUrlMedium = json['avatarUrlMedium'],
-        avatarUrlSmall = json['avatarUrlSmall'],
-        staff = json['staff'],
-        providers = json['providers'],
-        v = json['v'],
-        gv = json['gv'];
+part 'user.g.dart';
+
+@GenSerializer(typeInfo: false)
+class UserSerialalizer extends Serializer<User> with _$UserSerialalizer {
+  @override
+  User createModel() => new User();
+}
+
+class User {
+  String id;
+  String username;
+  String displayName;
+  String url;
+  String avatarUrlSmall;
+  String avatarUrlMedium;
+  bool staff;
+  List<String> providers;
+  num v;
+  String gv;
+
+  User();
+
+  factory User.fromJson(Map<String, dynamic> json) =>
+      new UserSerialalizer().fromMap(json);
 
   @override
   String toString() => "$id $username";

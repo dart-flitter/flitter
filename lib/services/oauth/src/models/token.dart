@@ -4,7 +4,7 @@ abstract class Token {
   String access;
   String type;
 
-  Token.fromJson(Map<String, String> json)
+/*  Token.fromJson(Map<String, String> json)
       : access = json['access_token'],
-        type = json['token_type'];
+        type = json['token_type'];*/
 }

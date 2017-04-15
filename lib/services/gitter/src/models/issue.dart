@@ -1,7 +1,20 @@
 library gitter.issue;
 
-class Issue {
-  final String number;
+import 'package:jaguar_serializer/serializer.dart';
 
-  Issue.fromJson(Map<String, String> json) : number = json['number'];
+part 'issue.g.dart';
+
+@GenSerializer(typeInfo: false)
+class IssueSerializer extends Serializer<Issue> with _$IssueSerializer {
+  @override
+  Issue createModel() => new Issue();
+}
+
+class Issue {
+  String number;
+
+  Issue();
+
+  factory Issue.fromJson(Map<String, String> json) =>
+      new IssueSerializer().fromMap(json);
 }

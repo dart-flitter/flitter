@@ -1,43 +1,37 @@
 library gitter.room;
 
 import 'package:flitter/services/gitter/src/models/user.dart';
+import 'package:jaguar_serializer/serializer.dart';
+
+part 'room.g.dart';
+
+@GenSerializer(typeInfo: false)
+@ProvideSerializer(User, UserSerialalizer)
+class RoomSerialalizer extends Serializer<Room> with _$RoomSerialalizer {
+  @override
+  Room createModel() => new Room();
+}
 
 class Room {
-  final String id;
-  final String name;
-  final String topic;
-  final String uri;
-  final bool oneToOne;
-  final num userCount;
-  final User user;
-  final num unreadItems;
-  final num mentions;
-  final String lastAccessTime;
-  final bool lurk;
-  final String url;
-  final String githubType;
-  final List<String> tags;
-  final num v;
-  final String avatarUrl;
+  String id;
+  String name;
+  String topic;
+  String uri;
+  bool oneToOne;
+  num userCount;
+  User user;
+  num unreadItems;
+  num mentions;
+  String lastAccessTime;
+  bool lurk;
+  String url;
+  String githubType;
+  List<String> tags;
+  num v;
+  String avatarUrl;
 
-  Room.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'],
-        topic = json['topic'],
-        uri = json['uri'],
-        oneToOne = json['oneToOne'],
-        userCount = json['userCount'],
-        user =
-            json.containsKey('user') ? new User.fromJson(json['user']) : null,
-        unreadItems = json['unreadItems'],
-        mentions = json['mentions'],
-        lastAccessTime = json['lastAccessTime'],
-        lurk = json['lurk'],
-        url = json['url'],
-        githubType = json['githubType'],
-        tags = json.containsKey('tags') ? json['tags'] : [],
-        avatarUrl = json['avatarUrl'],
-        v = json['v'];
+  factory Room.fromJson(Map<String, dynamic> json) =>
+      new RoomSerialalizer().fromMap(json);
 
   @override
   String toString() => "$id $name $lastAccessTime";
