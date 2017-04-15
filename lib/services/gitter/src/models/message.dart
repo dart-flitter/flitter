@@ -26,7 +26,7 @@ class Message {
   User fromUser;
   bool unread;
   int readBy;
-  List<String> urls;
+  List<Map<String, String>> urls;
   List<Mention> mentions;
   List<Issue> issues;
 //  not used right now

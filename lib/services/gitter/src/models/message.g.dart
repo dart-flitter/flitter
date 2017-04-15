@@ -44,8 +44,13 @@ abstract class _$MessageSerializer implements Serializer<Message> {
         ret["readBy"] = model.readBy;
       }
       if (model.urls != null) {
-        ret["urls"] =
-            model.urls?.map((String val) => val != null ? val : null)?.toList();
+        ret["urls"] = model.urls
+            ?.map((Map<String, String> val) => val != null
+                ? new MapMaker(val, (String key) => key, (String value) {
+                    return value;
+                  }).model
+                : null)
+            ?.toList();
       }
       if (model.mentions != null) {
         ret["mentions"] = model.mentions
@@ -86,7 +91,12 @@ abstract class _$MessageSerializer implements Serializer<Message> {
         fromUserSerialalizer.fromMap(map["fromUser"], typeKey: typeKey);
     model.unread = map["unread"];
     model.readBy = map["readBy"];
-    model.urls = map["urls"]?.map((String val) => val)?.toList();
+    model.urls = map["urls"]
+        ?.map((Map<String, String> val) =>
+            new MapMaker(val, (String key) => key, (String value) {
+              return value;
+            }).model as dynamic)
+        ?.toList();
     model.mentions = map["mentions"]
         ?.map((Map val) => fromMentionSerializer.fromMap(val, typeKey: typeKey))
         ?.toList();
