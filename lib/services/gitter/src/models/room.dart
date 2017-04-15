@@ -13,6 +13,7 @@ class RoomSerialalizer extends Serializer<Room> with _$RoomSerialalizer {
 }
 
 class Room {
+  static final serializer = new RoomSerialalizer();
   String id;
   String name;
   String topic;
@@ -30,9 +31,10 @@ class Room {
   num v;
   String avatarUrl;
 
-  factory Room.fromJson(Map<String, dynamic> json) =>
-      new RoomSerialalizer().fromMap(json);
+  Room();
+
+  factory Room.fromJson(Map<String, dynamic> json) => serializer.fromMap(json);
 
   @override
-  String toString() => "$id $name $lastAccessTime";
+  String toString() => serializer.toMap(this).toString();
 }

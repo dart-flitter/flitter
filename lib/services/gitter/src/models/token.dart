@@ -15,6 +15,8 @@ class GitterTokenSerialalizer extends Serializer<GitterToken>
 }
 
 class GitterToken implements Token {
+  static final serializer = new GitterTokenSerialalizer();
+
   @override
   String access;
 
@@ -24,7 +26,10 @@ class GitterToken implements Token {
   GitterToken();
 
   factory GitterToken.fromJson(Map<String, String> json) =>
-      new GitterTokenSerialalizer().fromMap(json);
+      serializer.fromMap(json);
 
-  Map<String, String> toMap() => new GitterTokenSerialalizer().toMap(this);
+  Map<String, String> toMap() => serializer.toMap(this);
+
+  @override
+  String toString() => toMap().toString();
 }

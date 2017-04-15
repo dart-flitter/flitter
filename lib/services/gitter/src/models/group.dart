@@ -17,6 +17,7 @@ class SecurityDescriptorSerializer extends Serializer<SecurityDescriptor>
 }
 
 class Group {
+  static final serializer = new GroupSerializer();
   String id;
   String name;
   String uri;
@@ -25,19 +26,22 @@ class Group {
 
   Group();
 
-  factory Group.fromJson(Map<String, dynamic> json) =>
-      new GroupSerializer().fromMap(json);
+  factory Group.fromJson(Map<String, dynamic> json) => serializer.fromMap(json);
 
   @override
-  String toString() => "$id $name";
+  String toString() => serializer.toMap(this).toString();
 }
 
 class SecurityDescriptor {
+  static final serializer = new SecurityDescriptorSerializer();
   String type;
   String linkPath;
 
   SecurityDescriptor();
 
   factory SecurityDescriptor.fromJson(Map<String, dynamic> json) =>
-      new SecurityDescriptorSerializer().fromMap(json);
+      serializer.fromMap(json);
+
+  @override
+  String toString() => serializer.toMap(this).toString();
 }

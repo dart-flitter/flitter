@@ -11,10 +11,13 @@ class IssueSerializer extends Serializer<Issue> with _$IssueSerializer {
 }
 
 class Issue {
+  static final serializer = new IssueSerializer();
   String number;
 
   Issue();
 
-  factory Issue.fromJson(Map<String, String> json) =>
-      new IssueSerializer().fromMap(json);
+  factory Issue.fromJson(Map<String, String> json) => serializer.fromMap(json);
+
+  @override
+  String toString() => serializer.toMap(this).toString();
 }

@@ -11,11 +11,15 @@ class MentionSerializer extends Serializer<Mention> with _$MentionSerializer {
 }
 
 class Mention {
+  static final serializer = new MentionSerializer();
   String screenName;
   String userId;
 
   Mention();
 
   factory Mention.fromJson(Map<String, String> json) =>
-      new MentionSerializer().fromMap(json);
+      serializer.fromMap(json);
+
+  @override
+  String toString() => serializer.toMap(this).toString();
 }

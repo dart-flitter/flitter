@@ -17,6 +17,7 @@ class MessageSerializer extends Serializer<Message> with _$MessageSerializer {
 }
 
 class Message {
+  static final serializer = new MessageSerializer();
   String id;
   String text;
   String html;
@@ -36,8 +37,8 @@ class Message {
   Message();
 
   factory Message.fromJson(Map<String, dynamic> json) =>
-      new MessageSerializer().fromMap(json);
+      serializer.fromMap(json);
 
   @override
-  String toString() => "$id ${fromUser.displayName}";
+  String toString() => serializer.toMap(this).toString();
 }
