@@ -53,7 +53,7 @@ Widget roomTile(BuildContext context, Room room) => new ListTile(
       leading: new CircleAvatar(
           backgroundImage: new NetworkImage(room.avatarUrl),
           backgroundColor: Theme.of(context).canvasColor),
-      trailing: room.unreadItems > 0
+      trailing: room?.unreadItems != null && room.unreadItems > 0
           ? new Chip(label: new Text("${room.unreadItems}"))
           : null,
       onTap: () {

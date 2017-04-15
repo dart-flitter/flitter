@@ -143,4 +143,11 @@ class GroupApi {
     final List<Map> json = JSON.decode(response.body);
     return json.map((map) => new Room.fromJson(map)).toList();
   }
+
+  Future<List<Room>> suggestedRoomsOf(String groupId) async {
+    final http.Response response =
+    await http.get("$_baseUrl/$groupId/suggestedRooms", headers: _getHeaders(token));
+    final List<Map> json = JSON.decode(response.body);
+    return json.map((map) => new Room.fromJson(map)).toList();
+  }
 }

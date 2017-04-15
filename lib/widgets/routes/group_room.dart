@@ -34,7 +34,7 @@ class _GroupRoomViewState extends State<GroupRoomView> {
   }
 
   Future<Null> fetchData(BuildContext context) async {
-    final rooms = await App.of(context).api.group.roomsOf(config.group.id);
+    final rooms = await App.of(context).api.group.suggestedRoomsOf(config.group.id);
     setState(() {
       _rooms = rooms;
     });
