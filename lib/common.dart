@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 export 'package:flitter/widgets/common/drawer.dart';
 export 'package:flitter/widgets/common/chat_room_widget.dart';
 export 'package:flitter/widgets/common/list_room.dart';
+export 'package:flitter/widgets/common/search.dart';
 
 DateTime parseLastAccessTime(String lastAccessTime) {
   RegExp regExp = new RegExp(

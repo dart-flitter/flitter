@@ -31,8 +31,8 @@ class _RoomViewState extends State<RoomView> {
     super.initState();
     _skip = 0;
     _counter = 0;
-    messages = [];
     _m = [];
+    messages = [];
     _messageSubscription =
         config.appState.api.room.onMessage.listen(_onMessage);
     config.appState.api.room.messagesFromRoomId(config.room.id, skip: _skip);
@@ -71,30 +71,18 @@ class _RoomViewState extends State<RoomView> {
 
   @override
   Widget build(BuildContext context) {
-    if (config.room == null) {
-      return new Scaffold(
-        body: new Center(
-          child: new CircularProgressIndicator(),
-        ),
-      );
-    }
-    Widget body;
-    if (messages.isEmpty) {
-      body = new Center(child: new CircularProgressIndicator());
-    } else {
-      final ChatRoomWidget chatRoom =
-          new ChatRoomWidget(messages: messages.reversed.toList());
-      chatRoom.onNeedData.listen((_) => fetchData(context));
-      body = chatRoom;
-    }
+    final ChatRoomWidget chatRoom =
+        new ChatRoomWidget(messages: messages.reversed.toList());
+    chatRoom.onNeedData.listen((_) => fetchData(context));
+    Widget body = chatRoom;
     return new Scaffold(
-      appBar: new AppBar(title: new Text(config.room.name)),
-      body: body,
-      bottomNavigationBar: _userHasJoined() ? _buildChatInput() : null
-    );
+        appBar: new AppBar(title: new Text(config.room.name)),
+        body: body,
+        bottomNavigationBar: _userHasJoined() ? _buildChatInput() : null);
   }
 
-  bool _userHasJoined() =>  App.of(context).rooms.any((Room room) => room.id == config.room.id);
+  bool _userHasJoined() =>
+      App.of(context).rooms.any((Room room) => room.id == config.room.id);
 
   Widget _buildChatInput() => new ChatInput(
         onSubmit: (String value) async {
@@ -107,5 +95,5 @@ class _RoomViewState extends State<RoomView> {
             messages.add(message);
           });
         },
-    );
+      );
 }

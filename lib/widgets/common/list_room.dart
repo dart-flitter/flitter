@@ -56,16 +56,16 @@ Widget roomTile(BuildContext context, Room room) => new ListTile(
     );
 
 Widget userTile(BuildContext context, User user) => new ListTile(
-    dense: false,
-    title: new Text(user.username),
-    leading: new CircleAvatar(
-        backgroundImage: new NetworkImage(user.avatarUrlSmall),
-        backgroundColor: Theme.of(context).canvasColor),
-    onTap: () {
-      App.of(context).api.room.roomFromUri(user.url).then((Room room) {
-        materialNavigateTo(
-            context, new RoomView(appState: App.of(context), room: room),
-            path: RoomView.path);
-      });
-    },
-);
+      dense: false,
+      title: new Text(user.username),
+      leading: new CircleAvatar(
+          backgroundImage: new NetworkImage(user.avatarUrlSmall),
+          backgroundColor: Theme.of(context).canvasColor),
+      onTap: () {
+        App.of(context).api.room.roomFromUri(user.url).then((Room room) {
+          materialNavigateTo(
+              context, new RoomView(appState: App.of(context), room: room),
+              path: RoomView.path);
+        });
+      },
+    );

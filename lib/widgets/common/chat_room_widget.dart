@@ -29,7 +29,9 @@ class ChatRoomWidget extends StatelessWidget {
             _alreadyFetchedData = true;
           }
           return new ChatMessageWidget(
-            leading: new CircleAvatar(backgroundImage: new NetworkImage(message.fromUser.avatarUrlSmall)),
+            leading: new CircleAvatar(
+                backgroundImage:
+                    new NetworkImage(message.fromUser.avatarUrlSmall)),
             body: new Text(message.text, softWrap: true),
             title:
                 "${message.fromUser.displayName} - @${message.fromUser.username}",
