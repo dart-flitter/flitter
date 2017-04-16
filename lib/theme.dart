@@ -1,3 +1,5 @@
+library flitter.theme;
+
 import 'package:flutter/material.dart';
 
 ThemeData kTheme = new ThemeData(

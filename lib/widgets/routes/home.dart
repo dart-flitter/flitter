@@ -1,3 +1,5 @@
+library flitter.routes.home;
+
 import 'dart:async';
 
 import 'package:flitter/common.dart';

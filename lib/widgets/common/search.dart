@@ -1,4 +1,4 @@
-library gitter.common.search;
+library flitter.common.search;
 
 import 'package:flutter/material.dart';
 import 'package:flitter/common.dart';

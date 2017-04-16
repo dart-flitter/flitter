@@ -1,3 +1,5 @@
+library flitter.common.list_room;
+
 import 'package:meta/meta.dart';
 import 'package:flitter/common.dart';
 import 'package:flitter/services/gitter/gitter.dart';

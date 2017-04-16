@@ -1,3 +1,5 @@
+library flitter.common.drawer;
+
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/painting.dart';
@@ -6,7 +8,6 @@ import 'package:flitter/app.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/auth.dart';
 import 'package:flitter/routes.dart';
-import 'package:flitter/common.dart';
 
 class FlitterDrawer extends StatefulWidget {
   VoidCallback onTapAllConversation;

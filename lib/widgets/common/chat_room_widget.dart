@@ -1,3 +1,5 @@
+library flitter.common.chat_room_widget;
+
 import 'dart:async';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flutter/material.dart';

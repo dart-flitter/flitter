@@ -1,6 +1,5 @@
 library gitter.user;
 
-import 'package:flitter/services/gitter/gitter.dart';
 import 'package:jaguar_serializer/serializer.dart';
 
 part 'user.g.dart';

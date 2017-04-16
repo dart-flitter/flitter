@@ -1,3 +1,5 @@
+library flitter.routes.group_room;
+
 import 'dart:async';
 
 import 'package:meta/meta.dart';
