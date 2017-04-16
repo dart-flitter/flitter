@@ -111,7 +111,7 @@ class ChatMessageWidget extends StatelessWidget {
           child: new Row(
               children: children, crossAxisAlignment: CrossAxisAlignment.start),
           padding: new EdgeInsets.only(bottom: 8.0, top: 8.0, right: 12.0)),
-      new Divider(height: 1.0)
+      new Divider(height: 1.0, color: Colors.grey[200])
     ]);
   }
 }
