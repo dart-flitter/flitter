@@ -1,10 +1,13 @@
-import 'dart:async';
+library flitter.routes.room;
 
+import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/widgets/common/chat_room_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/app.dart';
+
+enum RoomMenuAction { leave }
 
 class RoomView extends StatefulWidget {
   static const path = "/room";
@@ -76,19 +79,49 @@ class _RoomViewState extends State<RoomView> {
     chatRoom.onNeedData.listen((_) => fetchData(context));
     Widget body = chatRoom;
     return new Scaffold(
-        appBar: new AppBar(title: new Text(config.room.name)),
+        appBar: new AppBar(
+            title: new Text(config.room.name), actions: [_buildMenu()]),
         body: body,
         floatingActionButton: _userHasJoined ? null : _joinRoomButton(),
         bottomNavigationBar: _userHasJoined ? _buildChatInput() : null);
   }
 
+  Widget _buildMenu() => new PopupMenuButton(
+      itemBuilder: (BuildContext context) => <PopupMenuItem<RoomMenuAction>>[
+            new PopupMenuItem<RoomMenuAction>(
+                value: RoomMenuAction.leave,
+                child: const Text('Leave room')) //todo: intl
+          ],
+      onSelected: (RoomMenuAction action) {
+        switch (action) {
+          case RoomMenuAction.leave:
+            _onLeaveRoom();
+            break;
+        }
+      });
+
+  _onLeaveRoom() {
+    AppState state = App.of(context);
+    state.api.room.removeUserFrom(config.room.id, state.user.id).then((success) {
+      if (success == true) {
+          state.rooms.removeWhere((Room room) => room.id == config.room.id);
+          Navigator.of(context).pop();
+      } else {
+        // Todo: show error
+      }
+    });
+  }
+
   Widget _joinRoomButton() {
-    return new FloatingActionButton(child: new Icon(Icons.message), onPressed: _onTapJoinRoom);
+    return new FloatingActionButton(
+        child: new Icon(Icons.message), onPressed: _onTapJoinRoom);
   }
 
   void _onTapJoinRoom() {
     AppState state = App.of(context);
-    state.api.user.userJoinRoom(state.user.id, config.room.id).then((Room room) {
+    state.api.user
+        .userJoinRoom(state.user.id, config.room.id)
+        .then((Room room) {
       setState(() {
         state.rooms.add(room);
       });

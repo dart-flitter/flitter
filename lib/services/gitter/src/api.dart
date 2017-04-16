@@ -81,8 +81,7 @@ class UserApi {
   Future<Room> userJoinRoom(String userId, String roomId) async {
     final data = {"id": roomId};
     final http.Response response = await http.post("$_baseUrl/$userId/rooms",
-        body: JSON.encode(data),
-        headers: _getHeaders(_token));
+        body: JSON.encode(data), headers: _getHeaders(_token));
     final json = _getResponseBody(response);
     return new Room.fromJson(json);
   }
@@ -146,6 +145,15 @@ class RoomApi {
     );
     final room = new Room.fromJson(_getResponseBody(response));
     return room;
+  }
+
+  Future<bool> removeUserFrom(String roomId, String userId) async {
+    final http.Response response = await http.delete(
+      "$_baseUrl/$roomId/users/$userId",
+      headers: _getHeaders(token),
+    );
+    final json = _getResponseBody(response);
+    return json['success'];
   }
 }
 
