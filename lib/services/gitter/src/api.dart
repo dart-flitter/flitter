@@ -77,6 +77,15 @@ class UserApi {
     final List<Map> json = _getResponseBody(response);
     return json.map((map) => new Room.fromJson(map)).toList();
   }
+
+  Future<Room> userJoinRoom(String userId, String roomId) async {
+    final data = {"id": roomId};
+    final http.Response response = await http.post("$_baseUrl/$userId/rooms",
+        body: JSON.encode(data),
+        headers: _getHeaders(_token));
+    final json = _getResponseBody(response);
+    return new Room.fromJson(json);
+  }
 }
 
 class RoomApi {

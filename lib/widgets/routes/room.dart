@@ -78,10 +78,24 @@ class _RoomViewState extends State<RoomView> {
     return new Scaffold(
         appBar: new AppBar(title: new Text(config.room.name)),
         body: body,
-        bottomNavigationBar: _userHasJoined() ? _buildChatInput() : null);
+        floatingActionButton: _userHasJoined ? null : _joinRoomButton(),
+        bottomNavigationBar: _userHasJoined ? _buildChatInput() : null);
   }
 
-  bool _userHasJoined() =>
+  Widget _joinRoomButton() {
+    return new FloatingActionButton(child: new Icon(Icons.message), onPressed: _onTapJoinRoom);
+  }
+
+  void _onTapJoinRoom() {
+    AppState state = App.of(context);
+    state.api.user.userJoinRoom(state.user.id, config.room.id).then((Room room) {
+      setState(() {
+        state.rooms.add(room);
+      });
+    });
+  }
+
+  bool get _userHasJoined =>
       App.of(context).rooms.any((Room room) => room.id == config.room.id);
 
   Widget _buildChatInput() => new ChatInput(
