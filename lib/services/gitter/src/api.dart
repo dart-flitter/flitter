@@ -27,13 +27,13 @@ class MeApi {
   Future<User> get() async {
     final http.Response response =
         await http.get("$_baseUrl/", headers: _getHeaders(token));
-    return new User.fromJson(JSON.decode(response.body));
+    return new User.fromJson(_getResponseBody(response));
   }
 
   Future<List<Room>> rooms() async {
     final http.Response response =
         await http.get("$_baseUrl/rooms", headers: _getHeaders(token));
-    final List<Map> json = JSON.decode(response.body);
+    final List<Map> json = _getResponseBody(response);
     List<Room> rooms = json.map((map) => new Room.fromJson(map)).toList();
     // TODO: better sort
     // fixme: should we do that here ?
@@ -61,6 +61,22 @@ class UserApi {
     _token = value;
     me.token = value;
   }
+
+  Future<List<User>> search(String query,
+      {int limit: 15, String type: "gitter"}) async {
+    final http.Response response = await http.get(
+        "$_baseUrl?q=$query&limit=$limit&type=$type",
+        headers: _getHeaders(_token));
+    final List<Map> json = _getResponseBody(response)["results"];
+    return json.map((map) => new User.fromJson(map)).toList();
+  }
+
+  Future<List<Room>> channelsOf(String userId) async {
+    final http.Response response = await http.get("$_baseUrl/$userId/channels",
+        headers: _getHeaders(_token));
+    final List<Map> json = _getResponseBody(response);
+    return json.map((map) => new Room.fromJson(map)).toList();
+  }
 }
 
 class RoomApi {
@@ -78,12 +94,21 @@ class RoomApi {
 
   Stream<Message> get onMessage => _onMessage.stream;
 
+  Future<List<Room>> search(String query,
+      {int limit: 15, String type: "gitter"}) async {
+    final http.Response response = await http.get(
+        "$_baseUrl?q=$query&limit=$limit&type=$type",
+        headers: _getHeaders(token));
+    final List<Map> json = _getResponseBody(response)["results"];
+    return json.map((map) => new Room.fromJson(map)).toList();
+  }
+
   Future<Null> messagesFromRoomId(String id,
       {int skip: 0, int limit: 50, bool clear: false}) async {
     final http.Response response = await http.get(
         "$_baseUrl/$id/chatMessages?skip=$skip&limit=$limit",
         headers: _getHeaders(token));
-    final List<Map> json = JSON.decode(response.body);
+    final List<Map> json = _getResponseBody(response);
     List<Message> m = json
         .map<Message>((Map message) => new Message.fromJson(message))
         .toList();
@@ -97,9 +122,21 @@ class RoomApi {
       body: JSON.encode(json),
       headers: _getHeaders(token),
     );
-    final Message m = new Message.fromJson(JSON.decode(response.body));
+    final Message m = new Message.fromJson(_getResponseBody(response));
     messages.add(m);
     return m;
+  }
+
+  Future<Room> roomFromUri(String uri) async {
+    uri = Uri.parse(uri).pathSegments.first;
+    final Map<String, String> json = {"uri": uri};
+    final http.Response response = await http.post(
+      "$_baseUrl",
+      body: JSON.encode(json),
+      headers: _getHeaders(token),
+    );
+    final room = new Room.fromJson(_getResponseBody(response));
+    return room;
   }
 }
 
@@ -133,21 +170,54 @@ class GroupApi {
   Future<List<Group>> get() async {
     final http.Response response =
         await http.get("$_baseUrl/", headers: _getHeaders(token));
-    final List<Map> json = JSON.decode(response.body);
+    final List<Map> json = _getResponseBody(response);
     return json.map((map) => new Group.fromJson(map)).toList();
   }
 
   Future<List<Room>> roomsOf(String groupId) async {
     final http.Response response =
         await http.get("$_baseUrl/$groupId/rooms", headers: _getHeaders(token));
-    final List<Map> json = JSON.decode(response.body);
+    final List<Map> json = _getResponseBody(response);
     return json.map((map) => new Room.fromJson(map)).toList();
   }
 
   Future<List<Room>> suggestedRoomsOf(String groupId) async {
-    final http.Response response =
-    await http.get("$_baseUrl/$groupId/suggestedRooms", headers: _getHeaders(token));
-    final List<Map> json = JSON.decode(response.body);
+    final http.Response response = await http
+        .get("$_baseUrl/$groupId/suggestedRooms", headers: _getHeaders(token));
+    final List<Map> json = _getResponseBody(response);
     return json.map((map) => new Room.fromJson(map)).toList();
   }
+}
+
+dynamic _getResponseBody(http.Response response) {
+  final body = JSON.decode(response.body);
+  if (response != null &&
+      response.statusCode >= 200 &&
+      response.statusCode < 300) {
+    if (body is Map && body.containsKey("error")) {
+      if (body['error'] == "Not Found") {
+        throw new GitterNotFoundException(body: body, response: response);
+      }
+      throw new GitterErrorException(body: body, response: response);
+    }
+    return body;
+  }
+  throw new GitterHttpStatusException(body: body, response: response);
+}
+
+class GitterErrorException implements Exception {
+  final http.Response response;
+  final dynamic body;
+  GitterErrorException({this.body, this.response});
+}
+
+class GitterHttpStatusException extends GitterErrorException {
+  int get status => response?.statusCode;
+  GitterHttpStatusException({body, http.Response response})
+      : super(body: body, response: response);
+}
+
+class GitterNotFoundException extends GitterErrorException {
+  GitterNotFoundException({body, http.Response response})
+      : super(body: body, response: response);
 }

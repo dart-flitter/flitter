@@ -21,8 +21,8 @@ class Room {
   bool oneToOne;
   num userCount;
   User user;
-  num unreadItems;
-  num mentions;
+  num unreadItems = 0;
+  num mentions = 0;
   String lastAccessTime;
   bool lurk;
   String url;

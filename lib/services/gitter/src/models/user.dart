@@ -1,5 +1,6 @@
 library gitter.user;
 
+import 'package:flitter/services/gitter/gitter.dart';
 import 'package:jaguar_serializer/serializer.dart';
 
 part 'user.g.dart';
@@ -11,6 +12,7 @@ class UserSerialalizer extends Serializer<User> with _$UserSerialalizer {
 }
 
 class User {
+  static final serializer = new UserSerialalizer();
   String id;
   String username;
   String displayName;
@@ -24,9 +26,8 @@ class User {
 
   User();
 
-  factory User.fromJson(Map<String, dynamic> json) =>
-      new UserSerialalizer().fromMap(json);
+  factory User.fromJson(Map<String, dynamic> json) => serializer.fromMap(json);
 
   @override
-  String toString() => "$id $username";
+  String toString() => serializer.toMap(this).toString();
 }

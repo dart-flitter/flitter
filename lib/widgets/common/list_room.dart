@@ -12,38 +12,30 @@ class ListRoomWidget extends StatelessWidget {
   final List<Room> rooms;
   final RefreshCallback onRefresh;
 
-  ListRoomWidget({@required this.rooms, @required this.onRefresh});
+  ListRoomWidget({@required this.rooms, this.onRefresh});
 
   @override
   Widget build(BuildContext context) {
-    return new RefreshIndicator(
-      child: new ListView.builder(
+    if (onRefresh == null) {
+      return new ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         key: _refreshIndicatorKey,
         itemCount: rooms.length,
         itemBuilder: _buildListTile,
-      ),
-      onRefresh: onRefresh,
-    );
+      );
+    }
+    return new RefreshIndicator(
+        child: new ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          key: _refreshIndicatorKey,
+          itemCount: rooms.length,
+          itemBuilder: _buildListTile,
+        ),
+        onRefresh: onRefresh);
   }
 
   Widget _buildListTile(BuildContext context, int index) {
-    final Room room = rooms[index];
-    return new ListTile(
-      dense: false,
-      title: new Text(room.name),
-      leading: new CircleAvatar(
-          backgroundImage: new NetworkImage(room.avatarUrl),
-          backgroundColor: Theme.of(context).canvasColor),
-      trailing: room.unreadItems > 0
-          ? new Chip(label: new Text("${room.unreadItems}"))
-          : null,
-      onTap: () {
-        materialNavigateTo(
-            context, new RoomView(appState: App.of(context), room: room),
-            path: RoomView.path);
-      },
-    );
+    return roomTile(context, rooms[index]);
   }
 }
 
@@ -62,3 +54,18 @@ Widget roomTile(BuildContext context, Room room) => new ListTile(
             path: RoomView.path);
       },
     );
+
+Widget userTile(BuildContext context, User user) => new ListTile(
+    dense: false,
+    title: new Text(user.username),
+    leading: new CircleAvatar(
+        backgroundImage: new NetworkImage(user.avatarUrlSmall),
+        backgroundColor: Theme.of(context).canvasColor),
+    onTap: () {
+      App.of(context).api.room.roomFromUri(user.url).then((Room room) {
+        materialNavigateTo(
+            context, new RoomView(appState: App.of(context), room: room),
+            path: RoomView.path);
+      });
+    },
+);

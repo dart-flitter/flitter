@@ -90,7 +90,13 @@ class _RoomViewState extends State<RoomView> {
     return new Scaffold(
       appBar: new AppBar(title: new Text(config.room.name)),
       body: body,
-      bottomNavigationBar: new ChatInput(
+      bottomNavigationBar: _userHasJoined() ? _buildChatInput() : null
+    );
+  }
+
+  bool _userHasJoined() =>  App.of(context).rooms.any((Room room) => room.id == config.room.id);
+
+  Widget _buildChatInput() => new ChatInput(
         onSubmit: (String value) async {
           final Message message = await App
               .of(context)
@@ -101,7 +107,5 @@ class _RoomViewState extends State<RoomView> {
             messages.add(message);
           });
         },
-      ),
     );
-  }
 }
