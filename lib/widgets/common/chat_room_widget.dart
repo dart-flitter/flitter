@@ -6,16 +6,28 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
 
-class ChatRoomWidget extends StatelessWidget {
-  List<Message> messages;
+class ChatRoomWidget extends StatefulWidget {
+  final List<Message> messages;
   final StreamController<Null> _onNeedData;
-  bool _alreadyFetchedData;
+
+  @override
+  _ChatRoomWidgetState createState() => new _ChatRoomWidgetState();
 
   ChatRoomWidget({@required this.messages: const []})
-      : _alreadyFetchedData = false,
-        _onNeedData = new StreamController();
+      : _onNeedData = new StreamController();
 
-  Stream<Null> get onNeedData => _onNeedData.stream;
+  Stream<Null> get onNeedDataStream => onNeedDataController.stream;
+  StreamController<Null> get onNeedDataController => _onNeedData;
+}
+
+class _ChatRoomWidgetState extends State<ChatRoomWidget> {
+  bool _alreadyFetchedData;
+
+  @override
+  void initState() {
+    super.initState();
+    _alreadyFetchedData = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +35,12 @@ class ChatRoomWidget extends StatelessWidget {
       color: Colors.white,
       child: new ListView.builder(
         reverse: true,
-        itemCount: messages.length,
+        itemCount: widget.messages.length,
         itemBuilder: (BuildContext context, int index) {
-          Message message = messages[index];
-          if (!_alreadyFetchedData && (index * 100) / messages.length > 80) {
-            _onNeedData.add(null);
+          Message message = widget.messages[index];
+          if (!_alreadyFetchedData &&
+              (index * 100) / widget.messages.length > 80) {
+            widget.onNeedDataController.add(null);
             _alreadyFetchedData = true;
           }
           return new ChatMessageWidget(
@@ -66,7 +79,7 @@ class _ChatInputState extends State<ChatInput> {
           decoration: new InputDecoration(hintText: intl.typeChatMessage()),
           onSubmitted: (String value) {
             textController.clear();
-            config.onSubmit(value);
+            widget.onSubmit(value);
           },
         ),
       ),
