@@ -1,0 +1,11 @@
+name: flutter_webview_plugin
+
+flutter:
+  plugin:
+    androidPackage: io.flutter.flutter_webview_lugin
+    pluginClass: FlutterWebviewPlugin
+
+dependencies:
+  meta: ^1.0.4
+  flutter:
+    sdk: flutter
