@@ -17,24 +17,23 @@ class Splash extends StatelessWidget {
 }
 
 class App extends StatefulWidget {
-  GitterApi api;
-
+  final GitterApi api;
   App(this.api);
 
   @override
-  AppState createState() => new AppState();
+  AppState createState() => new AppState(api);
 
   static AppState of(BuildContext context) =>
       context.ancestorStateOfType(const TypeMatcher<AppState>());
 }
 
 class AppState extends State<App> {
-  GitterApi get api => config.api;
+  GitterApi api;
   List<Room> rooms;
   List<Group> groups;
   User user;
 
-  AppState();
+  AppState(this.api);
 
   @override
   void initState() {
@@ -45,7 +44,7 @@ class AppState extends State<App> {
 
   Widget getRoomsAndBuildHome(BuildContext context) {
     return new FutureBuilder<List<Room>>(
-      future: config.api.user.me.rooms(),
+      future: widget.api.user.me.rooms(),
       builder: (BuildContext context, AsyncSnapshot<List<Room>> snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return new Splash();
@@ -58,7 +57,7 @@ class AppState extends State<App> {
 
   void onLogout() {
     setState(() {
-      config.api = null;
+      api = null;
       user = null;
       rooms = [];
       groups = null;
@@ -68,7 +67,7 @@ class AppState extends State<App> {
   void onLogin(List<Room> rooms, GitterApi api, User user) {
     setState(() {
       this.rooms = rooms;
-      config.api = api;
+      this.api = api;
       this.user = user;
     });
   }
@@ -78,7 +77,7 @@ class AppState extends State<App> {
     Widget home;
     if (api != null && rooms.isEmpty) {
       home = getRoomsAndBuildHome(context);
-    } else if (config.api != null && rooms.isNotEmpty) {
+    } else if (widget.api != null && rooms.isNotEmpty) {
       home = new HomeView();
     } else {
       home = new LoginView();

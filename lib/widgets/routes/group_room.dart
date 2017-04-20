@@ -37,7 +37,7 @@ class _GroupRoomViewState extends State<GroupRoomView> {
 
   Future<Null> fetchData(BuildContext context) async {
     final rooms =
-        await App.of(context).api.group.suggestedRoomsOf(config.group.id);
+        await App.of(context).api.group.suggestedRoomsOf(widget.group.id);
     setState(() {
       _rooms = rooms;
     });
@@ -59,7 +59,7 @@ class _GroupRoomViewState extends State<GroupRoomView> {
     }
 
     return new Scaffold(
-      appBar: new AppBar(title: new Text(config.group.name)),
+      appBar: new AppBar(title: new Text(widget.group.name)),
       body: body,
       drawer: new FlitterDrawer(onTapAllConversation: () {
         HomeView.go(context);

@@ -10,8 +10,8 @@ import 'package:flitter/auth.dart';
 import 'package:flitter/routes.dart';
 
 class FlitterDrawer extends StatefulWidget {
-  VoidCallback onTapAllConversation;
-  VoidCallback onTapPeoples;
+  final VoidCallback onTapAllConversation;
+  final VoidCallback onTapPeoples;
 
   FlitterDrawer(
       {@required this.onTapAllConversation, @required this.onTapPeoples});
@@ -28,11 +28,11 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
       new ListTile(
           leading: new Icon(Icons.home),
           title: new Text(intl.allConversations()),
-          onTap: config.onTapAllConversation),
+          onTap: widget.onTapAllConversation),
       new ListTile(
           leading: new Icon(Icons.person),
           title: new Text(intl.people()),
-          onTap: config.onTapPeoples),
+          onTap: widget.onTapPeoples),
     ];
 
     child.addAll(_drawerCommunities(context));

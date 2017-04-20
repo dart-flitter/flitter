@@ -37,8 +37,8 @@ class _RoomViewState extends State<RoomView> {
     _m = [];
     messages = [];
     _messageSubscription =
-        config.appState.api.room.onMessage.listen(_onMessage);
-    config.appState.api.room.messagesFromRoomId(config.room.id, skip: _skip);
+        widget.appState.api.room.onMessage.listen(_onMessage);
+    widget.appState.api.room.messagesFromRoomId(widget.room.id, skip: _skip);
   }
 
   @override
@@ -69,18 +69,18 @@ class _RoomViewState extends State<RoomView> {
     _skip += 50;
     _counter = 0;
     _m = [];
-    App.of(context).api.room.messagesFromRoomId(config.room.id, skip: _skip);
+    App.of(context).api.room.messagesFromRoomId(widget.room.id, skip: _skip);
   }
 
   @override
   Widget build(BuildContext context) {
     final ChatRoomWidget chatRoom =
         new ChatRoomWidget(messages: messages.reversed.toList());
-    chatRoom.onNeedData.listen((_) => fetchData(context));
+    chatRoom.onNeedDataStream.listen((_) => fetchData(context));
     Widget body = chatRoom;
     return new Scaffold(
         appBar: new AppBar(
-            title: new Text(config.room.name), actions: [_buildMenu()]),
+            title: new Text(widget.room.name), actions: [_buildMenu()]),
         body: body,
         floatingActionButton: _userHasJoined ? null : _joinRoomButton(),
         bottomNavigationBar: _userHasJoined ? _buildChatInput() : null);
@@ -102,10 +102,12 @@ class _RoomViewState extends State<RoomView> {
 
   _onLeaveRoom() {
     AppState state = App.of(context);
-    state.api.room.removeUserFrom(config.room.id, state.user.id).then((success) {
+    state.api.room
+        .removeUserFrom(widget.room.id, state.user.id)
+        .then((success) {
       if (success == true) {
-          state.rooms.removeWhere((Room room) => room.id == config.room.id);
-          Navigator.of(context).pop();
+        state.rooms.removeWhere((Room room) => room.id == widget.room.id);
+        Navigator.of(context).pop();
       } else {
         // Todo: show error
       }
@@ -120,7 +122,7 @@ class _RoomViewState extends State<RoomView> {
   void _onTapJoinRoom() {
     AppState state = App.of(context);
     state.api.user
-        .userJoinRoom(state.user.id, config.room.id)
+        .userJoinRoom(state.user.id, widget.room.id)
         .then((Room room) {
       setState(() {
         state.rooms.add(room);
@@ -129,7 +131,7 @@ class _RoomViewState extends State<RoomView> {
   }
 
   bool get _userHasJoined =>
-      App.of(context).rooms.any((Room room) => room.id == config.room.id);
+      App.of(context).rooms.any((Room room) => room.id == widget.room.id);
 
   Widget _buildChatInput() => new ChatInput(
         onSubmit: (String value) async {
@@ -137,7 +139,7 @@ class _RoomViewState extends State<RoomView> {
               .of(context)
               .api
               .room
-              .sendMessageToRoomId(config.room.id, value);
+              .sendMessageToRoomId(widget.room.id, value);
           setState(() {
             messages.add(message);
           });
