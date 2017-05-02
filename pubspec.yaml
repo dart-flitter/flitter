@@ -1,5 +1,6 @@
 name: flitter
 description: A new flutter project.
+version: 0.0.1
 
 dependencies:
   flutter:
@@ -8,15 +9,10 @@ dependencies:
   http: "^0.11.3+13"
   jaguar_serializer: ^0.3.0
   flutter_webview_plugin:
-      path: flutter_webview_plugin
+    git: git@github.com:dart-flitter/flutter_webview_plugin.git
 
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the Icons class.
   uses-material-design: true
-
   assets:
     - assets/html/success.html
     - assets/images/banner.jpg

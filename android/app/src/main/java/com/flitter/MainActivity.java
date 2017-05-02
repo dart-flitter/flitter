@@ -1,4 +1,4 @@
-package com.flitter.flitter;
+package com.flitter;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

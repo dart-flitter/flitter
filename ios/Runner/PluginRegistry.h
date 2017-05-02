@@ -7,9 +7,11 @@
 
 #import <Flutter/Flutter.h>
 
+#import "FlutterWebviewPlugin.h"
 
 @interface PluginRegistry : NSObject
 
+@property (readonly, nonatomic) FlutterWebviewPlugin *flutter_webview_plugin;
 
 - (instancetype)initWithController:(FlutterViewController *)controller;
 
