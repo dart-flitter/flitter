@@ -2,6 +2,7 @@ library flitter.routes.group_room;
 
 import 'dart:async';
 
+import 'package:flitter/redux/store.dart';
 import 'package:meta/meta.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flutter/material.dart';
@@ -30,14 +31,24 @@ class GroupRoomView extends StatefulWidget {
 class _GroupRoomViewState extends State<GroupRoomView> {
   List<Room> _rooms;
 
+  StreamSubscription _subscription;
+
   @override
   void initState() {
     super.initState();
+    _subscription = store.onChange.listen((_) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _subscription.cancel();
   }
 
   Future<Null> fetchData(BuildContext context) async {
-    final rooms =
-        await App.of(context).api.group.suggestedRoomsOf(widget.group.id);
+    final rooms = await store.state.api.group.suggestedRoomsOf(widget.group.id);
     setState(() {
       _rooms = rooms;
     });

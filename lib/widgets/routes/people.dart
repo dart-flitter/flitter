@@ -3,6 +3,8 @@ library flitter.routes.people;
 import 'dart:async';
 
 import 'package:flitter/common.dart';
+import 'package:flitter/redux/actions.dart';
+import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/widgets/common/drawer.dart';
 import 'package:flitter/widgets/routes/home.dart';
@@ -30,13 +32,8 @@ class _PeopleViewState extends State<PeopleView> {
   List _searchResult;
 
   Future<Null> onRefresh(BuildContext context) async {
-    List<Room> rooms = await App.of(context).api.user.me.rooms();
-    if (!mounted) {
-      return;
-    }
-    setState(() {
-      App.of(context).rooms = rooms;
-    });
+    List<Room> rooms = await store.state.api.user.me.rooms();
+    store.dispatch(new FetchRoomsAction(rooms));
   }
 
   @override
@@ -45,6 +42,9 @@ class _PeopleViewState extends State<PeopleView> {
     _isSearching = false;
     _isRequesting = false;
     _searchResult = [];
+    store.onChange.listen((_) {
+      setState(() {});
+    });
   }
 
   @override
@@ -58,11 +58,7 @@ class _PeopleViewState extends State<PeopleView> {
         body = _buildSearchResult();
       }
     } else {
-      if (App.of(context).rooms == null) {
-        body = new Center(child: new CircularProgressIndicator());
-      } else {
-        body = _buildListRooms();
-      }
+      body = _buildListRooms();
     }
 
     return new Scaffold(
@@ -117,7 +113,7 @@ class _PeopleViewState extends State<PeopleView> {
       setState(() {
         _isRequesting = true;
       });
-      List result = await App.of(context).api.user.search(query, limit: 15);
+      List result = await store.state.api.user.search(query, limit: 15);
       setState(() {
         _searchResult = result;
         _isRequesting = false;
@@ -126,7 +122,7 @@ class _PeopleViewState extends State<PeopleView> {
   }
 
   _buildListRooms() => new ListRoomWidget(
-      rooms: App.of(context).rooms.where((Room room) => room.oneToOne).toList(),
+      rooms: store.state.rooms.where((Room room) => room.oneToOne).toList(),
       onRefresh: () {
         return onRefresh(context);
       });

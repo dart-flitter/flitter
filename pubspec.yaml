@@ -10,6 +10,7 @@ dependencies:
   jaguar_serializer: ^0.3.0
   flutter_webview_plugin:
     git: git@github.com:dart-flitter/flutter_webview_plugin.git
+  redux: "^1.1.0"
 
 flutter:
   uses-material-design: true

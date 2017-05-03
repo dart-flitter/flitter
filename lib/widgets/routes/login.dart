@@ -2,6 +2,8 @@ library flitter.routes.login;
 
 import 'dart:io';
 import 'dart:async';
+import 'package:flitter/redux/actions.dart';
+import 'package:flitter/redux/store.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/app.dart';
 import 'package:flitter/services/gitter/gitter.dart';
@@ -11,12 +13,10 @@ import 'package:flitter/theme.dart';
 typedef void OnLoginCallback(GitterToken token);
 
 class LoginView extends StatefulWidget {
-  final OnLoginCallback onLogin;
-
-  LoginView({this.onLogin});
+  LoginView();
 
   static void go(BuildContext context) {
-    App.of(context).onLogout();
+    store.dispatch(new LogoutAction());
   }
 
   @override
@@ -32,6 +32,21 @@ class _LoginViewState extends State<LoginView> {
     _loggedIn = false;
   }
 
+  _fetchData(GitterToken token) {
+    if (token != null) {
+      final GitterApi api = new GitterApi(token);
+      api.user.me.get().then((User user) {
+        store.dispatch(new LoginAction(api, user));
+      });
+      api.user.me.rooms().then((List<Room> rooms) {
+        store.dispatch(new FetchRoomsAction(rooms));
+      });
+      api.group.get().then((List<Group> groups) {
+        store.dispatch(new FetchGroupsAction(groups));
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!_loggedIn) {
@@ -41,7 +56,7 @@ class _LoginViewState extends State<LoginView> {
             _loggedIn = false;
           });
         } else {
-          widget.onLogin(token);
+          _fetchData(token);
           setState(() {
             _loggedIn = true;
           });

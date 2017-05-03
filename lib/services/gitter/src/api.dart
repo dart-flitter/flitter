@@ -10,6 +10,13 @@ import 'package:flitter/services/gitter/src/models/room.dart';
 import 'package:flitter/services/gitter/src/models/user.dart';
 import 'package:http/http.dart' as http;
 
+String mapToQuery(Map<String, dynamic> map, {Encoding encoding}) {
+  var pairs = <List>[];
+  map.forEach((key, value) =>
+      pairs.add([key,value]));
+  return pairs.map((pair) => "${pair[0]}=${pair[1]}").join("&");
+}
+
 Map<String, String> _getHeaders(GitterToken token) {
   return {
     "Accept": "application/json",
@@ -64,9 +71,10 @@ class UserApi {
 
   Future<List<User>> search(String query,
       {int limit: 15, String type: "gitter"}) async {
-    final http.Response response = await http.get(
-        "$_baseUrl?q=$query&limit=$limit&type=$type",
-        headers: _getHeaders(_token));
+    String url = "$_baseUrl?${mapToQuery(
+        {"q": query, "limit": limit, "type": type})}";
+    final http.Response response =
+        await http.get(url, headers: _getHeaders(_token));
     final List<Map> json = _getResponseBody(response)["results"];
     return json.map((map) => new User.fromJson(map)).toList();
   }
@@ -91,36 +99,37 @@ class RoomApi {
   final String _baseUrl;
   GitterToken token;
 
-  List<Message> messages;
-
-  StreamController<Message> _onMessage;
-
-  RoomApi(String baseUrl, this.token) : _baseUrl = "$baseUrl/rooms" {
-    messages = [];
-    _onMessage = new StreamController.broadcast();
-  }
-
-  Stream<Message> get onMessage => _onMessage.stream;
+  RoomApi(String baseUrl, this.token) : _baseUrl = "$baseUrl/rooms";
 
   Future<List<Room>> search(String query,
       {int limit: 15, String type: "gitter"}) async {
-    final http.Response response = await http.get(
-        "$_baseUrl?q=$query&limit=$limit&type=$type",
-        headers: _getHeaders(token));
+    String url = "$_baseUrl?${mapToQuery(
+        {"q": query, "limit": limit, "type": type})}";
+    final http.Response response =
+        await http.get(url, headers: _getHeaders(token));
     final List<Map> json = _getResponseBody(response)["results"];
     return json.map((map) => new Room.fromJson(map)).toList();
   }
 
-  Future<Null> messagesFromRoomId(String id,
-      {int skip: 0, int limit: 50, bool clear: false}) async {
-    final http.Response response = await http.get(
-        "$_baseUrl/$id/chatMessages?skip=$skip&limit=$limit",
-        headers: _getHeaders(token));
+  Future<List<Message>> messagesFromRoomId(String id,
+      {int skip: 0, int limit: 50, String beforeId}) async {
+
+    var params = <String, dynamic>{
+      "skip": skip,
+      "limit": limit
+    };
+
+    if (beforeId != null) {
+      params["beforeId"] = beforeId;
+    }
+
+    String url = "$_baseUrl/$id/chatMessages?${mapToQuery(params)}";
+    final http.Response response =
+        await http.get(url, headers: _getHeaders(token));
     final List<Map> json = _getResponseBody(response);
-    List<Message> m = json
+    return json
         .map<Message>((Map message) => new Message.fromJson(message))
         .toList();
-    _onMessage.addStream(new Stream.fromIterable(m));
   }
 
   Future<Message> sendMessageToRoomId(String id, String message) async {
@@ -130,9 +139,7 @@ class RoomApi {
       body: JSON.encode(json),
       headers: _getHeaders(token),
     );
-    final Message m = new Message.fromJson(_getResponseBody(response));
-    messages.add(m);
-    return m;
+    return new Message.fromJson(_getResponseBody(response));
   }
 
   Future<Room> roomFromUri(String uri) async {
@@ -225,11 +232,13 @@ dynamic _getResponseBody(http.Response response) {
 class GitterErrorException implements Exception {
   final http.Response response;
   final dynamic body;
+
   GitterErrorException({this.body, this.response});
 }
 
 class GitterHttpStatusException extends GitterErrorException {
   int get status => response?.statusCode;
+
   GitterHttpStatusException({body, http.Response response})
       : super(body: body, response: response);
 }

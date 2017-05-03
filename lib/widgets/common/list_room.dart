@@ -1,11 +1,12 @@
 library flitter.common.list_room;
 
+import 'package:flitter/redux/store.dart';
 import 'package:meta/meta.dart';
 import 'package:flitter/common.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/widgets/routes/room.dart';
 import 'package:flutter/material.dart';
-import 'package:flitter/app.dart';
+import 'package:flitter/redux/actions.dart';
 
 class ListRoomWidget extends StatelessWidget {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
@@ -51,9 +52,8 @@ Widget roomTile(BuildContext context, Room room) => new ListTile(
           ? new Chip(label: new Text("${room.unreadItems}"))
           : null,
       onTap: () {
-        materialNavigateTo(
-            context, new RoomView(appState: App.of(context), room: room),
-            path: RoomView.path);
+        store.dispatch(new SelectRoomAction(room));
+        materialNavigateTo(context, new RoomView(), path: RoomView.path);
       },
     );
 
@@ -64,10 +64,9 @@ Widget userTile(BuildContext context, User user) => new ListTile(
           backgroundImage: new NetworkImage(user.avatarUrlSmall),
           backgroundColor: Theme.of(context).canvasColor),
       onTap: () {
-        App.of(context).api.room.roomFromUri(user.url).then((Room room) {
-          materialNavigateTo(
-              context, new RoomView(appState: App.of(context), room: room),
-              path: RoomView.path);
+        store.state.api.room.roomFromUri(user.url).then((Room room) {
+          store.dispatch(new SelectRoomAction(room));
+          materialNavigateTo(context, new RoomView(), path: RoomView.path);
         });
       },
     );

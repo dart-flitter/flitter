@@ -1,6 +1,8 @@
 library flitter.routes.room;
 
 import 'dart:async';
+import 'package:flitter/redux/actions.dart';
+import 'package:flitter/redux/store.dart';
 import 'package:meta/meta.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/widgets/common/chat_room_widget.dart';
@@ -12,78 +14,59 @@ enum RoomMenuAction { leave }
 class RoomView extends StatefulWidget {
   static const path = "/room";
 
-  final AppState appState;
-  final Room room;
-
-  RoomView({@required this.appState, @required this.room});
+  RoomView();
 
   @override
   _RoomViewState createState() => new _RoomViewState();
 }
 
 class _RoomViewState extends State<RoomView> {
-  List<Message> messages;
-  int _skip;
-  int _counter;
-  List<Message> _m;
+  List<Message> get messages => store.state.selectedRoom.messages;
+  Room get room => store.state.selectedRoom.room;
 
-  StreamSubscription<Message> _messageSubscription;
+  StreamSubscription _subscription;
 
   @override
   void initState() {
     super.initState();
-    _skip = 0;
-    _counter = 0;
-    _m = [];
-    messages = [];
-    _messageSubscription =
-        widget.appState.api.room.onMessage.listen(_onMessage);
-    widget.appState.api.room.messagesFromRoomId(widget.room.id, skip: _skip);
+    _subscription = store.onChange.listen((_) {
+      setState(() {});
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
-    _messageSubscription.cancel();
-  }
-
-  void _onMessage(Message m) {
-    if (_skip == 0) {
-      setState(() {
-        messages.add(m);
-      });
-    } else {
-      if (_counter < 49) {
-        _m.add(m);
-      } else {
-        _m.addAll(messages);
-        setState(() {
-          messages = _m;
-        });
-      }
-      _counter++;
-    }
-  }
-
-  Future<Null> fetchData(BuildContext context) async {
-    _skip += 50;
-    _counter = 0;
-    _m = [];
-    App.of(context).api.room.messagesFromRoomId(widget.room.id, skip: _skip);
+    _subscription.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    final ChatRoomWidget chatRoom =
-        new ChatRoomWidget(messages: messages.reversed.toList());
-    chatRoom.onNeedDataStream.listen((_) => fetchData(context));
-    Widget body = chatRoom;
+    Widget body = new LoadingView();
+    if (messages == null) {
+      _fetchMessages();
+    } else {
+      final ChatRoomWidget chatRoom =
+          new ChatRoomWidget(messages: messages.reversed.toList());
+      chatRoom.onNeedDataStream.listen((_) => _fetchMessages());
+      body = chatRoom;
+    }
+
     return new Scaffold(
-        appBar: new AppBar(
-            title: new Text(widget.room.name), actions: [_buildMenu()]),
+        appBar: new AppBar(title: new Text(room.name), actions: [_buildMenu()]),
         body: body,
-        floatingActionButton: _userHasJoined ? null : _joinRoomButton(),
-        bottomNavigationBar: _userHasJoined ? _buildChatInput() : null);
+        floatingActionButton:
+            _userHasJoined || messages == null ? null : _joinRoomButton(),
+        bottomNavigationBar:
+            _userHasJoined && messages != null ? _buildChatInput() : null);
+  }
+
+  Future<Null> _fetchMessages() async {
+    store.state.api.room
+        .messagesFromRoomId(room.id, beforeId: messages?.first?.id)
+        .then((List<Message> messages) {
+      store.dispatch(new OnMessagesForRoom(messages, room.id));
+    });
   }
 
   Widget _buildMenu() => new PopupMenuButton(
@@ -101,15 +84,14 @@ class _RoomViewState extends State<RoomView> {
       });
 
   _onLeaveRoom() {
-    AppState state = App.of(context);
-    state.api.room
-        .removeUserFrom(widget.room.id, state.user.id)
+    store.state.api.room
+        .removeUserFrom(room.id, store.state.user.id)
         .then((success) {
       if (success == true) {
-        state.rooms.removeWhere((Room room) => room.id == widget.room.id);
+        store.dispatch(new LeaveRoomAction(room));
         Navigator.of(context).pop();
       } else {
-        // Todo: show error
+        // Todo: dispatch error
       }
     });
   }
@@ -120,29 +102,20 @@ class _RoomViewState extends State<RoomView> {
   }
 
   void _onTapJoinRoom() {
-    AppState state = App.of(context);
-    state.api.user
-        .userJoinRoom(state.user.id, widget.room.id)
+    store.state.api.user
+        .userJoinRoom(store.state.user.id, room.id)
         .then((Room room) {
-      setState(() {
-        state.rooms.add(room);
-      });
+      store.dispatch(new JoinRoomAction(room));
     });
   }
 
-  bool get _userHasJoined =>
-      App.of(context).rooms.any((Room room) => room.id == widget.room.id);
+  bool get _userHasJoined => store.state.rooms.any((Room r) => r.id == room.id);
 
   Widget _buildChatInput() => new ChatInput(
         onSubmit: (String value) async {
-          final Message message = await App
-              .of(context)
-              .api
-              .room
-              .sendMessageToRoomId(widget.room.id, value);
-          setState(() {
-            messages.add(message);
-          });
+          final Message message =
+              await store.state.api.room.sendMessageToRoomId(room.id, value);
+          store.dispatch(new OnSendMessage(message, room.id));
         },
       );
 }

@@ -3,6 +3,8 @@ library flitter.routes.home;
 import 'dart:async';
 
 import 'package:flitter/common.dart';
+import 'package:flitter/redux/actions.dart';
+import 'package:flitter/redux/store.dart';
 import 'package:flitter/widgets/common/drawer.dart';
 import 'package:flitter/widgets/routes/people.dart';
 import 'package:flutter/material.dart';
@@ -28,15 +30,7 @@ class _HomeViewState extends State<HomeView> {
   bool _isRequesting;
   List _searchResult;
 
-  Future<Null> onRefresh(BuildContext context) async {
-    List<Room> rooms = await App.of(context).api.user.me.rooms();
-    if (!mounted) {
-      return;
-    }
-    setState(() {
-      App.of(context).rooms = rooms;
-    });
-  }
+  StreamSubscription _subscription;
 
   @override
   void initState() {
@@ -44,10 +38,25 @@ class _HomeViewState extends State<HomeView> {
     _isSearching = false;
     _isRequesting = false;
     _searchResult = [];
+    _fetchRooms();
+
+    _subscription = store.onChange.listen((_) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _subscription.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (store.state.rooms == null) {
+      return new Splash();
+    }
+
     var body;
     if (_isSearching == true) {
       if (_isRequesting == true) {
@@ -56,11 +65,7 @@ class _HomeViewState extends State<HomeView> {
         body = _buildSearchResult();
       }
     } else {
-      if (App.of(context).rooms == null) {
-        body = new Center(child: new CircularProgressIndicator());
-      } else {
-        body = _buildListRooms();
-      }
+      body = _buildListRooms();
     }
 
     return new Scaffold(
@@ -71,6 +76,12 @@ class _HomeViewState extends State<HomeView> {
           PeopleView.go(context);
         }),
         body: body);
+  }
+
+  _fetchRooms() {
+    store.state.api.user.me.rooms().then((List<Room> rooms) {
+      store.dispatch(new FetchRoomsAction(rooms));
+    });
   }
 
   void _handleSearchBegin() {
@@ -99,8 +110,8 @@ class _HomeViewState extends State<HomeView> {
       setState(() {
         _isRequesting = true;
       });
-      List result = await App.of(context).api.user.search(query, limit: 5);
-      result.addAll(await App.of(context).api.room.search(query, limit: 10));
+      List result = await store.state.api.user.search(query, limit: 5);
+      result.addAll(await store.state.api.room.search(query, limit: 10));
       setState(() {
         _searchResult = result;
         _isRequesting = false;
@@ -111,9 +122,9 @@ class _HomeViewState extends State<HomeView> {
   _buildSearchResult() => new ListSearchResult(_searchResult);
 
   _buildListRooms() => new ListRoomWidget(
-      rooms: App.of(context).rooms,
+      rooms: store.state.rooms,
       onRefresh: () {
-        return onRefresh(context);
+        _fetchRooms();
       });
 
   Widget _buildAppBar() => new AppBar(

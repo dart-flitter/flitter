@@ -8,25 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/services/oauth/oauth.dart';
 import 'package:flutter/services.dart';
-import 'package:flitter/app.dart';
 import 'package:flitter/services/flutter_gitter_auth.dart';
 
 Future<File> getTokenFile() async {
   String dir = (await PathProvider.getApplicationDocumentsDirectory()).path;
   return new File("$dir/token.json");
-}
-
-Future<GitterToken> getSavedToken() async {
-  File tokenFile = await getTokenFile();
-  if (!await tokenFile.exists()) {
-    return null;
-  }
-  return new GitterToken.fromJson(JSON.decode(await tokenFile.readAsString()));
-}
-
-Future<bool> isAuth() async {
-  GitterToken token = await getSavedToken();
-  return token?.access?.isNotEmpty == true && token?.type?.isNotEmpty == true;
 }
 
 Future<GitterToken> auth() async {
@@ -55,7 +41,7 @@ Future<Null> saveToken(GitterToken token) async {
 }
 
 Future<Null> logout(BuildContext context) async {
-  App.of(context).rooms = [];
-  App.of(context).user = null;
+  // App.of(context).rooms = [];
+  // App.of(context).user = null;
   return saveToken(null);
 }

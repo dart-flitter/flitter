@@ -21,12 +21,9 @@ class ChatRoomWidget extends StatefulWidget {
 }
 
 class _ChatRoomWidgetState extends State<ChatRoomWidget> {
-  bool _alreadyFetchedData;
-
   @override
   void initState() {
     super.initState();
-    _alreadyFetchedData = false;
   }
 
   @override
@@ -38,10 +35,8 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
         itemCount: widget.messages.length,
         itemBuilder: (BuildContext context, int index) {
           Message message = widget.messages[index];
-          if (!_alreadyFetchedData &&
-              (index * 100) / widget.messages.length > 80) {
+          if (index == widget.messages.length - 5) {
             widget.onNeedDataController.add(null);
-            _alreadyFetchedData = true;
           }
           return new ChatMessageWidget(
             leading: new CircleAvatar(
