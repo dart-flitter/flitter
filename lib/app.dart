@@ -8,11 +8,13 @@ import 'package:flitter/theme.dart';
 class Splash extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      body: new Center(
-        child: new CircularProgressIndicator(),
-      ),
-    );
+    return new MaterialApp(
+        home: new Scaffold(
+          body: new Center(
+            child: new CircularProgressIndicator(),
+          ),
+        ),
+        theme: kTheme);
   }
 }
 
@@ -64,12 +66,17 @@ class AppState extends State<App> {
     });
   }
 
-  void onLogin(List<Room> rooms, GitterApi api, User user) {
-    setState(() {
-      this.rooms = rooms;
-      this.api = api;
-      this.user = user;
-    });
+  _onLogin(GitterToken token) async {
+    if (token != null) {
+      final GitterApi _api = new GitterApi(token);
+      final List<Room> _rooms = await _api.user.me.rooms();
+      final User _user = await _api.user.me.get();
+      setState(() {
+        this.rooms = _rooms;
+        this.api = _api;
+        this.user = _user;
+      });
+    }
   }
 
   @override
@@ -77,10 +84,10 @@ class AppState extends State<App> {
     Widget home;
     if (api != null && rooms.isEmpty) {
       home = getRoomsAndBuildHome(context);
-    } else if (widget.api != null && rooms.isNotEmpty) {
+    } else if (api != null && rooms.isNotEmpty) {
       home = new HomeView();
     } else {
-      home = new LoginView();
+      home = new LoginView(onLogin: _onLogin);
     }
 
     return new MaterialApp(

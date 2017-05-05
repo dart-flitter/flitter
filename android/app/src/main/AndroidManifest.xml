@@ -1,38 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yourcompany.flitter"
+    package="com.flitter"
     android:versionCode="1"
     android:versionName="0.0.1">
 
-    <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="21" />
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="21" />
 
-    <!-- The INTERNET permission is required for development. Specifically, flutter needs it to communicate with the running application
+    <!--
+         The INTERNET permission is required for development. Specifically, flutter needs it to communicate with the running application
          to allow setting breakpoints, to provide hot reload, etc.
     -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <!-- io.flutter.app.FlutterApplication is an android.app.Application that
+    <!--
+ io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide
          additional functionality it is fine to subclass or reimplement
-         FlutterApplication and put your custom class here. -->
-    <application android:name="io.flutter.app.FlutterApplication" android:label="flitter" android:icon="@mipmap/ic_launcher">
-        <activity android:name=".MainActivity"
-                  android:launchMode="singleTop"
-                  android:theme="@android:style/Theme.Black.NoTitleBar"
-                  android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection"
-                  android:hardwareAccelerated="true"
-                  android:windowSoftInputMode="adjustResize">
+         FlutterApplication and put your custom class here.
+    -->
+    <application
+        android:name="io.flutter.app.FlutterApplication"
+        android:icon="@mipmap/ic_launcher"
+        android:label="flitter">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Black.NoTitleBar"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="flitterapp" />
             </intent-filter>
         </activity>
+        <activity android:name="com.flutter_webview_plugin.WebviewActivity"
+                  android:theme="@android:style/Theme.Black.NoTitleBar"/>
     </application>
+
 </manifest>

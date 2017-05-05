@@ -9,6 +9,7 @@ import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/services/oauth/oauth.dart';
 import 'package:flutter/services.dart';
 import 'package:flitter/app.dart';
+import 'package:flitter/services/flutter_gitter_auth.dart';
 
 Future<File> getTokenFile() async {
   String dir = (await PathProvider.getApplicationDocumentsDirectory()).path;
@@ -29,14 +30,16 @@ Future<bool> isAuth() async {
 }
 
 Future<GitterToken> auth() async {
-  final GitterOAuth gitterOAuth = new GitterOAuth(new AppInformations(
+  final GitterOAuth gitterOAuth = new FlutterGitterOAuth(new AppInformations(
     "26258fa3ccd13c487dd8b5ed7e2acbeb087d14eb",
     "9c2239a87cfcf51d43c2abb30eae7e1878e5f268",
     "http://localhost:8080/",
   ));
   GitterToken token = await gitterOAuth.signIn();
-  File tokenFile = await getTokenFile();
-  tokenFile.writeAsStringSync(JSON.encode(token.toMap()));
+  if (token != null) {
+    File tokenFile = await getTokenFile();
+    tokenFile.writeAsStringSync(JSON.encode(token.toMap()));
+  }
   return token;
 }
 

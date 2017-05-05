@@ -74,7 +74,7 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
               backgroundImage:
                   new NetworkImage(App.of(context).user.avatarUrlMedium)),
           decoration: new BoxDecoration(
-              backgroundImage: new BackgroundImage(
+              image: new DecorationImage(
                   image: new AssetImage('assets/images/banner.jpg'),
                   fit: BoxFit.cover)));
 

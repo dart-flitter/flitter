@@ -1,12 +1,20 @@
 library flitter.routes.login;
 
+import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flitter/app.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/auth.dart';
+import 'package:flitter/theme.dart';
+
+typedef void OnLoginCallback(GitterToken token);
 
 class LoginView extends StatefulWidget {
+  final OnLoginCallback onLogin;
+
+  LoginView({this.onLogin});
+
   static void go(BuildContext context) {
     App.of(context).onLogout();
   }
@@ -16,48 +24,34 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  Future<Null> _onTapLoginButton(BuildContext context) async {
-    AppState appState = App.of(context);
+  bool _loggedIn;
 
-    final GitterToken token = await auth();
-    final GitterApi _api = new GitterApi(token);
-    final List<Room> _rooms = await _api.user.me.rooms();
-    final User _user = await _api.user.me.get();
-    if (!mounted) {
-      return;
-    }
-    appState.onLogin(_rooms, _api, _user);
+  @override
+  void initState() {
+    super.initState();
+    _loggedIn = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      body: new Column(
-        children: [
-          new Expanded(
-            child: new Center(
-              child: new Text(
-                "Flitter",
-                style: new TextStyle(fontSize: 70.0, color: Colors.pink),
-              ),
-            ),
-          ),
-          new Expanded(
-            child: new Center(
-              child: new RaisedButton(
-                color: Colors.pink,
-                child: new Text(
-                  "Login",
-                  style: new TextStyle(color: Colors.white),
-                ),
-                onPressed: () {
-                  _onTapLoginButton(context);
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    if (!_loggedIn) {
+      auth().then((token) {
+        if (token == null) {
+          setState(() {
+            _loggedIn = false;
+          });
+        } else {
+          widget.onLogin(token);
+          setState(() {
+            _loggedIn = true;
+          });
+        }
+      }).catchError(() {
+        setState(() {
+          _loggedIn = false;
+        });
+      });
+    }
+    return new Splash();
   }
 }
