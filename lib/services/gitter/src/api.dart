@@ -12,8 +12,7 @@ import 'package:http/http.dart' as http;
 
 String mapToQuery(Map<String, dynamic> map, {Encoding encoding}) {
   var pairs = <List>[];
-  map.forEach((key, value) =>
-      pairs.add([key,value]));
+  map.forEach((key, value) => pairs.add([key, value]));
   return pairs.map((pair) => "${pair[0]}=${pair[1]}").join("&");
 }
 
@@ -113,11 +112,7 @@ class RoomApi {
 
   Future<List<Message>> messagesFromRoomId(String id,
       {int skip: 0, int limit: 50, String beforeId}) async {
-
-    var params = <String, dynamic>{
-      "skip": skip,
-      "limit": limit
-    };
+    var params = <String, dynamic>{"skip": skip, "limit": limit};
 
     if (beforeId != null) {
       params["beforeId"] = beforeId;

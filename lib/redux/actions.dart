@@ -4,6 +4,7 @@ import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/services/gitter/src/models/token.dart';
 
 abstract class FlitterAction {
+  FlitterAction();
   String toString() => '$runtimeType';
 }
 
@@ -12,9 +13,13 @@ class InitGitterAction extends FlitterAction {
   InitGitterAction(this.api);
 }
 
+class InitAppAction extends FlitterAction {
+  InitAppAction();
+}
+
 class FetchRoomsAction extends FlitterAction {
-  final List<Room> romms;
-  FetchRoomsAction(this.romms);
+  final List<Room> rooms;
+  FetchRoomsAction(this.rooms);
 }
 
 class FetchGroupsAction extends FlitterAction {
@@ -27,9 +32,8 @@ class LogoutAction extends FlitterAction {
 }
 
 class LoginAction extends FlitterAction {
-  final GitterApi api;
   final User user;
-  LoginAction(this.api, this.user);
+  LoginAction(this.user);
 }
 
 class SelectRoomAction extends FlitterAction {
@@ -63,4 +67,14 @@ class OnSendMessage extends FlitterAction {
   final Message message;
   final String roomId;
   OnSendMessage(this.message, this.roomId);
+}
+
+class FetchRoomsOfGroup extends FlitterAction {
+  final List<Room> rooms;
+  FetchRoomsOfGroup(this.rooms);
+}
+
+class SelectGroupAction extends FlitterAction {
+  final Group group;
+  SelectGroupAction(this.group);
 }

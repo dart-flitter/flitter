@@ -16,7 +16,7 @@ class LoginView extends StatefulWidget {
   LoginView();
 
   static void go(BuildContext context) {
-    store.dispatch(new LogoutAction());
+    flitterStore.dispatch(new LogoutAction());
   }
 
   @override
@@ -32,21 +32,6 @@ class _LoginViewState extends State<LoginView> {
     _loggedIn = false;
   }
 
-  _fetchData(GitterToken token) {
-    if (token != null) {
-      final GitterApi api = new GitterApi(token);
-      api.user.me.get().then((User user) {
-        store.dispatch(new LoginAction(api, user));
-      });
-      api.user.me.rooms().then((List<Room> rooms) {
-        store.dispatch(new FetchRoomsAction(rooms));
-      });
-      api.group.get().then((List<Group> groups) {
-        store.dispatch(new FetchGroupsAction(groups));
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     if (!_loggedIn) {
@@ -56,15 +41,11 @@ class _LoginViewState extends State<LoginView> {
             _loggedIn = false;
           });
         } else {
-          _fetchData(token);
+          gitterStore.dispatch(new InitGitterAction(new GitterApi(token)));
           setState(() {
             _loggedIn = true;
           });
         }
-      }).catchError(() {
-        setState(() {
-          _loggedIn = false;
-        });
       });
     }
     return new Splash();

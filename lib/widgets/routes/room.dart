@@ -21,15 +21,15 @@ class RoomView extends StatefulWidget {
 }
 
 class _RoomViewState extends State<RoomView> {
-  List<Message> get messages => store.state.selectedRoom.messages;
-  Room get room => store.state.selectedRoom.room;
+  List<Message> get messages => flitterStore.state.selectedRoom.messages;
+  Room get room => flitterStore.state.selectedRoom.room;
 
   StreamSubscription _subscription;
 
   @override
   void initState() {
     super.initState();
-    _subscription = store.onChange.listen((_) {
+    _subscription = flitterStore.onChange.listen((_) {
       setState(() {});
     });
   }
@@ -62,10 +62,10 @@ class _RoomViewState extends State<RoomView> {
   }
 
   Future<Null> _fetchMessages() async {
-    store.state.api.room
+    gitterApi.room
         .messagesFromRoomId(room.id, beforeId: messages?.first?.id)
         .then((List<Message> messages) {
-      store.dispatch(new OnMessagesForRoom(messages, room.id));
+      flitterStore.dispatch(new OnMessagesForRoom(messages, room.id));
     });
   }
 
@@ -84,11 +84,11 @@ class _RoomViewState extends State<RoomView> {
       });
 
   _onLeaveRoom() {
-    store.state.api.room
-        .removeUserFrom(room.id, store.state.user.id)
+    gitterApi.room
+        .removeUserFrom(room.id, flitterStore.state.user.id)
         .then((success) {
       if (success == true) {
-        store.dispatch(new LeaveRoomAction(room));
+        flitterStore.dispatch(new LeaveRoomAction(room));
         Navigator.of(context).pop();
       } else {
         // Todo: dispatch error
@@ -102,20 +102,21 @@ class _RoomViewState extends State<RoomView> {
   }
 
   void _onTapJoinRoom() {
-    store.state.api.user
-        .userJoinRoom(store.state.user.id, room.id)
+    gitterApi.user
+        .userJoinRoom(flitterStore.state.user.id, room.id)
         .then((Room room) {
-      store.dispatch(new JoinRoomAction(room));
+      flitterStore.dispatch(new JoinRoomAction(room));
     });
   }
 
-  bool get _userHasJoined => store.state.rooms.any((Room r) => r.id == room.id);
+  bool get _userHasJoined =>
+      flitterStore.state.rooms.any((Room r) => r.id == room.id);
 
   Widget _buildChatInput() => new ChatInput(
         onSubmit: (String value) async {
           final Message message =
-              await store.state.api.room.sendMessageToRoomId(room.id, value);
-          store.dispatch(new OnSendMessage(message, room.id));
+              await gitterApi.room.sendMessageToRoomId(room.id, value);
+          flitterStore.dispatch(new OnSendMessage(message, room.id));
         },
       );
 }

@@ -4,11 +4,13 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:flitter/redux/store.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/services/oauth/oauth.dart';
 import 'package:flutter/services.dart';
 import 'package:flitter/services/flutter_gitter_auth.dart';
+import 'package:flitter/redux/actions.dart';
 
 Future<File> getTokenFile() async {
   String dir = (await PathProvider.getApplicationDocumentsDirectory()).path;
@@ -41,7 +43,7 @@ Future<Null> saveToken(GitterToken token) async {
 }
 
 Future<Null> logout(BuildContext context) async {
-  // App.of(context).rooms = [];
-  // App.of(context).user = null;
-  return saveToken(null);
+  await saveToken(null);
+  flitterStore.dispatch(new LogoutAction());
+  gitterStore.dispatch(new LogoutAction());
 }

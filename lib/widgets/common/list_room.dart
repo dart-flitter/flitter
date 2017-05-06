@@ -52,7 +52,7 @@ Widget roomTile(BuildContext context, Room room) => new ListTile(
           ? new Chip(label: new Text("${room.unreadItems}"))
           : null,
       onTap: () {
-        store.dispatch(new SelectRoomAction(room));
+        flitterStore.dispatch(new SelectRoomAction(room));
         materialNavigateTo(context, new RoomView(), path: RoomView.path);
       },
     );
@@ -64,8 +64,8 @@ Widget userTile(BuildContext context, User user) => new ListTile(
           backgroundImage: new NetworkImage(user.avatarUrlSmall),
           backgroundColor: Theme.of(context).canvasColor),
       onTap: () {
-        store.state.api.room.roomFromUri(user.url).then((Room room) {
-          store.dispatch(new SelectRoomAction(room));
+        gitterApi.room.roomFromUri(user.url).then((Room room) {
+          flitterStore.dispatch(new SelectRoomAction(room));
           materialNavigateTo(context, new RoomView(), path: RoomView.path);
         });
       },

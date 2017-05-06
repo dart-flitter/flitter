@@ -1,5 +1,7 @@
 library flitter.common.drawer;
 
+import 'dart:async';
+import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
@@ -20,6 +22,8 @@ class FlitterDrawer extends StatefulWidget {
 }
 
 class _FlitterDrawerState extends State<FlitterDrawer> {
+  StreamSubscription _subscription;
+
   @override
   Widget build(BuildContext context) {
     final child = [
@@ -67,18 +71,21 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
 
   Widget _buildDrawerHeader(BuildContext context) =>
       new UserAccountsDrawerHeader(
-          accountName: new Text(store.state.user.username),
-          accountEmail: new Text(store.state.user.displayName),
+          accountName: new Text(flitterStore.state.user.username),
+          accountEmail: new Text(flitterStore.state.user.displayName),
           currentAccountPicture: new CircleAvatar(
               backgroundImage:
-                  new NetworkImage(store.state.user.avatarUrlMedium)),
+                  new NetworkImage(flitterStore.state.user.avatarUrlMedium)),
           decoration: new BoxDecoration(
               image: new DecorationImage(
                   image: new AssetImage('assets/images/banner.jpg'),
                   fit: BoxFit.cover)));
 
   List<Widget> _buildCommunities(BuildContext context) {
-    return store.state.groups.map((group) {
+    if (flitterStore.state.groups == null) {
+      return [];
+    }
+    return flitterStore.state.groups.map((group) {
       return new ListTile(
           dense: false,
           title: new Text(group.name),
@@ -87,8 +94,23 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
               backgroundColor: Theme.of(context).canvasColor),
           trailing: null, //TODO: unread inside roomsOf(group)
           onTap: () {
+            flitterStore.dispatch(new SelectGroupAction(group));
             GroupRoomView.go(context, group);
           });
     }).toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _subscription = flitterStore.onChange.listen((_) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _subscription.cancel();
   }
 }

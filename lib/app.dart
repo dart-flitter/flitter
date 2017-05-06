@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flitter/auth.dart';
 import 'package:flitter/redux/actions.dart';
-import 'package:flitter/redux/reducer.dart';
+import 'package:flitter/redux/gitter_reducer.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/services/gitter/gitter.dart';
@@ -21,11 +21,8 @@ class Splash extends StatelessWidget {
 
 class LoadingView extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => new Scaffold(
-        body: new Center(
-          child: new CircularProgressIndicator(),
-        ),
-      );
+  Widget build(BuildContext context) =>
+      new Scaffold(body: new Center(child: new CircularProgressIndicator()));
 }
 
 class App extends StatefulWidget {
@@ -42,20 +39,18 @@ class App extends StatefulWidget {
 class AppState extends State<App> {
   AppState();
 
+  bool init;
+
   StreamSubscription _subscription;
-  bool _init;
 
   @override
   void initState() {
     super.initState();
 
-    _init = false;
+    init = false;
 
-    _subscription = store.onChange.listen((FlitterState state) {
-      if (_init != state.init)
-        setState(() {
-          _init = state.init;
-        });
+    _subscription = gitterStore.onChange.listen((_) {
+      setState(() {});
     });
   }
 
@@ -69,33 +64,43 @@ class AppState extends State<App> {
   Widget build(BuildContext context) {
     Widget home = new LoadingView();
 
-    if (_init == false) {
+    if (!gitterStore.state.init) {
       _initGitter();
       return new Splash();
     }
 
-    if (store.state.api != null) {
+    if (gitterApi != null) {
+      _initApp();
       home = new HomeView();
     } else {
       return new LoginView();
     }
 
     return new MaterialApp(
-      theme: kTheme,
-      title: "Flitter",
-      routes: {
-        HomeView.path: (BuildContext context) => new HomeView(),
-        PeopleView.path: (BuildContext context) => new PeopleView(),
-        GroupRoomView.path: (BuildContext context) =>
-            new GroupRoomView(appState: App.of(context), group: null),
-      },
-      home: home,
-    );
+        theme: kTheme,
+        title: "Flitter",
+        routes: {
+          HomeView.path: (BuildContext context) => new HomeView(),
+          PeopleView.path: (BuildContext context) => new PeopleView(),
+          GroupRoomView.path: (BuildContext context) => new GroupRoomView(),
+        },
+        home: home);
+  }
+
+  _initApp() async {
+    User user = await gitterApi.user.me.get();
+    List<Group> groups = await gitterApi.group.get();
+    flitterStore.dispatch(new LoginAction(user));
+    flitterStore.dispatch(new FetchGroupsAction(groups));
   }
 
   _initGitter() async {
     final GitterToken token = await _getSavedToken();
-    store.dispatch(new InitGitterAction(new GitterApi(token)));
+    if (token != null) {
+      final GitterApi api = new GitterApi(token);
+      gitterStore.dispatch(new InitGitterAction(api));
+    }
+    gitterStore.dispatch(new InitAppAction());
   }
 
   Future<GitterToken> _getSavedToken() async {
@@ -103,7 +108,10 @@ class AppState extends State<App> {
     if (!await tokenFile.exists()) {
       return null;
     }
-    return new GitterToken.fromJson(
-        JSON.decode(await tokenFile.readAsString()));
+    Map token = JSON.decode(await tokenFile.readAsString());
+    if (token.isEmpty) {
+      return null;
+    }
+    return new GitterToken.fromJson(token);
   }
 }

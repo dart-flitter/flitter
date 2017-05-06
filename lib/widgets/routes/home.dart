@@ -40,7 +40,7 @@ class _HomeViewState extends State<HomeView> {
     _searchResult = [];
     _fetchRooms();
 
-    _subscription = store.onChange.listen((_) {
+    _subscription = flitterStore.onChange.listen((_) {
       setState(() {});
     });
   }
@@ -53,7 +53,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    if (store.state.rooms == null) {
+    if (flitterStore.state.rooms == null) {
       return new Splash();
     }
 
@@ -79,8 +79,8 @@ class _HomeViewState extends State<HomeView> {
   }
 
   _fetchRooms() {
-    store.state.api.user.me.rooms().then((List<Room> rooms) {
-      store.dispatch(new FetchRoomsAction(rooms));
+    gitterApi.user.me.rooms().then((List<Room> rooms) {
+      flitterStore.dispatch(new FetchRoomsAction(rooms));
     });
   }
 
@@ -110,8 +110,8 @@ class _HomeViewState extends State<HomeView> {
       setState(() {
         _isRequesting = true;
       });
-      List result = await store.state.api.user.search(query, limit: 5);
-      result.addAll(await store.state.api.room.search(query, limit: 10));
+      List result = await gitterApi.user.search(query, limit: 5);
+      result.addAll(await gitterApi.room.search(query, limit: 10));
       setState(() {
         _searchResult = result;
         _isRequesting = false;
@@ -122,7 +122,7 @@ class _HomeViewState extends State<HomeView> {
   _buildSearchResult() => new ListSearchResult(_searchResult);
 
   _buildListRooms() => new ListRoomWidget(
-      rooms: store.state.rooms,
+      rooms: flitterStore.state.rooms,
       onRefresh: () {
         _fetchRooms();
       });

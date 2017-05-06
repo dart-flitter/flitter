@@ -32,8 +32,8 @@ class _PeopleViewState extends State<PeopleView> {
   List _searchResult;
 
   Future<Null> onRefresh(BuildContext context) async {
-    List<Room> rooms = await store.state.api.user.me.rooms();
-    store.dispatch(new FetchRoomsAction(rooms));
+    List<Room> rooms = await gitterApi.user.me.rooms();
+    flitterStore.dispatch(new FetchRoomsAction(rooms));
   }
 
   @override
@@ -42,7 +42,7 @@ class _PeopleViewState extends State<PeopleView> {
     _isSearching = false;
     _isRequesting = false;
     _searchResult = [];
-    store.onChange.listen((_) {
+    flitterStore.onChange.listen((_) {
       setState(() {});
     });
   }
@@ -113,7 +113,7 @@ class _PeopleViewState extends State<PeopleView> {
       setState(() {
         _isRequesting = true;
       });
-      List result = await store.state.api.user.search(query, limit: 15);
+      List result = await gitterApi.user.search(query, limit: 15);
       setState(() {
         _searchResult = result;
         _isRequesting = false;
@@ -122,7 +122,8 @@ class _PeopleViewState extends State<PeopleView> {
   }
 
   _buildListRooms() => new ListRoomWidget(
-      rooms: store.state.rooms.where((Room room) => room.oneToOne).toList(),
+      rooms:
+          flitterStore.state.rooms.where((Room room) => room.oneToOne).toList(),
       onRefresh: () {
         return onRefresh(context);
       });
