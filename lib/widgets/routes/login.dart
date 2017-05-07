@@ -41,7 +41,7 @@ class _LoginViewState extends State<LoginView> {
             _loggedIn = false;
           });
         } else {
-          gitterStore.dispatch(new InitGitterAction(new GitterApi(token)));
+          gitterStore.dispatch(new AuthGitterAction(new GitterApi(token)));
           setState(() {
             _loggedIn = true;
           });

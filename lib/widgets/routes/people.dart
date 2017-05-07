@@ -27,106 +27,52 @@ class PeopleView extends StatefulWidget {
 }
 
 class _PeopleViewState extends State<PeopleView> {
-  bool _isSearching;
-  bool _isRequesting;
-  List _searchResult;
 
-  Future<Null> onRefresh(BuildContext context) async {
-    List<Room> rooms = await gitterApi.user.me.rooms();
-    flitterStore.dispatch(new FetchRoomsAction(rooms));
-  }
+  StreamSubscription _subscription;
 
-  @override
-  void initState() {
-    super.initState();
-    _isSearching = false;
-    _isRequesting = false;
-    _searchResult = [];
-    flitterStore.onChange.listen((_) {
+  _PeopleViewState() {
+    _subscription = flitterStore.onChange.listen((_) {
       setState(() {});
     });
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _subscription.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var body;
+    Widget body = new LoadingView();
 
-    if (_isSearching == true) {
-      if (_isRequesting == true) {
-        body = new Container(child: new LinearProgressIndicator());
-      } else {
-        body = _buildSearchResult();
-      }
-    } else {
-      body = _buildListRooms();
-    }
-
-    return new Scaffold(
-      appBar: _isSearching == true ? _buildSearchBar() : _buildAppBar(),
-      body: body,
-      drawer: new FlitterDrawer(onTapAllConversation: () {
-        HomeView.go(context);
-      }, onTapPeoples: () {
-        Navigator.pop(context);
-      }),
-    );
-  }
-
-  Widget _buildAppBar() => new AppBar(
-          title: new Text(
-            intl.people(),
-          ),
-          actions: [
-            new IconButton(
-                icon: new Icon(Icons.search), onPressed: _handleSearchBegin)
-          ]);
-
-  Widget _buildSearchBar() {
-    return SearchBar.buildSearchBar(context, 'Search', //todo: intl
-        onSearchEnd: _handleSearchEnd,
-        onChange: _handleSearchChange);
-  }
-
-  void _handleSearchEnd() {
-    Navigator.pop(context);
-  }
-
-  void _handleSearchBegin() {
-    ModalRoute.of(context).addLocalHistoryEntry(new LocalHistoryEntry(
-      onRemove: () {
-        setState(() {
-          _isSearching = false;
-          _isRequesting = false;
-          _searchResult = [];
-        });
-      },
-    ));
-    setState(() {
-      _isSearching = true;
-      _isRequesting = false;
-      _searchResult = [];
+    Widget drawer = new FlitterDrawer(onTapAllConversation: () {
+      HomeView.go(context);
+    }, onTapPeoples: () {
+      Navigator.pop(context);
     });
-  }
 
-  _handleSearchChange(String query) async {
-    if (query.length > 3) {
-      setState(() {
-        _isRequesting = true;
-      });
-      List result = await gitterApi.user.search(query, limit: 15);
-      setState(() {
-        _searchResult = result;
-        _isRequesting = false;
-      });
+    String title = intl.people();
+
+    if (flitterStore.state.rooms != null) {
+      body = _buildListRooms();
+    } else {
+      _fetchRooms();
     }
+
+    return new ScaffoldWithSearchbar(
+        body: body, title: title, drawer: drawer);
   }
 
   _buildListRooms() => new ListRoomWidget(
       rooms:
           flitterStore.state.rooms.where((Room room) => room.oneToOne).toList(),
       onRefresh: () {
-        return onRefresh(context);
+        return _fetchRooms();
       });
 
-  _buildSearchResult() => new ListSearchResult(_searchResult);
+  _fetchRooms() async {
+    List<Room> rooms = await gitterApi.user.me.rooms();
+    flitterStore.dispatch(new FetchRoomsAction(rooms));
+  }
 }

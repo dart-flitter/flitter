@@ -8,9 +8,9 @@ import 'package:flitter/redux/store.dart';
 import 'package:flitter/widgets/common/drawer.dart';
 import 'package:flitter/widgets/routes/people.dart';
 import 'package:flutter/material.dart';
-import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/app.dart';
+import 'package:flitter/intl/messages_all.dart' as intl;
 
 class HomeView extends StatefulWidget {
   static final String path = "/home";
@@ -26,20 +26,9 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  bool _isSearching;
-  bool _isRequesting;
-  List _searchResult;
-
   StreamSubscription _subscription;
 
-  @override
-  void initState() {
-    super.initState();
-    _isSearching = false;
-    _isRequesting = false;
-    _searchResult = [];
-    _fetchRooms();
-
+  _HomeViewState() {
     _subscription = flitterStore.onChange.listen((_) {
       setState(() {});
     });
@@ -53,92 +42,36 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    if (flitterStore.state.rooms == null) {
-      return new Splash();
-    }
+    Widget body = new LoadingView();
 
-    var body;
-    if (_isSearching == true) {
-      if (_isRequesting == true) {
-        body = new Container(child: new LinearProgressIndicator());
-      } else {
-        body = _buildSearchResult();
-      }
-    } else {
+    Widget drawer = new FlitterDrawer(onTapAllConversation: () {
+      Navigator.pop(context);
+    }, onTapPeoples: () {
+      PeopleView.go(context);
+    });
+
+    String title = intl.allConversations();
+
+    if (flitterStore.state.rooms != null) {
       body = _buildListRooms();
+    } else {
+      _fetchRooms();
     }
 
-    return new Scaffold(
-        appBar: _isSearching == true ? _buildSearchBar() : _buildAppBar(),
-        drawer: new FlitterDrawer(onTapAllConversation: () {
-          Navigator.pop(context);
-        }, onTapPeoples: () {
-          PeopleView.go(context);
-        }),
-        body: body);
+    return new ScaffoldWithSearchbar(
+        body: body, title: title, drawer: drawer);
   }
 
-  _fetchRooms() {
-    gitterApi.user.me.rooms().then((List<Room> rooms) {
-      flitterStore.dispatch(new FetchRoomsAction(rooms));
-    });
+  _fetchRooms() async {
+    List<Room> rooms = await gitterApi.user.me.rooms();
+    flitterStore.dispatch(new FetchRoomsAction(rooms));
   }
 
-  void _handleSearchBegin() {
-    ModalRoute.of(context).addLocalHistoryEntry(new LocalHistoryEntry(
-      onRemove: () {
-        setState(() {
-          _isSearching = false;
-          _isRequesting = false;
-          _searchResult = [];
-        });
-      },
-    ));
-    setState(() {
-      _isSearching = true;
-      _isRequesting = false;
-      _searchResult = [];
-    });
-  }
 
-  void _handleSearchEnd() {
-    Navigator.pop(context);
-  }
-
-  _handleSearchChange(String query) async {
-    if (query.length > 3) {
-      setState(() {
-        _isRequesting = true;
-      });
-      List result = await gitterApi.user.search(query, limit: 5);
-      result.addAll(await gitterApi.room.search(query, limit: 10));
-      setState(() {
-        _searchResult = result;
-        _isRequesting = false;
-      });
-    }
-  }
-
-  _buildSearchResult() => new ListSearchResult(_searchResult);
-
-  _buildListRooms() => new ListRoomWidget(
-      rooms: flitterStore.state.rooms,
-      onRefresh: () {
-        _fetchRooms();
-      });
-
-  Widget _buildAppBar() => new AppBar(
-          title: new Text(
-            intl.allConversations(),
-          ),
-          actions: [
-            new IconButton(
-                icon: new Icon(Icons.search), onPressed: _handleSearchBegin)
-          ]);
-
-  Widget _buildSearchBar() {
-    return SearchBar.buildSearchBar(context, 'Search', //todo: intl
-        onSearchEnd: _handleSearchEnd,
-        onChange: _handleSearchChange);
-  }
+  _buildListRooms() =>
+      new ListRoomWidget(
+          rooms: flitterStore.state.rooms,
+          onRefresh: () {
+            return _fetchRooms();
+          });
 }

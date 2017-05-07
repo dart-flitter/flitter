@@ -15,7 +15,7 @@ class FlitterStore extends redux.Store<FlitterAppState, FlitterAction> {
             middleware: [new FlitterLoggingMiddleware()]);
 }
 
-final flitterStore = new FlitterStore();
+FlitterStore flitterStore = new FlitterStore();
 
 class GitterStore extends redux.Store<GitterState, FlitterAction> {
   GitterStore()

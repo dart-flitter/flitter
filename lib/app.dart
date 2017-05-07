@@ -5,11 +5,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flitter/auth.dart';
 import 'package:flitter/redux/actions.dart';
-import 'package:flitter/redux/gitter_reducer.dart';
 import 'package:flitter/redux/store.dart';
+import 'package:flitter/widgets/routes/group_room.dart';
+import 'package:flitter/widgets/routes/home.dart';
+import 'package:flitter/widgets/routes/login.dart';
+import 'package:flitter/widgets/routes/people.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/services/gitter/gitter.dart';
-import 'package:flitter/routes.dart';
 import 'package:flitter/theme.dart';
 
 class Splash extends StatelessWidget {
@@ -37,18 +39,10 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
-  AppState();
-
-  bool init;
 
   StreamSubscription _subscription;
 
-  @override
-  void initState() {
-    super.initState();
-
-    init = false;
-
+  AppState() {
     _subscription = gitterStore.onChange.listen((_) {
       setState(() {});
     });
@@ -62,19 +56,17 @@ class AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    Widget home = new LoadingView();
-
     if (!gitterStore.state.init) {
       _initGitter();
       return new Splash();
     }
 
-    if (gitterApi != null) {
-      _initApp();
-      home = new HomeView();
-    } else {
+    if (gitterApi == null) {
       return new LoginView();
     }
+
+    _initApp();
+    Widget home = new HomeView();
 
     return new MaterialApp(
         theme: kTheme,
@@ -88,17 +80,21 @@ class AppState extends State<App> {
   }
 
   _initApp() async {
-    User user = await gitterApi.user.me.get();
-    List<Group> groups = await gitterApi.group.get();
-    flitterStore.dispatch(new LoginAction(user));
-    flitterStore.dispatch(new FetchGroupsAction(groups));
+    if (flitterStore.state.user == null) {
+      User user = await gitterApi.user.me.get();
+      flitterStore.dispatch(new LoginAction(user));
+    }
+    if (flitterStore.state.groups == null) {
+      List<Group> groups = await gitterApi.group.get();
+      flitterStore.dispatch(new FetchGroupsAction(groups));
+    }
   }
 
   _initGitter() async {
     final GitterToken token = await _getSavedToken();
     if (token != null) {
       final GitterApi api = new GitterApi(token);
-      gitterStore.dispatch(new InitGitterAction(api));
+      gitterStore.dispatch(new AuthGitterAction(api));
     }
     gitterStore.dispatch(new InitAppAction());
   }

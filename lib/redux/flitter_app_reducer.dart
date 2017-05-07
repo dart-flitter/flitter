@@ -17,7 +17,6 @@ class FlitterAppReducer extends redux.Reducer<FlitterAppState, FlitterAction> {
   final _mapper = const <Type, Function>{
     FetchRoomsAction: _fetchRooms,
     FetchGroupsAction: _fetchGroups,
-    LogoutAction: _logout,
     LoginAction: _login,
     SelectRoomAction: _selectRoom,
     OnMessagesForRoom: _onMessages,
@@ -26,7 +25,12 @@ class FlitterAppReducer extends redux.Reducer<FlitterAppState, FlitterAction> {
     JoinRoomAction: _joinRoom,
     LeaveRoomAction: _leaveRoom,
     SelectGroupAction: _selectGroup,
-    FetchRoomsOfGroup: _fetchRoomsOfGroup
+    FetchRoomsOfGroup: _fetchRoomsOfGroup,
+    ShowSearchBarAction: _showSearchBar,
+    StartSearchAction: _startSearch,
+    EndSearchAction: _endSearch,
+    FetchSearchAction: _fetchSearch,
+    LogoutAction: _logout
   };
 
   @override
@@ -34,6 +38,22 @@ class FlitterAppReducer extends redux.Reducer<FlitterAppState, FlitterAction> {
     Function reducer = _mapper[action.runtimeType];
     return reducer != null ? reducer(state, action) : state;
   }
+}
+
+FlitterAppState _showSearchBar(FlitterAppState state, ShowSearchBarAction action) {
+  return state.apply(search: state.search.apply(searching: true, result: []));
+}
+
+FlitterAppState _startSearch(FlitterAppState state, StartSearchAction action) {
+  return state.apply(search: state.search.apply(searching: true, requesting: true, result: []));
+}
+
+FlitterAppState _fetchSearch(FlitterAppState state, FetchSearchAction action) {
+  return state.apply(search: state.search.apply(searching: true, requesting: false, result: action.result));
+}
+
+FlitterAppState _endSearch(FlitterAppState state, EndSearchAction action) {
+  return state.apply(search: state.search.apply(searching: false, requesting: false, result: []));
 }
 
 FlitterAppState _fetchRooms(FlitterAppState state, FetchRoomsAction action) {
@@ -45,7 +65,7 @@ FlitterAppState _fetchGroups(FlitterAppState state, FetchGroupsAction action) {
 }
 
 FlitterAppState _logout(FlitterAppState state, LogoutAction action) {
-  return state.apply(rooms: null, user: null, groups: null, messages: {});
+  return new FlitterAppState.initial();
 }
 
 FlitterAppState _login(FlitterAppState state, LoginAction action) {
@@ -58,8 +78,8 @@ FlitterAppState _selectRoom(FlitterAppState state, SelectRoomAction action) {
   return state.apply(selectedRoom: current);
 }
 
-FlitterAppState _fetchMessages(FlitterAppState state,
-    FetchMessagesForRoomAction action) {
+FlitterAppState _fetchMessages(
+    FlitterAppState state, FetchMessagesForRoomAction action) {
   Map<String, List<Message>> messages = state.messages;
   messages[action.roomId] = action.messages;
   return state.apply(messages: messages);
@@ -71,7 +91,7 @@ FlitterAppState _onMessages(FlitterAppState state, OnMessagesForRoom action) {
   messages.addAll(state.messages[action.roomId] ?? []);
   messagesByRooms[action.roomId] = messages;
   CurrentRoomState currentRoom =
-  state.selectedRoom?.apply(messages: messagesByRooms[action.roomId]);
+      state.selectedRoom?.apply(messages: messagesByRooms[action.roomId]);
   return state.apply(messages: messagesByRooms, selectedRoom: currentRoom);
 }
 
@@ -92,7 +112,7 @@ FlitterAppState _onSendMessage(FlitterAppState state, OnSendMessage action) {
   messages[action.roomId] ??= [];
   messages[action.roomId].add(action.message);
   CurrentRoomState currentRoom =
-  state.selectedRoom?.apply(messages: messages[action.roomId]);
+      state.selectedRoom?.apply(messages: messages[action.roomId]);
   return state.apply(messages: messages, selectedRoom: currentRoom);
 }
 
@@ -101,7 +121,9 @@ FlitterAppState _selectGroup(FlitterAppState state, SelectGroupAction action) {
   return state.apply(selectedGroup: current);
 }
 
-FlitterAppState _fetchRoomsOfGroup(FlitterAppState state, FetchRoomsOfGroup action) {
-  CurrentGroupState current = new CurrentGroupState(group: state.selectedGroup.group, rooms: action.rooms);
+FlitterAppState _fetchRoomsOfGroup(
+    FlitterAppState state, FetchRoomsOfGroup action) {
+  CurrentGroupState current = new CurrentGroupState(
+      group: state.selectedGroup.group, rooms: action.rooms);
   return state.apply(selectedGroup: current);
 }

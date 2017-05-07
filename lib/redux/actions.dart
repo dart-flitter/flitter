@@ -8,9 +8,9 @@ abstract class FlitterAction {
   String toString() => '$runtimeType';
 }
 
-class InitGitterAction extends FlitterAction {
+class AuthGitterAction extends FlitterAction {
   final GitterApi api;
-  InitGitterAction(this.api);
+  AuthGitterAction(this.api);
 }
 
 class InitAppAction extends FlitterAction {
@@ -77,4 +77,21 @@ class FetchRoomsOfGroup extends FlitterAction {
 class SelectGroupAction extends FlitterAction {
   final Group group;
   SelectGroupAction(this.group);
+}
+
+class ShowSearchBarAction extends FlitterAction {
+  ShowSearchBarAction();
+}
+
+class StartSearchAction extends FlitterAction {
+  StartSearchAction();
+}
+
+class EndSearchAction extends FlitterAction {
+  EndSearchAction();
+}
+
+class FetchSearchAction extends FlitterAction {
+  final List result;
+  FetchSearchAction(this.result);
 }

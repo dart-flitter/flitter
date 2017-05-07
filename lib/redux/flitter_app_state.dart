@@ -1,10 +1,23 @@
 import 'package:flitter/services/gitter/gitter.dart';
 
 class SearchState {
-  final result;
+  final List result;
   final bool requesting;
+  final bool searching;
 
-  SearchState({this.result, this.requesting});
+  SearchState({this.result, this.requesting, this.searching});
+
+  SearchState.initial()
+      : result = [],
+        requesting = false,
+        searching = false;
+
+  SearchState apply({List result, bool requesting, bool searching}) {
+    return new SearchState(
+        result: result ?? this.result,
+        requesting: requesting ?? this.requesting,
+        searching: searching ?? this.searching);
+  }
 }
 
 class CurrentRoomState {
@@ -55,7 +68,7 @@ class FlitterAppState {
         user = null,
         messages = const <String, List<Message>>{},
         selectedRoom = null,
-        search = null,
+        search = new SearchState.initial(),
         selectedGroup = null;
 
   FlitterAppState apply(

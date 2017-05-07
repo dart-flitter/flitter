@@ -17,7 +17,7 @@ class GitterLoggingMiddleware
 class GitterReducer extends redux.Reducer<GitterState, FlitterAction> {
   final _mapper = const <Type, Function>{
     LogoutAction: _logout,
-    InitGitterAction: _initGitter,
+    AuthGitterAction: _initGitter,
     InitAppAction: _initApp
   };
 
@@ -29,13 +29,13 @@ class GitterReducer extends redux.Reducer<GitterState, FlitterAction> {
 }
 
 GitterState _logout(GitterState state, LogoutAction action) {
-  return state.apply(api: null, init: false);
+  return state.apply(api: null);
 }
 
 GitterState _initApp(GitterState state, InitAppAction action) {
   return state.apply(init: true);
 }
 
-GitterState _initGitter(GitterState state, InitGitterAction action) {
+GitterState _initGitter(GitterState state, AuthGitterAction action) {
   return state.apply(api: action.api);
 }
