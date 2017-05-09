@@ -1,10 +1,8 @@
 library flitter.routes.room;
 
 import 'dart:async';
-import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
-import 'package:meta/meta.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/widgets/common/chat_room_widget.dart';
 import 'package:flutter/material.dart';

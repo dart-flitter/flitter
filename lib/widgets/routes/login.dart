@@ -1,9 +1,8 @@
 library flitter.routes.login;
 
-import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/binding.dart';
 import 'dart:async';
-import 'dart:io';
+import 'package:flitter/theme.dart';
+import 'package:flutter/services.dart';
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_auth.dart';
@@ -11,7 +10,6 @@ import 'package:flitter/services/flitter_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/app.dart';
 import 'package:flitter/services/gitter/gitter.dart';
-import 'package:flitter/theme.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 typedef void OnLoginCallback(GitterToken token);
@@ -49,8 +47,10 @@ class _LoginViewState extends State<LoginView> {
       });
 
       // catch onBackPressed for Android
-      flutterWebviewPlugin.onBackPressed.first.then((_)  => SystemNavigator.pop());
+      flutterWebviewPlugin.onBackPressed.first.then((_)  {
+        return SystemNavigator.pop();
+      });
     }
-    return new Splash();
+    return new MaterialApp(home: new Scaffold(body: new Center(child: new CircularProgressIndicator())), theme: kTheme);
   }
 }

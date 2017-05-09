@@ -2,7 +2,6 @@ library flitter.routes.group_room;
 
 import 'dart:async';
 
-import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/flitter_app_state.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';

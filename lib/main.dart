@@ -19,7 +19,7 @@ Future main() async {
 }
 
 Future<Null> _init() async {
-  final GitterToken token = await FlitterAuth.getSavedToken();
+  final GitterToken token = await FlitterAuth.getToken();
   if (token != null) {
     flitterStore.dispatch(new AuthGitterAction(token));
     await initBasicData();

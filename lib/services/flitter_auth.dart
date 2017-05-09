@@ -1,21 +1,33 @@
 library flitter.auth;
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:convert';
 
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/services/oauth/oauth.dart';
-import 'package:flutter/services.dart';
 import 'package:flitter/services/flutter_gitter_auth.dart';
 import 'package:flitter/redux/actions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class FlitterAuth {
-  static Future<File> _getTokenFile() async {
-    String dir = (await PathProvider.getApplicationDocumentsDirectory()).path;
-    return new File("$dir/token.json");
+
+  static const _tokenKey = "gitter_token";
+
+  static Future<GitterToken> getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String tokenJson = prefs.getString(_tokenKey);
+    if (tokenJson == null) {
+      return null;
+    }
+    return new GitterToken.fromJson(JSON.decode(tokenJson));
+  }
+
+  static Future<bool> saveToken(GitterToken token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(_tokenKey, token == null ? null : JSON.encode(token?.toMap()));
+    return prefs.commit();
   }
 
   static Future<GitterToken> auth() async {
@@ -25,39 +37,13 @@ class FlitterAuth {
       "http://localhost:8080/",
     ));
     GitterToken token = await gitterOAuth.signIn();
-    if (token != null) {
-      File tokenFile = await _getTokenFile();
-      tokenFile.writeAsStringSync(JSON.encode(token.toMap()));
-    }
+    await saveToken(token);
     return token;
-  }
-
-  static Future<Null> saveToken(GitterToken token) async {
-    File tokenFile = await _getTokenFile();
-    if (!tokenFile.existsSync()) {
-      await tokenFile.create(recursive: true);
-    }
-    if (token != null) {
-      return tokenFile.writeAsString(JSON.encode(token.toMap()));
-    }
-    return tokenFile.writeAsString(JSON.encode({}));
   }
 
   static Future<Null> logout() async {
     await saveToken(null);
     flitterStore.dispatch(new LogoutAction());
     flitterStore.dispatch(new LogoutAction());
-  }
-
-  static Future<GitterToken> getSavedToken() async {
-    File tokenFile = await _getTokenFile();
-    if (!await tokenFile.exists()) {
-      return null;
-    }
-    Map token = JSON.decode(await tokenFile.readAsString());
-    if (token.isEmpty) {
-      return null;
-    }
-    return new GitterToken.fromJson(token);
   }
 }

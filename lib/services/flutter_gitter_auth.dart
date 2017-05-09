@@ -50,7 +50,9 @@ class FlutterGitterOAuth extends GitterOAuth {
       final String urlParams = constructUrlParams();
 
       // catch onDestroy event of WebView
-      flutterWebviewPlugin.onDestroy.first.then((_) => _close());
+      flutterWebviewPlugin.onDestroy.first.then((_) {
+        _close();
+      });
 
       // launch url inside webview
       flutterWebviewPlugin.launch("${codeInformations.url}?$urlParams",
