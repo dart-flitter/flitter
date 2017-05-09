@@ -1,52 +1,55 @@
 library flitter.routes.login;
 
-import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:flutter/src/widgets/binding.dart';
 import 'dart:async';
+import 'dart:io';
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
+import 'package:flitter/services/flitter_auth.dart';
+import 'package:flitter/services/flitter_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/app.dart';
 import 'package:flitter/services/gitter/gitter.dart';
-import 'package:flitter/auth.dart';
 import 'package:flitter/theme.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 typedef void OnLoginCallback(GitterToken token);
 
 class LoginView extends StatefulWidget {
-  LoginView();
-
-  static void go(BuildContext context) {
-    flitterStore.dispatch(new LogoutAction());
-  }
-
   @override
   _LoginViewState createState() => new _LoginViewState();
 }
 
 class _LoginViewState extends State<LoginView> {
-  bool _loggedIn;
+  StreamSubscription _subscription;
+
+  final FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
 
   @override
   void initState() {
     super.initState();
-    _loggedIn = false;
+    _subscription = flitterStore.onChange.listen((_) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _subscription.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_loggedIn) {
-      auth().then((token) {
-        if (token == null) {
-          setState(() {
-            _loggedIn = false;
-          });
-        } else {
-          gitterStore.dispatch(new AuthGitterAction(new GitterApi(token)));
-          setState(() {
-            _loggedIn = true;
-          });
-        }
+    if (flitterStore.state.token == null) {
+      FlitterAuth.auth().then((GitterToken token) {
+        initBasicData();
+        flitterStore.dispatch(new AuthGitterAction(token));
       });
+
+      // catch onBackPressed for Android
+      flutterWebviewPlugin.onBackPressed.first.then((_)  => SystemNavigator.pop());
     }
     return new Splash();
   }

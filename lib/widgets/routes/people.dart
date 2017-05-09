@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flitter/common.dart';
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
+import 'package:flitter/services/flitter_request.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/widgets/common/drawer.dart';
 import 'package:flitter/widgets/routes/home.dart';
@@ -27,10 +28,11 @@ class PeopleView extends StatefulWidget {
 }
 
 class _PeopleViewState extends State<PeopleView> {
-
   StreamSubscription _subscription;
 
-  _PeopleViewState() {
+  @override
+  void initState() {
+    super.initState();
     _subscription = flitterStore.onChange.listen((_) {
       setState(() {});
     });
@@ -44,7 +46,7 @@ class _PeopleViewState extends State<PeopleView> {
 
   @override
   Widget build(BuildContext context) {
-    Widget body = new LoadingView();
+    Widget body;
 
     Widget drawer = new FlitterDrawer(onTapAllConversation: () {
       HomeView.go(context);
@@ -52,27 +54,20 @@ class _PeopleViewState extends State<PeopleView> {
       Navigator.pop(context);
     });
 
-    String title = intl.people();
-
     if (flitterStore.state.rooms != null) {
       body = _buildListRooms();
     } else {
-      _fetchRooms();
+      body = new LoadingView();
+      fetchRooms();
     }
 
-    return new ScaffoldWithSearchbar(
-        body: body, title: title, drawer: drawer);
+    return new ScaffoldWithSearchbar(body: body, title: intl.people(), drawer: drawer);
   }
 
   _buildListRooms() => new ListRoomWidget(
       rooms:
           flitterStore.state.rooms.where((Room room) => room.oneToOne).toList(),
       onRefresh: () {
-        return _fetchRooms();
+        return fetchRooms();
       });
-
-  _fetchRooms() async {
-    List<Room> rooms = await gitterApi.user.me.rooms();
-    flitterStore.dispatch(new FetchRoomsAction(rooms));
-  }
 }

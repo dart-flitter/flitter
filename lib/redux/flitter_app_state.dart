@@ -52,18 +52,25 @@ class FlitterAppState {
   final CurrentRoomState selectedRoom;
   final SearchState search;
   final CurrentGroupState selectedGroup;
+  final GitterApi api;
+  final GitterToken token;
 
-  FlitterAppState(
-      {this.rooms,
-      this.groups,
-      this.user,
-      this.messages,
-      this.search,
-      this.selectedRoom,
-      this.selectedGroup});
+  FlitterAppState({
+    this.api,
+    this.token,
+    this.rooms,
+    this.groups,
+    this.user,
+    this.messages,
+    this.search,
+    this.selectedRoom,
+    this.selectedGroup});
 
   FlitterAppState.initial()
-      : rooms = null,
+      :
+        api = null,
+        token = null,
+        rooms = null,
         groups = null,
         user = null,
         messages = const <String, List<Message>>{},
@@ -71,15 +78,16 @@ class FlitterAppState {
         search = new SearchState.initial(),
         selectedGroup = null;
 
-  FlitterAppState apply(
-      {List<Room> rooms,
-      List<Group> groups,
-      User user,
-      Map<String, List<Message>> messages,
-      bool init,
-      CurrentRoomState selectedRoom,
-      SearchState search,
-      CurrentGroupState selectedGroup}) {
+  FlitterAppState apply({List<Room> rooms,
+    List<Group> groups,
+    User user,
+    Map<String, List<Message>> messages,
+    bool init,
+    CurrentRoomState selectedRoom,
+    SearchState search,
+    CurrentGroupState selectedGroup,
+    GitterApi api,
+    GitterToken token}) {
     return new FlitterAppState(
         rooms: rooms ?? this.rooms,
         groups: groups ?? this.groups,
@@ -87,6 +95,8 @@ class FlitterAppState {
         messages: messages ?? this.messages,
         selectedRoom: selectedRoom ?? this.selectedRoom,
         search: search ?? this.search,
-        selectedGroup: selectedGroup ?? this.selectedGroup);
+        selectedGroup: selectedGroup ?? this.selectedGroup,
+        api: api ?? this.api,
+        token: token ?? this.token);
   }
 }

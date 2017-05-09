@@ -25,6 +25,8 @@ Future<String> getContent() async {
 class FlutterGitterOAuth extends GitterOAuth {
   final StreamController<String> _onCode = new StreamController();
 
+  final FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
+
   bool _isOpen = false;
   HttpServer _server;
   Stream<String> _onCodeStream;
@@ -36,6 +38,8 @@ class FlutterGitterOAuth extends GitterOAuth {
 
   Future<String> requestCode() async {
     if (shouldRequestCode() && !_isOpen) {
+      // close any open browser (happen on hot reload)
+      await flutterWebviewPlugin.close();
       _isOpen = true;
 
       // init server
@@ -46,10 +50,10 @@ class FlutterGitterOAuth extends GitterOAuth {
       final String urlParams = constructUrlParams();
 
       // catch onDestroy event of WebView
-      FlutterWebviewPlugin.onDestroy.first.then((_) => _close());
+      flutterWebviewPlugin.onDestroy.first.then((_) => _close());
 
       // launch url inside webview
-      FlutterWebviewPlugin.launch("${codeInformations.url}?$urlParams",
+      flutterWebviewPlugin.launch("${codeInformations.url}?$urlParams",
           clearCookies: true);
 
       code = await onCode.first;
@@ -63,14 +67,14 @@ class FlutterGitterOAuth extends GitterOAuth {
       // close server
       _server.close(force: true);
       // close Webview
-      FlutterWebviewPlugin.close();
+      flutterWebviewPlugin.close();
     }
     _isOpen = false;
   }
 
   Future<HttpServer> _createServer() async {
-    HttpServer server =
-        await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080);
+    HttpServer server = await HttpServer
+        .bind(InternetAddress.LOOPBACK_IP_V4, 8080, shared: true);
     return server;
   }
 

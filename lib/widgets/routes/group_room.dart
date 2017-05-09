@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/flitter_app_state.dart';
 import 'package:flitter/redux/store.dart';
+import 'package:flitter/services/flitter_request.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/widgets/routes/home.dart';
 import 'package:flitter/widgets/routes/people.dart';
@@ -37,6 +38,10 @@ class _GroupRoomViewState extends State<GroupRoomView> {
     _subscription = flitterStore.onChange.listen((_) {
       setState(() {});
     });
+
+    if (groupState.rooms == null) {
+      fetchRoomsOfGroup();
+    }
   }
 
   @override
@@ -45,29 +50,19 @@ class _GroupRoomViewState extends State<GroupRoomView> {
     _subscription.cancel();
   }
 
-  Future<Null> fetchData(BuildContext context) async {
-    String groupId = groupState.group.id;
-    final rooms = await gitterApi.group.suggestedRoomsOf(groupId);
-    flitterStore.dispatch(new FetchRoomsOfGroup(rooms));
-  }
-
   @override
   Widget build(BuildContext context) {
-    Widget body = new Center(
-      child: new CircularProgressIndicator(),
-    );
-    if (groupState == null) {
-      return new Splash();
-    }
-    if (groupState.rooms == null) {
-      fetchData(context);
-    } else {
+    Widget body;
+
+    if (groupState?.rooms != null) {
       final children = [];
 
       children.addAll(
           groupState.rooms.map((room) => roomTile(context, room)).toList());
 
       body = new ListView(children: children);
+    } else {
+      body = new LoadingView();
     }
 
     return new Scaffold(

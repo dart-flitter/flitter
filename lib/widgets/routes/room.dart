@@ -3,6 +3,7 @@ library flitter.routes.room;
 import 'dart:async';
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
+import 'package:flitter/services/flitter_request.dart';
 import 'package:meta/meta.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/widgets/common/chat_room_widget.dart';
@@ -22,6 +23,7 @@ class RoomView extends StatefulWidget {
 
 class _RoomViewState extends State<RoomView> {
   List<Message> get messages => flitterStore.state.selectedRoom.messages;
+
   Room get room => flitterStore.state.selectedRoom.room;
 
   StreamSubscription _subscription;
@@ -32,6 +34,10 @@ class _RoomViewState extends State<RoomView> {
     _subscription = flitterStore.onChange.listen((_) {
       setState(() {});
     });
+
+    if (messages == null) {
+      _fetchMessages();
+    }
   }
 
   @override
@@ -42,56 +48,52 @@ class _RoomViewState extends State<RoomView> {
 
   @override
   Widget build(BuildContext context) {
-    Widget body = new LoadingView();
-    if (messages == null) {
-      _fetchMessages();
-    } else {
+    Widget body;
+
+    if (messages != null) {
       final ChatRoomWidget chatRoom =
-          new ChatRoomWidget(messages: messages.reversed.toList());
+      new ChatRoomWidget(messages: messages.reversed.toList());
       chatRoom.onNeedDataStream.listen((_) => _fetchMessages());
       body = chatRoom;
+    } else {
+      body = new LoadingView();
     }
 
     return new Scaffold(
         appBar: new AppBar(title: new Text(room.name), actions: [_buildMenu()]),
         body: body,
         floatingActionButton:
-            _userHasJoined || messages == null ? null : _joinRoomButton(),
+        _userHasJoined || messages == null ? null : _joinRoomButton(),
         bottomNavigationBar:
-            _userHasJoined && messages != null ? _buildChatInput() : null);
+        _userHasJoined && messages != null ? _buildChatInput() : null);
   }
 
-  Future<Null> _fetchMessages() async {
-    gitterApi.room
-        .messagesFromRoomId(room.id, beforeId: messages?.first?.id)
-        .then((List<Message> messages) {
-      flitterStore.dispatch(new OnMessagesForRoom(messages, room.id));
-    });
+  _fetchMessages() {
+    fetchMessagesOfRoom(room.id, messages?.first?.id);
   }
 
-  Widget _buildMenu() => new PopupMenuButton(
-      itemBuilder: (BuildContext context) => <PopupMenuItem<RoomMenuAction>>[
+  Widget _buildMenu() =>
+      new PopupMenuButton(
+          itemBuilder: (BuildContext context) =>
+          <PopupMenuItem<RoomMenuAction>>[
             new PopupMenuItem<RoomMenuAction>(
                 value: RoomMenuAction.leave,
                 child: const Text('Leave room')) //todo: intl
           ],
-      onSelected: (RoomMenuAction action) {
-        switch (action) {
-          case RoomMenuAction.leave:
-            _onLeaveRoom();
-            break;
-        }
-      });
+          onSelected: (RoomMenuAction action) {
+            switch (action) {
+              case RoomMenuAction.leave:
+                _onLeaveRoom();
+                break;
+            }
+          });
 
   _onLeaveRoom() {
-    gitterApi.room
-        .removeUserFrom(room.id, flitterStore.state.user.id)
-        .then((success) {
+    leaveRoom(room).then((success) {
       if (success == true) {
-        flitterStore.dispatch(new LeaveRoomAction(room));
         Navigator.of(context).pop();
       } else {
-        // Todo: dispatch error
+        // Todo: show error
       }
     });
   }
@@ -102,21 +104,16 @@ class _RoomViewState extends State<RoomView> {
   }
 
   void _onTapJoinRoom() {
-    gitterApi.user
-        .userJoinRoom(flitterStore.state.user.id, room.id)
-        .then((Room room) {
-      flitterStore.dispatch(new JoinRoomAction(room));
-    });
+    joinRoom(room);
   }
 
   bool get _userHasJoined =>
       flitterStore.state.rooms.any((Room r) => r.id == room.id);
 
-  Widget _buildChatInput() => new ChatInput(
+  Widget _buildChatInput() =>
+      new ChatInput(
         onSubmit: (String value) async {
-          final Message message =
-              await gitterApi.room.sendMessageToRoomId(room.id, value);
-          flitterStore.dispatch(new OnSendMessage(message, room.id));
+          sendMessage(value, room);
         },
       );
 }

@@ -9,8 +9,8 @@ abstract class FlitterAction {
 }
 
 class AuthGitterAction extends FlitterAction {
-  final GitterApi api;
-  AuthGitterAction(this.api);
+  final GitterToken token;
+  AuthGitterAction(this.token);
 }
 
 class InitAppAction extends FlitterAction {
@@ -31,9 +31,9 @@ class LogoutAction extends FlitterAction {
   LogoutAction();
 }
 
-class LoginAction extends FlitterAction {
+class FetchUser extends FlitterAction {
   final User user;
-  LoginAction(this.user);
+  FetchUser(this.user);
 }
 
 class SelectRoomAction extends FlitterAction {

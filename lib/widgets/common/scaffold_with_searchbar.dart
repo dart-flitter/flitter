@@ -1,6 +1,7 @@
 import 'package:flitter/common.dart';
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
+import 'package:flitter/services/flitter_request.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
@@ -54,25 +55,17 @@ class _ScaffoldWithSearchbarState extends State<ScaffoldWithSearchbar> {
 
   _handleSearchChange(String query) async {
     if (query.length > 3) {
-      flitterStore.dispatch(new StartSearchAction());
-      List result = await gitterApi.user.search(query, limit: 5);
-      result.addAll(await gitterApi.room.search(query, limit: 10));
-      flitterStore.dispatch(new FetchSearchAction(result));
+      search(query);
     }
   }
 
   _buildSearchResult() =>
       new ListSearchResult(flitterStore.state.search.result);
 
-  Widget _buildAppBar() =>
-      new AppBar(
-          title: new Text(
-              widget.title
-          ),
-          actions: [
-            new IconButton(
-                icon: new Icon(Icons.search), onPressed: _handleSearchBegin)
-          ]);
+  Widget _buildAppBar() => new AppBar(title: new Text(widget.title), actions: [
+        new IconButton(
+            icon: new Icon(Icons.search), onPressed: _handleSearchBegin)
+      ]);
 
   Widget _buildSearchBar() {
     return SearchBar.buildSearchBar(context, 'Search', //todo: intl

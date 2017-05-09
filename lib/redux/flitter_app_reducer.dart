@@ -17,7 +17,7 @@ class FlitterAppReducer extends redux.Reducer<FlitterAppState, FlitterAction> {
   final _mapper = const <Type, Function>{
     FetchRoomsAction: _fetchRooms,
     FetchGroupsAction: _fetchGroups,
-    LoginAction: _login,
+    FetchUser: _fetchUser,
     SelectRoomAction: _selectRoom,
     OnMessagesForRoom: _onMessages,
     OnSendMessage: _onSendMessage,
@@ -30,7 +30,8 @@ class FlitterAppReducer extends redux.Reducer<FlitterAppState, FlitterAction> {
     StartSearchAction: _startSearch,
     EndSearchAction: _endSearch,
     FetchSearchAction: _fetchSearch,
-    LogoutAction: _logout
+    LogoutAction: _logout,
+    AuthGitterAction: _initGitter
   };
 
   @override
@@ -40,20 +41,27 @@ class FlitterAppReducer extends redux.Reducer<FlitterAppState, FlitterAction> {
   }
 }
 
-FlitterAppState _showSearchBar(FlitterAppState state, ShowSearchBarAction action) {
+FlitterAppState _showSearchBar(
+    FlitterAppState state, ShowSearchBarAction action) {
   return state.apply(search: state.search.apply(searching: true, result: []));
 }
 
 FlitterAppState _startSearch(FlitterAppState state, StartSearchAction action) {
-  return state.apply(search: state.search.apply(searching: true, requesting: true, result: []));
+  return state.apply(
+      search:
+          state.search.apply(searching: true, requesting: true, result: []));
 }
 
 FlitterAppState _fetchSearch(FlitterAppState state, FetchSearchAction action) {
-  return state.apply(search: state.search.apply(searching: true, requesting: false, result: action.result));
+  return state.apply(
+      search: state.search
+          .apply(searching: true, requesting: false, result: action.result));
 }
 
 FlitterAppState _endSearch(FlitterAppState state, EndSearchAction action) {
-  return state.apply(search: state.search.apply(searching: false, requesting: false, result: []));
+  return state.apply(
+      search:
+          state.search.apply(searching: false, requesting: false, result: []));
 }
 
 FlitterAppState _fetchRooms(FlitterAppState state, FetchRoomsAction action) {
@@ -64,11 +72,7 @@ FlitterAppState _fetchGroups(FlitterAppState state, FetchGroupsAction action) {
   return state.apply(groups: action.groups);
 }
 
-FlitterAppState _logout(FlitterAppState state, LogoutAction action) {
-  return new FlitterAppState.initial();
-}
-
-FlitterAppState _login(FlitterAppState state, LoginAction action) {
+FlitterAppState _fetchUser(FlitterAppState state, FetchUser action) {
   return state.apply(user: action.user);
 }
 
@@ -126,4 +130,16 @@ FlitterAppState _fetchRoomsOfGroup(
   CurrentGroupState current = new CurrentGroupState(
       group: state.selectedGroup.group, rooms: action.rooms);
   return state.apply(selectedGroup: current);
+}
+
+FlitterAppState _logout(FlitterAppState state, LogoutAction action) {
+  return new FlitterAppState.initial();
+}
+
+FlitterAppState _initGitter(FlitterAppState state, AuthGitterAction action) {
+  GitterApi api;
+  if (action.token != null) {
+    api = new GitterApi(action.token);
+  }
+  return state.apply(api: api, token: action.token);
 }

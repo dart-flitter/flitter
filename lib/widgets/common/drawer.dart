@@ -3,13 +3,12 @@ library flitter.common.drawer;
 import 'dart:async';
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
+import 'package:flitter/services/flitter_auth.dart';
 import 'package:flitter/widgets/routes/group_room.dart';
-import 'package:flitter/widgets/routes/login.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/painting.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
-import 'package:flitter/auth.dart';
 
 class FlitterDrawer extends StatefulWidget {
   final VoidCallback onTapAllConversation;
@@ -27,22 +26,24 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final child = [
-      _buildDrawerHeader(context),
-      new ListTile(
-          leading: new Icon(Icons.home),
-          title: new Text(intl.allConversations()),
-          onTap: widget.onTapAllConversation),
-      new ListTile(
-          leading: new Icon(Icons.person),
-          title: new Text(intl.people()),
-          onTap: widget.onTapPeoples),
-    ];
+    if (flitterStore.state.user != null) {
+      final child = [
+        _buildDrawerHeader(context),
+        new ListTile(
+            leading: new Icon(Icons.home),
+            title: new Text(intl.allConversations()),
+            onTap: widget.onTapAllConversation),
+        new ListTile(
+            leading: new Icon(Icons.person),
+            title: new Text(intl.people()),
+            onTap: widget.onTapPeoples),
+      ];
 
-    child.addAll(_drawerCommunities(context));
-    child.addAll(_drawerFooter(context));
-
-    return new Drawer(child: new ListView(children: child));
+      child.addAll(_drawerCommunities(context));
+      child.addAll(_drawerFooter(context));
+      return new Drawer(child: new ListView(children: child));
+    }
+    return new Center(child: new CircularProgressIndicator());
   }
 
   ////////
@@ -64,9 +65,8 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
             leading: new Icon(Icons.exit_to_app),
             title: new Text(intl.logout()),
             onTap: () {
-              logout(context).then((_) {
-                LoginView.go(context);
-              });
+              Navigator.of(context).pop();
+              FlitterAuth.logout();
             }),
       ];
 
