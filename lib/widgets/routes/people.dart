@@ -60,7 +60,8 @@ class _PeopleViewState extends State<PeopleView> {
       fetchRooms();
     }
 
-    return new ScaffoldWithSearchbar(body: body, title: intl.people(), drawer: drawer);
+    return new ScaffoldWithSearchbar(
+        body: body, title: intl.people(), drawer: drawer);
   }
 
   _buildListRooms() => new ListRoomWidget(

@@ -56,7 +56,8 @@ class _HomeViewState extends State<HomeView> {
       fetchRooms();
     }
 
-    return new ScaffoldWithSearchbar(body: body, title: intl.allConversations(), drawer: drawer);
+    return new ScaffoldWithSearchbar(
+        body: body, title: intl.allConversations(), drawer: drawer);
   }
 
   _buildListRooms() => new ListRoomWidget(

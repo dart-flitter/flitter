@@ -18,3 +18,4 @@ flutter:
   assets:
     - assets/html/success.html
     - assets/images/banner.jpg
+    - config.yaml

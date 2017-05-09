@@ -50,7 +50,7 @@ class _RoomViewState extends State<RoomView> {
 
     if (messages != null) {
       final ChatRoomWidget chatRoom =
-      new ChatRoomWidget(messages: messages.reversed.toList());
+          new ChatRoomWidget(messages: messages.reversed.toList());
       chatRoom.onNeedDataStream.listen((_) => _fetchMessages());
       body = chatRoom;
     } else {
@@ -61,30 +61,28 @@ class _RoomViewState extends State<RoomView> {
         appBar: new AppBar(title: new Text(room.name), actions: [_buildMenu()]),
         body: body,
         floatingActionButton:
-        _userHasJoined || messages == null ? null : _joinRoomButton(),
+            _userHasJoined || messages == null ? null : _joinRoomButton(),
         bottomNavigationBar:
-        _userHasJoined && messages != null ? _buildChatInput() : null);
+            _userHasJoined && messages != null ? _buildChatInput() : null);
   }
 
   _fetchMessages() {
     fetchMessagesOfRoom(room.id, messages?.first?.id);
   }
 
-  Widget _buildMenu() =>
-      new PopupMenuButton(
-          itemBuilder: (BuildContext context) =>
-          <PopupMenuItem<RoomMenuAction>>[
+  Widget _buildMenu() => new PopupMenuButton(
+      itemBuilder: (BuildContext context) => <PopupMenuItem<RoomMenuAction>>[
             new PopupMenuItem<RoomMenuAction>(
                 value: RoomMenuAction.leave,
                 child: const Text('Leave room')) //todo: intl
           ],
-          onSelected: (RoomMenuAction action) {
-            switch (action) {
-              case RoomMenuAction.leave:
-                _onLeaveRoom();
-                break;
-            }
-          });
+      onSelected: (RoomMenuAction action) {
+        switch (action) {
+          case RoomMenuAction.leave:
+            _onLeaveRoom();
+            break;
+        }
+      });
 
   _onLeaveRoom() {
     leaveRoom(room).then((success) {
@@ -108,8 +106,7 @@ class _RoomViewState extends State<RoomView> {
   bool get _userHasJoined =>
       flitterStore.state.rooms.any((Room r) => r.id == room.id);
 
-  Widget _buildChatInput() =>
-      new ChatInput(
+  Widget _buildChatInput() => new ChatInput(
         onSubmit: (String value) async {
           sendMessage(value, room);
         },

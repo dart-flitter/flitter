@@ -15,13 +15,13 @@ class Splash extends StatelessWidget {
     return new MaterialApp(
         home: new Scaffold(
             body: new Column(children: [
-              new Center(
-                  child: new FlutterLogo(colors: Colors.pink, size: 80.0)),
-              new Center(child: new Text(
-                  "Flitter", style: new TextStyle(fontSize: 32.0))),
-              new Center(child: new Text(
-                  "for Gitter", style: new TextStyle(fontSize: 16.0)))
-            ], mainAxisAlignment: MainAxisAlignment.center)),
+          new Center(child: new FlutterLogo(colors: Colors.pink, size: 80.0)),
+          new Center(
+              child: new Text("Flitter", style: new TextStyle(fontSize: 32.0))),
+          new Center(
+              child:
+                  new Text("for Gitter", style: new TextStyle(fontSize: 16.0)))
+        ], mainAxisAlignment: MainAxisAlignment.center)),
         theme: kTheme);
   }
 }
@@ -58,13 +58,10 @@ class _AppState extends State<App> {
       return new LoginView();
     }
 
-    return new MaterialApp(
-        theme: kTheme,
-        title: "Flitter",
-        routes: {
-          HomeView.path: (BuildContext context) => new HomeView(),
-          PeopleView.path: (BuildContext context) => new PeopleView(),
-          GroupRoomView.path: (BuildContext context) => new GroupRoomView(),
-        });
+    return new MaterialApp(theme: kTheme, title: "Flitter", routes: {
+      HomeView.path: (BuildContext context) => new HomeView(),
+      PeopleView.path: (BuildContext context) => new PeopleView(),
+      GroupRoomView.path: (BuildContext context) => new GroupRoomView(),
+    });
   }
 }

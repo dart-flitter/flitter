@@ -8,7 +8,6 @@ import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_auth.dart';
 import 'package:flitter/services/flitter_request.dart';
 import 'package:flutter/material.dart';
-import 'package:flitter/app.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
@@ -47,10 +46,13 @@ class _LoginViewState extends State<LoginView> {
       });
 
       // catch onBackPressed for Android
-      flutterWebviewPlugin.onBackPressed.first.then((_)  {
+      flutterWebviewPlugin.onBackPressed.first.then((_) {
         return SystemNavigator.pop();
       });
     }
-    return new MaterialApp(home: new Scaffold(body: new Center(child: new CircularProgressIndicator())), theme: kTheme);
+    return new MaterialApp(
+        home: new Scaffold(
+            body: new Center(child: new CircularProgressIndicator())),
+        theme: kTheme);
   }
 }

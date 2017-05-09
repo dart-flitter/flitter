@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_auth.dart';
+import 'package:flitter/services/flitter_config.dart';
 import 'package:flitter/services/flitter_request.dart';
 import 'package:flitter/services/gitter/src/models/token.dart';
 import 'package:flutter/material.dart';
@@ -24,4 +25,5 @@ Future<Null> _init() async {
     flitterStore.dispatch(new AuthGitterAction(token));
     await initBasicData();
   }
+  await flitterConfig.init();
 }

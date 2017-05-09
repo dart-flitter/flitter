@@ -16,5 +16,3 @@ class FlitterStore extends redux.Store<FlitterAppState, FlitterAction> {
 FlitterStore flitterStore = new FlitterStore();
 GitterApi get gitterApi => flitterStore.state.api;
 GitterToken get gitterToken => flitterStore.state.token;
-
-
