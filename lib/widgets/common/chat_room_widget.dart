@@ -17,15 +17,11 @@ class ChatRoomWidget extends StatefulWidget {
       : _onNeedData = new StreamController();
 
   Stream<Null> get onNeedDataStream => onNeedDataController.stream;
+
   StreamController<Null> get onNeedDataController => _onNeedData;
 }
 
 class _ChatRoomWidgetState extends State<ChatRoomWidget> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return new Container(
@@ -33,21 +29,32 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
       child: new ListView.builder(
         reverse: true,
         itemCount: widget.messages.length,
-        itemBuilder: (BuildContext context, int index) {
-          Message message = widget.messages[index];
-          if (index == widget.messages.length - 5) {
-            widget.onNeedDataController.add(null);
-          }
-          return new ChatMessageWidget(
-            leading: new CircleAvatar(
-                backgroundImage:
-                    new NetworkImage(message.fromUser.avatarUrlSmall)),
-            body: new Text(message.text, softWrap: true),
-            title:
-                "${message.fromUser.displayName} - @${message.fromUser.username}",
-          );
-        },
+        itemBuilder: _buildListItem,
       ),
+    );
+  }
+
+  _buildListItem(BuildContext context, int index) {
+    Message message = widget.messages[index];
+    if (index == widget.messages.length - 5) {
+      widget.onNeedDataController.add(null);
+    }
+
+    if (index != 0 &&
+        widget.messages[index - 1].fromUser.id == message.fromUser.id) {
+      return new ChatMessageWidget(
+        leading: new Container(),
+        withDivider: false,
+        body: new Text(message.text, softWrap: true),
+      );
+    }
+
+    return new ChatMessageWidget(
+      leading: new CircleAvatar(
+          backgroundImage: new NetworkImage(message.fromUser.avatarUrlSmall),
+          backgroundColor: Colors.grey[200]),
+      body: new Text(message.text, softWrap: true),
+      title: "${message.fromUser.displayName} - @${message.fromUser.username}",
     );
   }
 }
@@ -86,9 +93,10 @@ class ChatMessageWidget extends StatelessWidget {
   final Widget leading;
   final String title;
   final Widget body;
+  final bool withDivider;
 
   ChatMessageWidget(
-      {@required this.leading, @required this.body, @required this.title});
+      {this.leading, @required this.body, this.title, this.withDivider: true});
 
   TextStyle _titleTextStyle() {
     return new TextStyle(color: Colors.grey);
@@ -97,31 +105,58 @@ class ChatMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final children = [];
-    children.add(new Column(children: [
+
+    if (leading != null) {
+      children.add(_buildAvatar());
+    }
+
+    final content = _buildContent();
+
+    children.add(new Expanded(child: content));
+
+    return _buildContainer(children);
+  }
+
+  Widget _buildContainer(List<Widget> body) {
+    final children = <Widget>[];
+
+    if (withDivider) {
+      children.add(new Divider(color: Colors.grey[200]));
+    }
+
+    children.add(new Padding(
+        child: new Row(
+            children: body, crossAxisAlignment: CrossAxisAlignment.start),
+        padding: new EdgeInsets.only(bottom: 8.0, top: 8.0, right: 12.0)));
+
+    return new Column(children: children);
+  }
+
+  Widget _buildAvatar() {
+    return new Column(children: [
       new Container(
           margin: new EdgeInsets.only(left: 12.0, right: 12.0, top: 12.0),
           width: 40.0,
           child: leading)
-    ], crossAxisAlignment: CrossAxisAlignment.start));
-    final content = new Column(
+    ], crossAxisAlignment: CrossAxisAlignment.start);
+  }
+
+  Widget _buildContent() {
+    final children = [];
+
+    if (title != null) {
+      children.add(new AnimatedDefaultTextStyle(
+          style: _titleTextStyle(),
+          duration: kThemeChangeDuration,
+          child: new Container(
+              padding: new EdgeInsets.only(bottom: 6.0),
+              child: new Text(title, softWrap: true))));
+    }
+    children.add(body);
+
+    return new Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          new AnimatedDefaultTextStyle(
-              style: _titleTextStyle(),
-              duration: kThemeChangeDuration,
-              child: new Container(
-                  padding: new EdgeInsets.only(bottom: 6.0),
-                  child: new Text(title, softWrap: true))),
-          body
-        ]);
-    children.add(new Expanded(child: content));
-    return new Column(children: [
-      new Padding(
-          child: new Row(
-              children: children, crossAxisAlignment: CrossAxisAlignment.start),
-          padding: new EdgeInsets.only(bottom: 8.0, top: 8.0, right: 12.0)),
-      new Divider(height: 1.0, color: Colors.grey[200])
-    ]);
+        children: children);
   }
 }
