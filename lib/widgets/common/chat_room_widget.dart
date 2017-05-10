@@ -24,6 +24,9 @@ class ChatRoomWidget extends StatefulWidget {
 class _ChatRoomWidgetState extends State<ChatRoomWidget> {
   @override
   Widget build(BuildContext context) {
+    if (widget.messages.isEmpty) {
+      return new Container(color: Colors.white);
+    }
     return new Container(
       color: Colors.white,
       child: new ListView.builder(
@@ -36,11 +39,11 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
 
   _buildListItem(BuildContext context, int index) {
     Message message = widget.messages[index];
-    if (index == widget.messages.length - 5) {
+    if (widget.messages.length >= 50 && index == widget.messages.length - 5) {
       widget.onNeedDataController.add(null);
     }
 
-    if (index !=  widget.messages.length &&
+    if (index != widget.messages.length - 1 &&
         widget.messages[index + 1].fromUser.id == message.fromUser.id) {
       return new ChatMessageWidget(
         leading: new Container(),
@@ -127,7 +130,7 @@ class ChatMessageWidget extends StatelessWidget {
     children.add(new Padding(
         child: new Row(
             children: body, crossAxisAlignment: CrossAxisAlignment.start),
-        padding: new EdgeInsets.only(bottom: 8.0, top: 8.0, right: 12.0)));
+        padding: new EdgeInsets.only(bottom: 4.0, top: 4.0, right: 12.0)));
 
     return new Column(children: children);
   }

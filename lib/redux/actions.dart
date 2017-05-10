@@ -53,6 +53,12 @@ class OnMessagesForRoom extends FlitterAction {
   OnMessagesForRoom(this.messages, this.roomId);
 }
 
+class OnMessage extends FlitterAction {
+  final Message message;
+  final String roomId;
+  OnMessage(this.message, this.roomId);
+}
+
 class JoinRoomAction extends FlitterAction {
   final Room room;
   JoinRoomAction(this.room);

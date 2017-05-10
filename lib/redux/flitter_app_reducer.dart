@@ -31,7 +31,8 @@ class FlitterAppReducer extends redux.Reducer<FlitterAppState, FlitterAction> {
     EndSearchAction: _endSearch,
     FetchSearchAction: _fetchSearch,
     LogoutAction: _logout,
-    AuthGitterAction: _initGitter
+    AuthGitterAction: _initGitter,
+    OnMessage: _onMessage
   };
 
   @override
@@ -142,4 +143,16 @@ FlitterAppState _initGitter(FlitterAppState state, AuthGitterAction action) {
     api = new GitterApi(action.token);
   }
   return state.apply(api: api, token: action.token);
+}
+
+FlitterAppState _onMessage(FlitterAppState state, OnMessage action) {
+  Map<String, List<Message>> messages = new Map.from(state.messages);
+  messages[action.roomId] ??= [];
+  messages[action.roomId].add(action.message);
+  CurrentRoomState currentRoom =
+      state.selectedRoom?.apply(messages: messages[action.roomId]);
+  if (currentRoom?.room?.id == action.roomId) {
+    return state.apply(messages: messages, selectedRoom: currentRoom);
+  }
+  return state.apply(messages: messages);
 }

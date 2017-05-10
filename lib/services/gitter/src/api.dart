@@ -3,6 +3,7 @@ library gitter.api;
 import 'dart:async';
 import 'dart:convert';
 
+import 'dart:io';
 import 'package:flitter/common.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/services/gitter/src/models/message.dart';
@@ -97,6 +98,7 @@ class UserApi {
 class RoomApi {
   final String _baseUrl;
   GitterToken token;
+  final _client = new http.IOClient();
 
   RoomApi(String baseUrl, this.token) : _baseUrl = "$baseUrl/rooms";
 
@@ -156,6 +158,25 @@ class RoomApi {
     );
     final json = _getResponseBody(response);
     return json['success'];
+  }
+
+  final Map<String, Stream<Message>> _streamMapper = {};
+
+  Future<Stream<Message>> streamMessagesOfRoom(String roomId) async {
+    if (_streamMapper.containsKey(roomId)) {
+      //return _streamMapper[roomId];
+    }
+    String url = "https://stream.gitter.im/v1/rooms/$roomId/chatMessages";
+    http.Request req = new http.Request("GET", Uri.parse(url));
+    req.headers.addAll(_getHeaders(token));
+    http.StreamedResponse responseStream = await _client.send(req);
+
+    return _streamMapper[roomId] = responseStream.stream
+        .map((List<int> data) =>
+            (new String.fromCharCodes(data)).replaceAll("\r", ""))
+        .where((String json) => json != " \n" && json != "\n")
+        .map((String json) => new Message.fromJson(JSON.decode(json)))
+        .asBroadcastStream();
   }
 }
 

@@ -1,6 +1,7 @@
 library flitter.routes.room;
 
 import 'dart:async';
+import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
 import 'package:flitter/services/gitter/gitter.dart';
@@ -25,6 +26,7 @@ class _RoomViewState extends State<RoomView> {
   Room get room => flitterStore.state.selectedRoom.room;
 
   StreamSubscription _subscription;
+  StreamSubscription _subscriptionMessages;
 
   @override
   void initState() {
@@ -36,12 +38,21 @@ class _RoomViewState extends State<RoomView> {
     if (messages == null) {
       _fetchMessages();
     }
+
+    gitterApi.room
+        .streamMessagesOfRoom(room.id)
+        .then((Stream<Message> messages) {
+      _subscriptionMessages = messages.listen((Message msg) {
+        flitterStore.dispatch(new OnMessage(msg, room.id));
+      });
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
     _subscription.cancel();
+    _subscriptionMessages?.cancel();
   }
 
   @override
