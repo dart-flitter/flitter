@@ -40,8 +40,8 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
       widget.onNeedDataController.add(null);
     }
 
-    if (index != 0 &&
-        widget.messages[index - 1].fromUser.id == message.fromUser.id) {
+    if (index !=  widget.messages.length &&
+        widget.messages[index + 1].fromUser.id == message.fromUser.id) {
       return new ChatMessageWidget(
         leading: new Container(),
         withDivider: false,
