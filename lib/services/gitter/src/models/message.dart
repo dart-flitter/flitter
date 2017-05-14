@@ -7,10 +7,24 @@ import 'package:jaguar_serializer/serializer.dart';
 
 part 'message.g.dart';
 
+@DefineFieldProcessor()
+class DateTimeProcessor implements FieldProcessor<DateTime, String> {
+  final Symbol field;
+  const DateTimeProcessor(this.field);
+
+  @override
+  String serialize(DateTime value) => value?.toIso8601String();
+
+  @override
+  DateTime deserialize(String value) => value != null ? DateTime.parse(value) : null;
+}
+
 @GenSerializer(typeInfo: false)
 @ProvideSerializer(Mention, MentionSerializer)
 @ProvideSerializer(Issue, IssueSerializer)
 @ProvideSerializer(User, UserSerialalizer)
+@DateTimeProcessor(#sent)
+@DateTimeProcessor(#editedAt)
 class MessageSerializer extends Serializer<Message> with _$MessageSerializer {
   @override
   Message createModel() => new Message();
@@ -21,8 +35,8 @@ class Message {
   String id;
   String text;
   String html;
-  String sent;
-  String editedAt;
+  DateTime sent;
+  DateTime editedAt;
   User fromUser;
   bool unread;
   int readBy;

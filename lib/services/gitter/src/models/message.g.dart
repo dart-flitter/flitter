@@ -28,10 +28,11 @@ abstract class _$MessageSerializer implements Serializer<Message> {
         ret["html"] = model.html;
       }
       if (model.sent != null) {
-        ret["sent"] = model.sent;
+        ret["sent"] = new DateTimeProcessor(#sent).serialize(model.sent);
       }
       if (model.editedAt != null) {
-        ret["editedAt"] = model.editedAt;
+        ret["editedAt"] =
+            new DateTimeProcessor(#editedAt).serialize(model.editedAt);
       }
       if (model.fromUser != null) {
         ret["fromUser"] = toUserSerialalizer.toMap(model.fromUser,
@@ -85,8 +86,9 @@ abstract class _$MessageSerializer implements Serializer<Message> {
     model.id = map["id"];
     model.text = map["text"];
     model.html = map["html"];
-    model.sent = map["sent"];
-    model.editedAt = map["editedAt"];
+    model.sent = new DateTimeProcessor(#sent).deserialize(map["sent"]);
+    model.editedAt =
+        new DateTimeProcessor(#editedAt).deserialize(map["editedAt"]);
     model.fromUser =
         fromUserSerialalizer.fromMap(map["fromUser"], typeKey: typeKey);
     model.unread = map["unread"];

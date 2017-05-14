@@ -17,12 +17,6 @@ abstract class _$GitterTokenSerialalizer implements Serializer<GitterToken> {
       if (model.type != null) {
         ret["token_type"] = model.type;
       }
-      if (model.access != null) {
-        ret["access_token"] = model.access;
-      }
-      if (model.type != null) {
-        ret["token_type"] = model.type;
-      }
     }
     return ret;
   }
@@ -34,8 +28,6 @@ abstract class _$GitterTokenSerialalizer implements Serializer<GitterToken> {
     if (model is! GitterToken) {
       model = createModel();
     }
-    model.access = map["access_token"];
-    model.type = map["token_type"];
     model.access = map["access_token"];
     model.type = map["token_type"];
     return model;
