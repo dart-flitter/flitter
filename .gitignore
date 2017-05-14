@@ -10,3 +10,4 @@ pubspec.lock
 .flutter-plugins
 .dart_tool
 config.yaml
+lib/main.dart

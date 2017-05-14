@@ -31,10 +31,11 @@ class FlitterAuth {
   }
 
   static Future<GitterToken> auth() async {
+    Config cfg = Config.getInstance();
     final GitterOAuth gitterOAuth = new FlutterGitterOAuth(new AppInformations(
-      flitterConfig.gitter.appId,
-      flitterConfig.gitter.appSecret,
-      flitterConfig.gitter.redirectionUrl,
+      cfg.gitter.appId,
+      cfg.gitter.appSecret,
+      cfg.gitter.redirectionUrl,
     ));
     GitterToken token = await gitterOAuth.signIn();
     await saveToken(token);

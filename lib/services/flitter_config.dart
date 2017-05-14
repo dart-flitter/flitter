@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:meta/meta.dart';
 import 'package:yaml/yaml.dart';
 
 /*
@@ -10,34 +11,26 @@ import 'package:yaml/yaml.dart';
  *   redirection_url: URL
  */
 
-class FlitterConfig {
-  static FlitterConfig _instance;
+class Config {
+  final GitterConfig gitter;
 
-  factory FlitterConfig() => _instance ??= new FlitterConfig._();
+  static Config _instance;
 
-  GitterConfig _gitter;
+  Config._({this.gitter});
 
-  FlitterConfig._();
+  static init({@required GitterConfig gitter}) =>
+      _instance ??= new Config._(gitter: gitter);
 
-  init() async {
-    String cfg = await rootBundle.loadString("config.yaml");
-    Map yaml = loadYaml(cfg);
-    _gitter = new GitterConfig(yaml["gitter"]);
-  }
-
-  GitterConfig get gitter => _gitter;
+  static Config getInstance() => _instance;
 }
 
 class GitterConfig {
-  final Map<String, dynamic> _map;
+  final String appId;
+  final String appSecret;
+  final String redirectionUrl;
 
-  GitterConfig(this._map);
-
-  String get appId => _map["app_id"];
-
-  String get appSecret => _map["app_secret"];
-
-  String get redirectionUrl => _map["redirection_url"];
+  const GitterConfig(
+      {@required this.appId,
+      @required this.appSecret,
+      @required this.redirectionUrl});
 }
-
-final FlitterConfig flitterConfig = new FlitterConfig();
