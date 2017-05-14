@@ -45,7 +45,9 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
     }
 
     if (index != widget.messages.length - 1 &&
-        widget.messages[index + 1].fromUser.id == message.fromUser.id) {
+        widget.messages[index + 1].fromUser.id == message.fromUser.id &&
+        message.sent.difference(widget.messages[index + 1].sent).inMinutes <= 10
+    ) {
       return new ChatMessageWidget(
         leading: new Container(),
         withDivider: false,
@@ -59,7 +61,7 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
           backgroundColor: Colors.grey[200]),
       body: new Text(message.text, softWrap: true),
       title: message.fromUser.displayName,
-      date: DateTime.parse(message.sent)
+      date: message.sent
     );
   }
 }
