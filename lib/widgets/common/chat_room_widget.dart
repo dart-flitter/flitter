@@ -5,6 +5,7 @@ import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
+import 'package:intl/intl.dart';
 
 class ChatRoomWidget extends StatefulWidget {
   final List<Message> messages;
@@ -57,7 +58,8 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
           backgroundImage: new NetworkImage(message.fromUser.avatarUrlSmall),
           backgroundColor: Colors.grey[200]),
       body: new Text(message.text, softWrap: true),
-      title: "${message.fromUser.displayName} - @${message.fromUser.username}",
+      title: message.fromUser.displayName,
+      date: DateTime.parse(message.sent)
     );
   }
 }
@@ -95,11 +97,14 @@ class _ChatInputState extends State<ChatInput> {
 class ChatMessageWidget extends StatelessWidget {
   final Widget leading;
   final String title;
+  final DateTime date;
   final Widget body;
   final bool withDivider;
 
+  final DateFormat _dateFormat = new DateFormat.MMMd()..add_Hm();
+
   ChatMessageWidget(
-      {this.leading, @required this.body, this.title, this.withDivider: true});
+      {this.leading, @required this.body, this.title, this.withDivider: true, this.date});
 
   TextStyle _titleTextStyle() {
     return new TextStyle(color: Colors.grey);
@@ -148,12 +153,16 @@ class ChatMessageWidget extends StatelessWidget {
     final children = [];
 
     if (title != null) {
+
       children.add(new AnimatedDefaultTextStyle(
           style: _titleTextStyle(),
           duration: kThemeChangeDuration,
           child: new Container(
               padding: new EdgeInsets.only(bottom: 6.0),
-              child: new Text(title, softWrap: true))));
+              child: new Row(children: [
+                new Expanded(child: new Text(title, softWrap: true)),
+                new Text(_dateFormat.format(date))
+              ]))));
     }
     children.add(body);
 
