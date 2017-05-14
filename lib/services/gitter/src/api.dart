@@ -164,7 +164,7 @@ class RoomApi {
 
   Future<Stream<Message>> streamMessagesOfRoom(String roomId) async {
     if (_streamMapper.containsKey(roomId)) {
-      //return _streamMapper[roomId];
+      return _streamMapper[roomId];
     }
     String url = "https://stream.gitter.im/v1/rooms/$roomId/chatMessages";
     http.Request req = new http.Request("GET", Uri.parse(url));
