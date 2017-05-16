@@ -10,7 +10,7 @@ import 'package:flitter/services/oauth/oauth.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 Future<String> getContent() async {
-  String content = await rootBundle.loadString("assets/html/success.html");
+  final content = await rootBundle.loadString("assets/html/success.html");
   if (content.isNotEmpty) {
     return content;
   }
@@ -28,9 +28,9 @@ class FlutterGitterOAuth extends GitterOAuth {
 
   final FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
 
-  bool _isOpen = false;
-  HttpServer _server;
-  Stream<String> _onCodeStream;
+  var _isOpen = false;
+  var _server;
+  var _onCodeStream;
 
   Stream<String> get onCode =>
       _onCodeStream ??= _onCode.stream.asBroadcastStream();
@@ -98,21 +98,21 @@ class FlutterGitterOAuth extends GitterOAuth {
   }
 
   Future<HttpServer> _createServer() async {
-    HttpServer server = await HttpServer
+    final server = await HttpServer
         .bind(InternetAddress.LOOPBACK_IP_V4, 8080, shared: true);
     return server;
   }
 
   _listenCode(HttpServer server) {
     server.listen((HttpRequest request) async {
-      Uri uri = request.uri;
+      final uri = request.uri;
       request.response
         ..statusCode = 200
         ..headers.set("Content-Type", ContentType.HTML.mimeType)
         ..write(await getContent());
 
-      final String code = uri.queryParameters["code"];
-      final String error = uri.queryParameters["error"];
+      final code = uri.queryParameters["code"];
+      final error = uri.queryParameters["error"];
       await request.response.close();
       if (code != null && error == null) {
         _onCode.add(code);

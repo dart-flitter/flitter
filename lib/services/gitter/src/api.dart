@@ -3,7 +3,6 @@ library gitter.api;
 import 'dart:async';
 import 'dart:convert';
 
-import 'dart:io';
 import 'package:flitter/common.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/services/gitter/src/models/message.dart';

@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 
 class ChatRoomWidget extends StatefulWidget {
   final Iterable<Message> messages;
-  final StreamController<Null> _onNeedData;
+  final _onNeedData;
 
   @override
   _ChatRoomWidgetState createState() => new _ChatRoomWidgetState();
@@ -38,19 +38,27 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
     );
   }
 
+  _shouldMergeMessages(Message message, int index) => index != widget.messages.length - 1 &&
+        widget.messages
+            .elementAt(index + 1)
+            .fromUser
+            .id ==
+            message.fromUser.id &&
+        message.sent
+            .difference(widget.messages
+            .elementAt(index + 1)
+            .sent)
+            .inMinutes <=
+            10;
+
   _buildListItem(BuildContext context, int index) {
-    Message message = widget.messages.elementAt(index);
+    final message = widget.messages.elementAt(index);
+
     if (widget.messages.length >= 50 && index == widget.messages.length - 5) {
       widget.onNeedDataController.add(null);
     }
 
-    if (index != widget.messages.length - 1 &&
-        widget.messages.elementAt(index + 1).fromUser.id ==
-            message.fromUser.id &&
-        message.sent
-                .difference(widget.messages.elementAt(index + 1).sent)
-                .inMinutes <=
-            10) {
+    if (_shouldMergeMessages(message, index)) {
       return new ChatMessageWidget(
         leading: new Container(),
         withDivider: false,
@@ -78,7 +86,7 @@ class ChatInput extends StatefulWidget {
 }
 
 class _ChatInputState extends State<ChatInput> {
-  TextEditingController textController = new TextEditingController();
+  final _textController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -86,10 +94,10 @@ class _ChatInputState extends State<ChatInput> {
       child: new Container(
         padding: new EdgeInsets.only(left: 8.0, right: 8.0),
         child: new TextField(
-          controller: textController,
+          controller: _textController,
           decoration: new InputDecoration(hintText: intl.typeChatMessage()),
           onSubmitted: (String value) {
-            textController.clear();
+            _textController.clear();
             widget.onSubmit(value);
           },
         ),
@@ -105,14 +113,14 @@ class ChatMessageWidget extends StatelessWidget {
   final Widget body;
   final bool withDivider;
 
-  final DateFormat _dateFormat = new DateFormat.MMMd()..add_Hm();
+  final _dateFormat = new DateFormat.MMMd()
+    ..add_Hm();
 
-  ChatMessageWidget(
-      {this.leading,
-      @required this.body,
-      this.title,
-      this.withDivider: true,
-      this.date});
+  ChatMessageWidget({this.leading,
+    @required this.body,
+    this.title,
+    this.withDivider: true,
+    this.date});
 
   TextStyle _titleTextStyle() {
     return new TextStyle(color: Colors.grey);

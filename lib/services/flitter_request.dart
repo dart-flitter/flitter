@@ -4,25 +4,25 @@ import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 
 Future<Iterable<Room>> fetchRooms() async {
-  Iterable<Room> rooms = await gitterApi.user.me.rooms();
+  final rooms = await gitterApi.user.me.rooms();
   flitterStore.dispatch(new FetchRoomsAction(rooms));
   return rooms;
 }
 
 Future<User> fetchUser() async {
-  User user = await gitterApi.user.me.get();
+  final user = await gitterApi.user.me.get();
   flitterStore.dispatch(new FetchUser(user));
   return user;
 }
 
 Future<Iterable<Group>> fetchGroups() async {
-  Iterable<Group> groups = await gitterApi.group.get();
+  final groups = await gitterApi.group.get();
   flitterStore.dispatch(new FetchGroupsAction(groups));
   return groups;
 }
 
 Future<Iterable<Room>> fetchRoomsOfGroup() async {
-  String groupId = flitterStore.state.selectedGroup.group.id;
+  final groupId = flitterStore.state.selectedGroup.group.id;
   final rooms = await gitterApi.group.suggestedRoomsOf(groupId);
   flitterStore.dispatch(new FetchRoomsOfGroup(rooms));
   return rooms;
@@ -30,14 +30,14 @@ Future<Iterable<Room>> fetchRoomsOfGroup() async {
 
 Future<Iterable<Message>> fetchMessagesOfRoom(
     String roomId, String beforeId) async {
-  Iterable<Message> messages =
+  final messages =
       await gitterApi.room.messagesFromRoomId(roomId, beforeId: beforeId);
   flitterStore.dispatch(new OnMessagesForRoom(messages, roomId));
   return messages;
 }
 
 Future<bool> leaveRoom(Room room) async {
-  bool success =
+  final success =
       await gitterApi.room.removeUserFrom(room.id, flitterStore.state.user.id);
   if (success == true) {
     flitterStore.dispatch(new LeaveRoomAction(room));
@@ -46,14 +46,14 @@ Future<bool> leaveRoom(Room room) async {
 }
 
 Future<Room> joinRoom(Room room) async {
-  Room r =
+  final joinedRoom =
       await gitterApi.user.userJoinRoom(flitterStore.state.user.id, room.id);
   flitterStore.dispatch(new JoinRoomAction(room));
-  return r;
+  return joinedRoom;
 }
 
 Future<Message> sendMessage(String value, Room room) async {
-  final Message message =
+  final message =
       await gitterApi.room.sendMessageToRoomId(room.id, value);
   flitterStore.dispatch(new OnSendMessage(message, room.id));
   return message;

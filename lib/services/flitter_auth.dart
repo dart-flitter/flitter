@@ -15,8 +15,8 @@ class FlitterAuth {
   static const _tokenKey = "gitter_token";
 
   static Future<GitterToken> getToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String tokenJson = prefs.getString(_tokenKey);
+    final prefs = await SharedPreferences.getInstance();
+    final tokenJson = prefs.getString(_tokenKey);
     if (tokenJson == null) {
       return null;
     }
@@ -24,14 +24,14 @@ class FlitterAuth {
   }
 
   static Future<bool> saveToken(GitterToken token) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     prefs.setString(
         _tokenKey, token == null ? null : JSON.encode(token?.toMap()));
     return prefs.commit();
   }
 
   static Future<GitterToken> auth() async {
-    Config cfg = Config.getInstance();
+    final cfg = Config.getInstance();
     final GitterOAuth gitterOAuth = new FlutterGitterOAuth(new AppInformations(
       cfg.gitter.appId,
       cfg.gitter.appSecret,

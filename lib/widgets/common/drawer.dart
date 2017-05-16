@@ -1,6 +1,5 @@
 library flitter.common.drawer;
 
-import 'dart:async';
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_auth.dart';
@@ -22,12 +21,12 @@ class FlitterDrawer extends StatefulWidget {
 }
 
 class _FlitterDrawerState extends State<FlitterDrawer> {
-  StreamSubscription _subscription;
+  var _subscription;
 
   @override
   Widget build(BuildContext context) {
     if (flitterStore.state.user != null) {
-      final child = [
+      final child = <Widget>[
         _buildDrawerHeader(context),
         new ListTile(
             leading: new Icon(Icons.home),
@@ -84,7 +83,7 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
 
   Iterable<Widget> _buildCommunities(BuildContext context) {
     if (flitterStore.state.groups == null) {
-      return [];
+      return <Widget>[];
     }
     return flitterStore.state.groups.map((group) {
       return new ListTile(

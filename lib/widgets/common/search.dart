@@ -40,8 +40,8 @@ class SearchBar extends StatelessWidget {
       );
 }
 
-class ListSearchResult extends StatelessWidget {
-  final Iterable results;
+class ListSearchResult<T> extends StatelessWidget {
+  final Iterable<T> results;
 
   ListSearchResult(this.results);
 

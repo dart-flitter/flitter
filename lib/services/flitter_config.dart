@@ -1,15 +1,4 @@
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:meta/meta.dart';
-import 'package:yaml/yaml.dart';
-
-/*
- * Configuration inside config.yaml
- *
- * gitter:
- *   app_id: APP_ID
- *   app_secret: APP_SECRET
- *   redirection_url: URL
- */
 
 class Config {
   final GitterConfig gitter;

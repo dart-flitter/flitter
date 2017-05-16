@@ -1,7 +1,5 @@
 library flitter.routes.group_room;
 
-import 'dart:async';
-
 import 'package:flitter/redux/flitter_app_state.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
@@ -20,14 +18,12 @@ class GroupRoomView extends StatefulWidget {
         path: GroupRoomView.path, replace: replace);
   }
 
-  GroupRoomView();
-
   @override
   _GroupRoomViewState createState() => new _GroupRoomViewState();
 }
 
 class _GroupRoomViewState extends State<GroupRoomView> {
-  StreamSubscription _subscription;
+  var _subscription;
 
   CurrentGroupState get groupState => flitterStore.state.selectedGroup;
 
@@ -51,10 +47,10 @@ class _GroupRoomViewState extends State<GroupRoomView> {
 
   @override
   Widget build(BuildContext context) {
-    Widget body;
+    var body;
 
     if (groupState?.rooms != null) {
-      final children = [];
+      final children = <Widget>[];
 
       children.addAll(
           groupState.rooms.map((room) => roomTile(context, room)).toList());

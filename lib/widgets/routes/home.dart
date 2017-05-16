@@ -41,9 +41,9 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    Widget body;
+    var body;
 
-    Widget drawer = new FlitterDrawer(onTapAllConversation: () {
+    final drawer = new FlitterDrawer(onTapAllConversation: () {
       Navigator.pop(context);
     }, onTapPeoples: () {
       PeopleView.go(context);

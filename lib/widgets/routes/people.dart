@@ -1,7 +1,5 @@
 library flitter.routes.people;
 
-import 'dart:async';
-
 import 'package:flitter/common.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
@@ -20,14 +18,12 @@ class PeopleView extends StatefulWidget {
         path: PeopleView.path, replace: replace);
   }
 
-  PeopleView();
-
   @override
   _PeopleViewState createState() => new _PeopleViewState();
 }
 
 class _PeopleViewState extends State<PeopleView> {
-  StreamSubscription _subscription;
+  var _subscription;
 
   @override
   void initState() {
@@ -45,9 +41,9 @@ class _PeopleViewState extends State<PeopleView> {
 
   @override
   Widget build(BuildContext context) {
-    Widget body;
+    var body;
 
-    Widget drawer = new FlitterDrawer(onTapAllConversation: () {
+    final drawer = new FlitterDrawer(onTapAllConversation: () {
       HomeView.go(context);
     }, onTapPeoples: () {
       Navigator.pop(context);

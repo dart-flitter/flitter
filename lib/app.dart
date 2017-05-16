@@ -5,7 +5,6 @@ import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_auth.dart';
 import 'package:flitter/services/flitter_request.dart';
-import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/widgets/routes/group_room.dart';
 import 'package:flitter/widgets/routes/home.dart';
 import 'package:flitter/widgets/routes/login.dart';
@@ -42,7 +41,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  StreamSubscription _subscription;
+  var _subscription;
 
   _AppState() {
     _subscription = flitterStore.onChange.listen((_) {
@@ -79,7 +78,7 @@ Future run() async {
 }
 
 Future<Null> _init() async {
-  final GitterToken token = await FlitterAuth.getToken();
+  final token = await FlitterAuth.getToken();
   if (token != null) {
     flitterStore.dispatch(new AuthGitterAction(token));
     await initBasicData();

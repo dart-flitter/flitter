@@ -25,8 +25,8 @@ class _RoomViewState extends State<RoomView> {
 
   Room get room => flitterStore.state.selectedRoom.room;
 
-  StreamSubscription _subscription;
-  StreamSubscription _subscriptionMessages;
+  var _subscription;
+  var _subscriptionMessages;
 
   @override
   void initState() {
@@ -57,7 +57,7 @@ class _RoomViewState extends State<RoomView> {
 
   @override
   Widget build(BuildContext context) {
-    Widget body;
+    var body;
 
     if (messages != null) {
       final ChatRoomWidget chatRoom =

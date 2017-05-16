@@ -1,6 +1,5 @@
 library flitter.routes.login;
 
-import 'dart:async';
 import 'package:flitter/theme.dart';
 import 'package:flutter/services.dart';
 import 'package:flitter/redux/actions.dart';
@@ -19,7 +18,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  StreamSubscription _subscription;
+  var _subscription;
 
   final FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
 
