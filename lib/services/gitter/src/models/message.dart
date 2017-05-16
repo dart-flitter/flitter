@@ -16,7 +16,8 @@ class DateTimeProcessor implements FieldProcessor<DateTime, String> {
   String serialize(DateTime value) => value?.toIso8601String();
 
   @override
-  DateTime deserialize(String value) => value != null ? DateTime.parse(value) : null;
+  DateTime deserialize(String value) =>
+      value != null ? DateTime.parse(value) : null;
 }
 
 @GenSerializer(typeInfo: false)

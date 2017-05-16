@@ -85,4 +85,3 @@ Future<Null> _init() async {
     await initBasicData();
   }
 }
-

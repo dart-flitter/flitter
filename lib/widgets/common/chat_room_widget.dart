@@ -46,8 +46,8 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
 
     if (index != widget.messages.length - 1 &&
         widget.messages[index + 1].fromUser.id == message.fromUser.id &&
-        message.sent.difference(widget.messages[index + 1].sent).inMinutes <= 10
-    ) {
+        message.sent.difference(widget.messages[index + 1].sent).inMinutes <=
+            10) {
       return new ChatMessageWidget(
         leading: new Container(),
         withDivider: false,
@@ -56,13 +56,12 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
     }
 
     return new ChatMessageWidget(
-      leading: new CircleAvatar(
-          backgroundImage: new NetworkImage(message.fromUser.avatarUrlSmall),
-          backgroundColor: Colors.grey[200]),
-      body: new Text(message.text, softWrap: true),
-      title: message.fromUser.displayName,
-      date: message.sent
-    );
+        leading: new CircleAvatar(
+            backgroundImage: new NetworkImage(message.fromUser.avatarUrlSmall),
+            backgroundColor: Colors.grey[200]),
+        body: new Text(message.text, softWrap: true),
+        title: message.fromUser.displayName,
+        date: message.sent);
   }
 }
 
@@ -106,7 +105,11 @@ class ChatMessageWidget extends StatelessWidget {
   final DateFormat _dateFormat = new DateFormat.MMMd()..add_Hm();
 
   ChatMessageWidget(
-      {this.leading, @required this.body, this.title, this.withDivider: true, this.date});
+      {this.leading,
+      @required this.body,
+      this.title,
+      this.withDivider: true,
+      this.date});
 
   TextStyle _titleTextStyle() {
     return new TextStyle(color: Colors.grey);
@@ -155,7 +158,6 @@ class ChatMessageWidget extends StatelessWidget {
     final children = [];
 
     if (title != null) {
-
       children.add(new AnimatedDefaultTextStyle(
           style: _titleTextStyle(),
           duration: kThemeChangeDuration,

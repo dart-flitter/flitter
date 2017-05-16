@@ -4,6 +4,8 @@ import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart' as redux;
 
+T orElseNull<T>() => null;
+
 class FlitterLoggingMiddleware
     implements redux.Middleware<FlitterAppState, FlitterAction> {
   call(redux.Store<FlitterAppState, FlitterAction> store, FlitterAction action,
@@ -113,9 +115,7 @@ FlitterAppState _leaveRoom(FlitterAppState state, LeaveRoomAction action) {
 }
 
 FlitterAppState _onSendMessage(FlitterAppState state, OnSendMessage action) {
-  Map<String, List<Message>> messages = new Map.from(state.messages);
-  messages[action.roomId] ??= [];
-  messages[action.roomId].add(action.message);
+  Map<String, List<Message>> messages = _addOrUpdateMessage(state, action.message, action.roomId);
   CurrentRoomState currentRoom =
       state.selectedRoom?.apply(messages: messages[action.roomId]);
   return state.apply(messages: messages, selectedRoom: currentRoom);
@@ -146,13 +146,28 @@ FlitterAppState _initGitter(FlitterAppState state, AuthGitterAction action) {
 }
 
 FlitterAppState _onMessage(FlitterAppState state, OnMessage action) {
-  Map<String, List<Message>> messages = new Map.from(state.messages);
-  messages[action.roomId] ??= [];
-  messages[action.roomId].add(action.message);
-  CurrentRoomState currentRoom =
+  Map<String, List<Message>> messages = _addOrUpdateMessage(state, action.message, action.roomId);
+
+  final currentRoom =
       state.selectedRoom?.apply(messages: messages[action.roomId]);
   if (currentRoom?.room?.id == action.roomId) {
     return state.apply(messages: messages, selectedRoom: currentRoom);
   }
   return state.apply(messages: messages);
+}
+
+Map<String, List<Message>> _addOrUpdateMessage(FlitterAppState state, Message message, String roomId) {
+  Map<String, List<Message>> messages = new Map.from(state.messages);
+  messages[roomId] ??= [];
+
+  final exist = messages[roomId]
+      .firstWhere((msg) => msg.id == message.id, orElse: orElseNull);
+
+  if (exist != null) {
+    messages[roomId][messages[roomId].indexOf(exist)] =
+        message;
+  } else {
+    messages[roomId].add(message);
+  }
+  return messages;
 }
