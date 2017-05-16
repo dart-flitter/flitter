@@ -13,6 +13,13 @@ class FlitterStore extends redux.Store<FlitterAppState, FlitterAction> {
             middleware: [new FlitterLoggingMiddleware()]);
 }
 
-FlitterStore flitterStore = new FlitterStore();
+class ThemeStore extends redux.Store<ThemeState, FlitterAction> {
+  ThemeStore()
+      : super(new ThemeReducer(),
+      initialState: new ThemeState.initial());
+}
+
+final flitterStore = new FlitterStore();
+final themeStore = new ThemeStore();
 GitterApi get gitterApi => flitterStore.state.api;
 GitterToken get gitterToken => flitterStore.state.token;

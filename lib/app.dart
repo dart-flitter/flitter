@@ -10,7 +10,6 @@ import 'package:flitter/widgets/routes/home.dart';
 import 'package:flitter/widgets/routes/login.dart';
 import 'package:flitter/widgets/routes/people.dart';
 import 'package:flutter/material.dart';
-import 'package:flitter/theme.dart';
 
 class Splash extends StatelessWidget {
   @override
@@ -25,7 +24,7 @@ class Splash extends StatelessWidget {
               child:
                   new Text("for Gitter", style: new TextStyle(fontSize: 16.0)))
         ], mainAxisAlignment: MainAxisAlignment.center)),
-        theme: kTheme);
+        theme: themeStore.state.theme);
   }
 }
 
@@ -42,9 +41,13 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   var _subscription;
+  var _themeSubscription;
 
   _AppState() {
     _subscription = flitterStore.onChange.listen((_) {
+      setState(() {});
+    });
+    _themeSubscription = themeStore.onChange.listen((_) {
       setState(() {});
     });
   }
@@ -53,6 +56,7 @@ class _AppState extends State<App> {
   void dispose() {
     super.dispose();
     _subscription.cancel();
+    _themeSubscription.cancel();
   }
 
   @override
@@ -61,7 +65,7 @@ class _AppState extends State<App> {
       return new LoginView();
     }
 
-    return new MaterialApp(theme: kTheme, title: "Flitter", routes: {
+    return new MaterialApp(theme: themeStore.state.theme, title: "Flitter", routes: {
       HomeView.path: (BuildContext context) => new HomeView(),
       PeopleView.path: (BuildContext context) => new PeopleView(),
       GroupRoomView.path: (BuildContext context) => new GroupRoomView(),

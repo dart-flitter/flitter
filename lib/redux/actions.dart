@@ -2,6 +2,7 @@ library flitter.redux.actions;
 
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/services/gitter/src/models/token.dart';
+import 'package:flutter/material.dart';
 
 abstract class FlitterAction {
   FlitterAction();
@@ -100,4 +101,12 @@ class EndSearchAction extends FlitterAction {
 class FetchSearchAction<T> extends FlitterAction {
   final Iterable<T> result;
   FetchSearchAction(this.result);
+}
+
+class ChangeThemeAction extends FlitterAction {
+  final Brightness brightness;
+  final MaterialColor primarySwatch;
+  final Color accentColor;
+
+  ChangeThemeAction(this.brightness, this.primarySwatch, this.accentColor);
 }

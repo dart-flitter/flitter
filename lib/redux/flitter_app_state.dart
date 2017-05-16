@@ -1,4 +1,33 @@
 import 'package:flitter/services/gitter/gitter.dart';
+import 'package:flutter/material.dart';
+
+class ThemeState {
+  final Brightness brightness;
+  final MaterialColor primarySwatch;
+  final Color accentColor;
+  final ThemeData _theme;
+
+  ThemeData get theme => _theme;
+
+  ThemeState({this.brightness, this.primarySwatch, this.accentColor})
+      : _theme = new ThemeData(
+            brightness: brightness,
+            primarySwatch: primarySwatch,
+            accentColor: accentColor);
+
+  factory ThemeState.initial() => new ThemeState(
+      brightness: Brightness.light,
+      primarySwatch: Colors.indigo,
+      accentColor: Colors.pink[500]);
+
+  ThemeState apply(
+      {Brightness brightness, MaterialColor primarySwatch, Color accentColor}) {
+    return new ThemeState(
+        brightness: brightness ?? this.brightness,
+        primarySwatch: primarySwatch ?? this.primarySwatch,
+        accentColor: accentColor ?? this.accentColor);
+  }
+}
 
 class SearchState {
   final Iterable result;

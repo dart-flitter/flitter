@@ -1,6 +1,5 @@
 library flitter.routes.login;
 
-import 'package:flitter/theme.dart';
 import 'package:flutter/services.dart';
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
@@ -52,6 +51,6 @@ class _LoginViewState extends State<LoginView> {
     return new MaterialApp(
         home: new Scaffold(
             body: new Center(child: new CircularProgressIndicator())),
-        theme: kTheme);
+        theme: themeStore.state.theme);
   }
 }

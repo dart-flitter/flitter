@@ -38,18 +38,13 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
     );
   }
 
-  _shouldMergeMessages(Message message, int index) => index != widget.messages.length - 1 &&
-        widget.messages
-            .elementAt(index + 1)
-            .fromUser
-            .id ==
-            message.fromUser.id &&
-        message.sent
-            .difference(widget.messages
-            .elementAt(index + 1)
-            .sent)
-            .inMinutes <=
-            10;
+  _shouldMergeMessages(Message message, int index) =>
+      index != widget.messages.length - 1 &&
+      widget.messages.elementAt(index + 1).fromUser.id == message.fromUser.id &&
+      message.sent
+              .difference(widget.messages.elementAt(index + 1).sent)
+              .inMinutes <=
+          10;
 
   _buildListItem(BuildContext context, int index) {
     final message = widget.messages.elementAt(index);
@@ -113,14 +108,14 @@ class ChatMessageWidget extends StatelessWidget {
   final Widget body;
   final bool withDivider;
 
-  final _dateFormat = new DateFormat.MMMd()
-    ..add_Hm();
+  final _dateFormat = new DateFormat.MMMd()..add_Hm();
 
-  ChatMessageWidget({this.leading,
-    @required this.body,
-    this.title,
-    this.withDivider: true,
-    this.date});
+  ChatMessageWidget(
+      {this.leading,
+      @required this.body,
+      this.title,
+      this.withDivider: true,
+      this.date});
 
   TextStyle _titleTextStyle() {
     return new TextStyle(color: Colors.grey);

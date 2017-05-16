@@ -98,8 +98,8 @@ class FlutterGitterOAuth extends GitterOAuth {
   }
 
   Future<HttpServer> _createServer() async {
-    final server = await HttpServer
-        .bind(InternetAddress.LOOPBACK_IP_V4, 8080, shared: true);
+    final server = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080,
+        shared: true);
     return server;
   }
 

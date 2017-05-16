@@ -53,8 +53,7 @@ Future<Room> joinRoom(Room room) async {
 }
 
 Future<Message> sendMessage(String value, Room room) async {
-  final message =
-      await gitterApi.room.sendMessageToRoomId(room.id, value);
+  final message = await gitterApi.room.sendMessageToRoomId(room.id, value);
   flitterStore.dispatch(new OnSendMessage(message, room.id));
   return message;
 }
