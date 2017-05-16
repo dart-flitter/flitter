@@ -63,10 +63,9 @@ Widget userTile(BuildContext context, User user) => new ListTile(
       leading: new CircleAvatar(
           backgroundImage: new NetworkImage(user.avatarUrlSmall),
           backgroundColor: Theme.of(context).canvasColor),
-      onTap: () {
-        gitterApi.room.roomFromUri(user.url).then((Room room) {
-          flitterStore.dispatch(new SelectRoomAction(room));
-          materialNavigateTo(context, new RoomView(), path: RoomView.path);
-        });
+      onTap: () async {
+        final Room room = await gitterApi.room.roomFromUri(user.url);
+        flitterStore.dispatch(new SelectRoomAction(room));
+        materialNavigateTo(context, new RoomView(), path: RoomView.path);
       },
     );

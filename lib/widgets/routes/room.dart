@@ -39,12 +39,13 @@ class _RoomViewState extends State<RoomView> {
       _fetchMessages();
     }
 
-    gitterApi.room
-        .streamMessagesOfRoom(room.id)
-        .then((Stream<Message> messages) {
-      _subscriptionMessages = messages.listen((Message msg) {
-        flitterStore.dispatch(new OnMessage(msg, room.id));
-      });
+    _getStreamedMessages();
+  }
+
+  Future<Null> _getStreamedMessages() async {
+    Stream<Message> stream = await gitterApi.room.streamMessagesOfRoom(room.id);
+    _subscriptionMessages = stream.listen((Message msg) {
+      flitterStore.dispatch(new OnMessage(msg, room.id));
     });
   }
 
@@ -95,14 +96,13 @@ class _RoomViewState extends State<RoomView> {
         }
       });
 
-  _onLeaveRoom() {
-    leaveRoom(room).then((success) {
-      if (success == true) {
-        Navigator.of(context).pop();
-      } else {
-        // Todo: show error
-      }
-    });
+  _onLeaveRoom() async {
+    bool success = await leaveRoom(room);
+    if (success == true) {
+      Navigator.of(context).pop();
+    } else {
+      // Todo: show error
+    }
   }
 
   Widget _joinRoomButton() {
