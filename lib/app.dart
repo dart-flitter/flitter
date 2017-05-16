@@ -11,15 +11,20 @@ import 'package:flitter/widgets/routes/login.dart';
 import 'package:flitter/widgets/routes/people.dart';
 import 'package:flutter/material.dart';
 
+const appName = "Flitter";
+
 class Splash extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
         home: new Scaffold(
             body: new Column(children: [
-          new Center(child: new FlutterLogo(colors: Colors.pink, size: 80.0)),
           new Center(
-              child: new Text("Flitter", style: new TextStyle(fontSize: 32.0))),
+              child: new FlutterLogo(
+                  colors: themeStore?.state?.secondarySwatch ?? Colors.pink,
+                  size: 80.0)),
+          new Center(
+              child: new Text(appName, style: new TextStyle(fontSize: 32.0))),
           new Center(
               child:
                   new Text("for Gitter", style: new TextStyle(fontSize: 16.0)))
@@ -67,7 +72,7 @@ class _AppState extends State<App> {
 
     return new MaterialApp(
         theme: themeStore.state.theme,
-        title: "Flitter",
+        title: appName,
         routes: {
           HomeView.path: (BuildContext context) => new HomeView(),
           PeopleView.path: (BuildContext context) => new PeopleView(),
@@ -85,6 +90,8 @@ Future run() async {
 }
 
 Future<Null> _init() async {
+  flitterStore = new FlitterStore();
+  themeStore = new ThemeStore();
   final token = await FlitterAuth.getToken();
   if (token != null) {
     flitterStore.dispatch(new AuthGitterAction(token));

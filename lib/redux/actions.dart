@@ -106,7 +106,7 @@ class FetchSearchAction<T> extends FlitterAction {
 class ChangeThemeAction extends FlitterAction {
   final Brightness brightness;
   final MaterialColor primarySwatch;
-  final Color accentColor;
+  final MaterialColor secondarySwatch;
 
-  ChangeThemeAction(this.brightness, this.primarySwatch, this.accentColor);
+  ChangeThemeAction(this.brightness, this.primarySwatch, this.secondarySwatch);
 }

@@ -4,28 +4,28 @@ import 'package:flutter/material.dart';
 class ThemeState {
   final Brightness brightness;
   final MaterialColor primarySwatch;
-  final Color accentColor;
+  final MaterialColor secondarySwatch;
   final ThemeData _theme;
 
   ThemeData get theme => _theme;
 
-  ThemeState({this.brightness, this.primarySwatch, this.accentColor})
+  ThemeState({this.brightness, this.primarySwatch, this.secondarySwatch})
       : _theme = new ThemeData(
             brightness: brightness,
             primarySwatch: primarySwatch,
-            accentColor: accentColor);
+            accentColor: secondarySwatch[500]);
 
   factory ThemeState.initial() => new ThemeState(
       brightness: Brightness.light,
       primarySwatch: Colors.indigo,
-      accentColor: Colors.pink[500]);
+      secondarySwatch: Colors.pink);
 
   ThemeState apply(
-      {Brightness brightness, MaterialColor primarySwatch, Color accentColor}) {
+      {Brightness brightness, MaterialColor primarySwatch, MaterialColor secondarySwatch}) {
     return new ThemeState(
         brightness: brightness ?? this.brightness,
         primarySwatch: primarySwatch ?? this.primarySwatch,
-        accentColor: accentColor ?? this.accentColor);
+        secondarySwatch: secondarySwatch ?? this.secondarySwatch);
   }
 }
 

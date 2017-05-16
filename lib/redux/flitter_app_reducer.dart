@@ -17,7 +17,7 @@ class ThemeReducer extends redux.Reducer<ThemeState, FlitterAction> {
 
 ThemeState _changeThemeAction(ThemeState state, ChangeThemeAction action) {
   return state.apply(
-      accentColor: action.accentColor,
+      secondarySwatch: action.secondarySwatch,
       primarySwatch: action.primarySwatch,
       brightness: action.brightness);
 }
