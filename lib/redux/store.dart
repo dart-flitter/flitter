@@ -15,8 +15,7 @@ class FlitterStore extends redux.Store<FlitterAppState, FlitterAction> {
 
 class ThemeStore extends redux.Store<ThemeState, FlitterAction> {
   ThemeStore()
-      : super(new ThemeReducer(),
-      initialState: new ThemeState.initial());
+      : super(new ThemeReducer(), initialState: new ThemeState.initial());
 }
 
 final flitterStore = new FlitterStore();

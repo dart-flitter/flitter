@@ -65,11 +65,14 @@ class _AppState extends State<App> {
       return new LoginView();
     }
 
-    return new MaterialApp(theme: themeStore.state.theme, title: "Flitter", routes: {
-      HomeView.path: (BuildContext context) => new HomeView(),
-      PeopleView.path: (BuildContext context) => new PeopleView(),
-      GroupRoomView.path: (BuildContext context) => new GroupRoomView(),
-    });
+    return new MaterialApp(
+        theme: themeStore.state.theme,
+        title: "Flitter",
+        routes: {
+          HomeView.path: (BuildContext context) => new HomeView(),
+          PeopleView.path: (BuildContext context) => new PeopleView(),
+          GroupRoomView.path: (BuildContext context) => new GroupRoomView(),
+        });
   }
 }
 

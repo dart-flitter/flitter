@@ -1,9 +1,9 @@
-import 'package:flitter/common.dart';
+import 'package:flitter/widgets/common/search.dart';
+import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
-import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 class ScaffoldWithSearchbar extends StatefulWidget {
   final Widget body;

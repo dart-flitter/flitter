@@ -1,7 +1,7 @@
 library flitter.common.search;
 
+import 'package:flitter/widgets/common/list_room.dart';
 import 'package:flutter/material.dart';
-import 'package:flitter/common.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 
 class SearchBar extends StatelessWidget {

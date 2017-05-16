@@ -1,11 +1,11 @@
 library flitter.common.list_room;
 
-import 'package:flitter/redux/store.dart';
+import 'package:flitter/widgets/common/utils.dart';
 import 'package:meta/meta.dart';
-import 'package:flitter/common.dart';
+import 'package:flutter/material.dart';
+import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/widgets/routes/room.dart';
-import 'package:flutter/material.dart';
 import 'package:flitter/redux/actions.dart';
 
 class ListRoomWidget extends StatelessWidget {

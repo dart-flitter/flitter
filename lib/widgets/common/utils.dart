@@ -1,20 +1,5 @@
 import 'package:flutter/material.dart';
 
-DateTime parseLastAccessTime(String lastAccessTime) {
-  // fixme: DateTime.parse ?
-  final regExp = new RegExp(
-      r"^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})");
-  final match = regExp.firstMatch(lastAccessTime);
-  return new DateTime(
-    int.parse(match.group(1)),
-    int.parse(match.group(2)),
-    int.parse(match.group(3)),
-    int.parse(match.group(4)),
-    int.parse(match.group(5)),
-    int.parse(match.group(6)),
-  );
-}
-
 void navigateTo(BuildContext context, Widget widget,
     {String path: '', bool replace: false}) {
   final builder = new PageRouteBuilder(

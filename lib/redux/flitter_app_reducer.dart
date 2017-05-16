@@ -7,10 +7,7 @@ import 'package:redux/redux.dart' as redux;
 T orElseNull<T>() => null;
 
 class ThemeReducer extends redux.Reducer<ThemeState, FlitterAction> {
-
-  final _mapper = const <Type, Function>{
-    ChangeThemeAction: _changeThemeAction
-  };
+  final _mapper = const <Type, Function>{ChangeThemeAction: _changeThemeAction};
 
   @override
   ThemeState reduce(ThemeState state, FlitterAction action) {
@@ -19,7 +16,8 @@ class ThemeReducer extends redux.Reducer<ThemeState, FlitterAction> {
 }
 
 ThemeState _changeThemeAction(ThemeState state, ChangeThemeAction action) {
-  return state.apply(accentColor: action.accentColor,
+  return state.apply(
+      accentColor: action.accentColor,
       primarySwatch: action.primarySwatch,
       brightness: action.brightness);
 }
@@ -62,15 +60,15 @@ class FlitterAppReducer extends redux.Reducer<FlitterAppState, FlitterAction> {
   }
 }
 
-FlitterAppState _showSearchBar(FlitterAppState state,
-    ShowSearchBarAction action) {
+FlitterAppState _showSearchBar(
+    FlitterAppState state, ShowSearchBarAction action) {
   return state.apply(search: state.search.apply(searching: true, result: []));
 }
 
 FlitterAppState _startSearch(FlitterAppState state, StartSearchAction action) {
   return state.apply(
       search:
-      state.search.apply(searching: true, requesting: true, result: []));
+          state.search.apply(searching: true, requesting: true, result: []));
 }
 
 FlitterAppState _fetchSearch(FlitterAppState state, FetchSearchAction action) {
@@ -82,7 +80,7 @@ FlitterAppState _fetchSearch(FlitterAppState state, FetchSearchAction action) {
 FlitterAppState _endSearch(FlitterAppState state, EndSearchAction action) {
   return state.apply(
       search:
-      state.search.apply(searching: false, requesting: false, result: []));
+          state.search.apply(searching: false, requesting: false, result: []));
 }
 
 FlitterAppState _fetchRooms(FlitterAppState state, FetchRoomsAction action) {
@@ -103,8 +101,8 @@ FlitterAppState _selectRoom(FlitterAppState state, SelectRoomAction action) {
   return state.apply(selectedRoom: current);
 }
 
-FlitterAppState _fetchMessages(FlitterAppState state,
-    FetchMessagesForRoomAction action) {
+FlitterAppState _fetchMessages(
+    FlitterAppState state, FetchMessagesForRoomAction action) {
   Map<String, Iterable<Message>> messages = state.messages;
   messages[action.roomId] = action.messages;
   return state.apply(messages: messages);
@@ -116,7 +114,7 @@ FlitterAppState _onMessages(FlitterAppState state, OnMessagesForRoom action) {
   messages.addAll(state.messages[action.roomId] ?? []);
   messagesByRooms[action.roomId] = messages;
   final currentRoom =
-  state.selectedRoom?.apply(messages: messagesByRooms[action.roomId]);
+      state.selectedRoom?.apply(messages: messagesByRooms[action.roomId]);
   return state.apply(messages: messagesByRooms, selectedRoom: currentRoom);
 }
 
@@ -134,9 +132,9 @@ FlitterAppState _leaveRoom(FlitterAppState state, LeaveRoomAction action) {
 
 FlitterAppState _onSendMessage(FlitterAppState state, OnSendMessage action) {
   Map<String, Iterable<Message>> messages =
-  _addOrUpdateMessage(state, action.message, action.roomId);
+      _addOrUpdateMessage(state, action.message, action.roomId);
   CurrentRoomState currentRoom =
-  state.selectedRoom?.apply(messages: messages[action.roomId]);
+      state.selectedRoom?.apply(messages: messages[action.roomId]);
   return state.apply(messages: messages, selectedRoom: currentRoom);
 }
 
@@ -145,8 +143,8 @@ FlitterAppState _selectGroup(FlitterAppState state, SelectGroupAction action) {
   return state.apply(selectedGroup: current);
 }
 
-FlitterAppState _fetchRoomsOfGroup(FlitterAppState state,
-    FetchRoomsOfGroup action) {
+FlitterAppState _fetchRoomsOfGroup(
+    FlitterAppState state, FetchRoomsOfGroup action) {
   CurrentGroupState current = new CurrentGroupState(
       group: state.selectedGroup.group, rooms: action.rooms);
   return state.apply(selectedGroup: current);
@@ -166,18 +164,18 @@ FlitterAppState _initGitter(FlitterAppState state, AuthGitterAction action) {
 
 FlitterAppState _onMessage(FlitterAppState state, OnMessage action) {
   Map<String, Iterable<Message>> messages =
-  _addOrUpdateMessage(state, action.message, action.roomId);
+      _addOrUpdateMessage(state, action.message, action.roomId);
 
   final currentRoom =
-  state.selectedRoom?.apply(messages: messages[action.roomId]);
+      state.selectedRoom?.apply(messages: messages[action.roomId]);
   if (currentRoom?.room?.id == action.roomId) {
     return state.apply(messages: messages, selectedRoom: currentRoom);
   }
   return state.apply(messages: messages);
 }
 
-Map<String, Iterable<Message>> _addOrUpdateMessage(FlitterAppState state,
-    Message message, String roomId) {
+Map<String, Iterable<Message>> _addOrUpdateMessage(
+    FlitterAppState state, Message message, String roomId) {
   Map<String, Iterable<Message>> messages = new Map.from(state.messages);
   messages[roomId] ??= [];
 
@@ -190,8 +188,7 @@ Map<String, Iterable<Message>> _addOrUpdateMessage(FlitterAppState state,
     list[idx] = message;
     messages[roomId] = list;
   } else {
-    messages[roomId] = messages[roomId].toList()
-      ..add(message);
+    messages[roomId] = messages[roomId].toList()..add(message);
   }
   return messages;
 }

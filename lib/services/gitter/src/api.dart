@@ -3,12 +3,26 @@ library gitter.api;
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flitter/common.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/services/gitter/src/models/message.dart';
 import 'package:flitter/services/gitter/src/models/room.dart';
 import 'package:flitter/services/gitter/src/models/user.dart';
 import 'package:http/http.dart' as http;
+
+DateTime parseLastAccessTime(String lastAccessTime) {
+  // fixme: DateTime.parse ?
+  final regExp = new RegExp(
+      r"^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})");
+  final match = regExp.firstMatch(lastAccessTime);
+  return new DateTime(
+    int.parse(match.group(1)),
+    int.parse(match.group(2)),
+    int.parse(match.group(3)),
+    int.parse(match.group(4)),
+    int.parse(match.group(5)),
+    int.parse(match.group(6)),
+  );
+}
 
 String mapToQuery(Map<String, dynamic> map, {Encoding encoding}) {
   var pairs = <List>[];

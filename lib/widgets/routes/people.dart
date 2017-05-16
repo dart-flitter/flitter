@@ -1,12 +1,14 @@
 library flitter.routes.people;
 
-import 'package:flitter/common.dart';
+import 'package:flitter/widgets/common/list_room.dart';
+import 'package:flitter/widgets/common/scaffold_with_searchbar.dart';
+import 'package:flutter/material.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/widgets/common/drawer.dart';
+import 'package:flitter/widgets/common/utils.dart';
 import 'package:flitter/widgets/routes/home.dart';
-import 'package:flutter/material.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:flitter/app.dart';
 
