@@ -85,7 +85,7 @@ class _RoomViewState extends State<RoomView> {
       itemBuilder: (BuildContext context) => <PopupMenuItem<RoomMenuAction>>[
             new PopupMenuItem<RoomMenuAction>(
                 value: RoomMenuAction.leave,
-                child: const Text('Leave room')) //todo: intl
+                child: new Text('Leave room')) //todo: intl
           ],
       onSelected: (RoomMenuAction action) {
         switch (action) {
