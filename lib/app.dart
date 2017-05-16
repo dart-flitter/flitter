@@ -29,7 +29,7 @@ class Splash extends StatelessWidget {
               child:
                   new Text("for Gitter", style: new TextStyle(fontSize: 16.0)))
         ], mainAxisAlignment: MainAxisAlignment.center)),
-        theme: themeStore.state.theme);
+        theme: themeStore?.state?.theme);
   }
 }
 
