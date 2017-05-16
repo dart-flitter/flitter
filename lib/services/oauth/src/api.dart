@@ -40,7 +40,7 @@ abstract class OAuth {
   String constructUrlParams() => mapToQueryParams(codeInformations.params);
 
   String mapToQueryParams(Map<String, String> params) {
-    final List<String> queryParams = [];
+    final queryParams = <String>[];
     params
         .forEach((String key, String value) => queryParams.add("$key=$value"));
     return queryParams.join("&");

@@ -41,9 +41,9 @@ class Message {
   User fromUser;
   bool unread;
   int readBy;
-  List<Map<String, String>> urls;
-  List<Mention> mentions;
-  List<Issue> issues;
+  Iterable<Map<String, String>> urls;
+  Iterable<Mention> mentions;
+  Iterable<Issue> issues;
 //  not used right now
 //  final meta;
   int v;

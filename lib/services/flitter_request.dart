@@ -3,8 +3,8 @@ import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/gitter/gitter.dart';
 
-Future<List<Room>> fetchRooms() async {
-  List<Room> rooms = await gitterApi.user.me.rooms();
+Future<Iterable<Room>> fetchRooms() async {
+  Iterable<Room> rooms = await gitterApi.user.me.rooms();
   flitterStore.dispatch(new FetchRoomsAction(rooms));
   return rooms;
 }
@@ -15,22 +15,22 @@ Future<User> fetchUser() async {
   return user;
 }
 
-Future<List<Group>> fetchGroups() async {
-  List<Group> groups = await gitterApi.group.get();
+Future<Iterable<Group>> fetchGroups() async {
+  Iterable<Group> groups = await gitterApi.group.get();
   flitterStore.dispatch(new FetchGroupsAction(groups));
   return groups;
 }
 
-Future<List<Room>> fetchRoomsOfGroup() async {
+Future<Iterable<Room>> fetchRoomsOfGroup() async {
   String groupId = flitterStore.state.selectedGroup.group.id;
   final rooms = await gitterApi.group.suggestedRoomsOf(groupId);
   flitterStore.dispatch(new FetchRoomsOfGroup(rooms));
   return rooms;
 }
 
-Future<List<Message>> fetchMessagesOfRoom(
+Future<Iterable<Message>> fetchMessagesOfRoom(
     String roomId, String beforeId) async {
-  List<Message> messages =
+  Iterable<Message> messages =
       await gitterApi.room.messagesFromRoomId(roomId, beforeId: beforeId);
   flitterStore.dispatch(new OnMessagesForRoom(messages, roomId));
   return messages;
@@ -59,9 +59,10 @@ Future<Message> sendMessage(String value, Room room) async {
   return message;
 }
 
-Future<List> search(String query) async {
+Future<Iterable> search(String query) async {
   flitterStore.dispatch(new StartSearchAction());
-  List result = await gitterApi.user.search(query, limit: 5);
+  final result = [];
+  result.addAll(await gitterApi.user.search(query, limit: 5));
   result.addAll(await gitterApi.room.search(query, limit: 10));
   flitterStore.dispatch(new FetchSearchAction(result));
   return result;

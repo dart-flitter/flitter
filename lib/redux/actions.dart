@@ -18,12 +18,12 @@ class InitAppAction extends FlitterAction {
 }
 
 class FetchRoomsAction extends FlitterAction {
-  final List<Room> rooms;
+  final Iterable<Room> rooms;
   FetchRoomsAction(this.rooms);
 }
 
 class FetchGroupsAction extends FlitterAction {
-  final List<Group> groups;
+  final Iterable<Group> groups;
   FetchGroupsAction(this.groups);
 }
 
@@ -42,13 +42,13 @@ class SelectRoomAction extends FlitterAction {
 }
 
 class FetchMessagesForRoomAction extends FlitterAction {
-  final List<Message> messages;
+  final Iterable<Message> messages;
   final String roomId;
   FetchMessagesForRoomAction(this.messages, this.roomId);
 }
 
 class OnMessagesForRoom extends FlitterAction {
-  final List<Message> messages;
+  final Iterable<Message> messages;
   final String roomId;
   OnMessagesForRoom(this.messages, this.roomId);
 }
@@ -76,7 +76,7 @@ class OnSendMessage extends FlitterAction {
 }
 
 class FetchRoomsOfGroup extends FlitterAction {
-  final List<Room> rooms;
+  final Iterable<Room> rooms;
   FetchRoomsOfGroup(this.rooms);
 }
 
@@ -97,7 +97,7 @@ class EndSearchAction extends FlitterAction {
   EndSearchAction();
 }
 
-class FetchSearchAction extends FlitterAction {
-  final List result;
+class FetchSearchAction<T> extends FlitterAction {
+  final Iterable<T> result;
   FetchSearchAction(this.result);
 }

@@ -87,35 +87,36 @@ FlitterAppState _selectRoom(FlitterAppState state, SelectRoomAction action) {
 
 FlitterAppState _fetchMessages(
     FlitterAppState state, FetchMessagesForRoomAction action) {
-  Map<String, List<Message>> messages = state.messages;
+  Map<String, Iterable<Message>> messages = state.messages;
   messages[action.roomId] = action.messages;
   return state.apply(messages: messages);
 }
 
 FlitterAppState _onMessages(FlitterAppState state, OnMessagesForRoom action) {
-  List<Message> messages = new List.from(action.messages);
-  Map<String, List<Message>> messagesByRooms = new Map.from(state.messages);
+  final messages = new List<Message>.from(action.messages);
+  final messagesByRooms = new Map.from(state.messages);
   messages.addAll(state.messages[action.roomId] ?? []);
   messagesByRooms[action.roomId] = messages;
-  CurrentRoomState currentRoom =
+  final currentRoom =
       state.selectedRoom?.apply(messages: messagesByRooms[action.roomId]);
   return state.apply(messages: messagesByRooms, selectedRoom: currentRoom);
 }
 
 FlitterAppState _joinRoom(FlitterAppState state, JoinRoomAction action) {
-  List<Room> rooms = new List.from(state.rooms);
+  final rooms = new List<Room>.from(state.rooms);
   rooms.add(action.room);
   return state.apply(rooms: rooms);
 }
 
 FlitterAppState _leaveRoom(FlitterAppState state, LeaveRoomAction action) {
-  List<Room> rooms = new List.from(state.rooms);
+  final rooms = new List<Room>.from(state.rooms);
   rooms.removeWhere((Room room) => room.id == action.room.id);
   return state.apply(rooms: rooms);
 }
 
 FlitterAppState _onSendMessage(FlitterAppState state, OnSendMessage action) {
-  Map<String, List<Message>> messages = _addOrUpdateMessage(state, action.message, action.roomId);
+  Map<String, Iterable<Message>> messages =
+      _addOrUpdateMessage(state, action.message, action.roomId);
   CurrentRoomState currentRoom =
       state.selectedRoom?.apply(messages: messages[action.roomId]);
   return state.apply(messages: messages, selectedRoom: currentRoom);
@@ -146,7 +147,8 @@ FlitterAppState _initGitter(FlitterAppState state, AuthGitterAction action) {
 }
 
 FlitterAppState _onMessage(FlitterAppState state, OnMessage action) {
-  Map<String, List<Message>> messages = _addOrUpdateMessage(state, action.message, action.roomId);
+  Map<String, Iterable<Message>> messages =
+      _addOrUpdateMessage(state, action.message, action.roomId);
 
   final currentRoom =
       state.selectedRoom?.apply(messages: messages[action.roomId]);
@@ -156,18 +158,21 @@ FlitterAppState _onMessage(FlitterAppState state, OnMessage action) {
   return state.apply(messages: messages);
 }
 
-Map<String, List<Message>> _addOrUpdateMessage(FlitterAppState state, Message message, String roomId) {
-  Map<String, List<Message>> messages = new Map.from(state.messages);
+Map<String, Iterable<Message>> _addOrUpdateMessage(
+    FlitterAppState state, Message message, String roomId) {
+  Map<String, Iterable<Message>> messages = new Map.from(state.messages);
   messages[roomId] ??= [];
 
   final exist = messages[roomId]
       .firstWhere((msg) => msg.id == message.id, orElse: orElseNull);
 
   if (exist != null) {
-    messages[roomId][messages[roomId].indexOf(exist)] =
-        message;
+    final list = messages[roomId].toList();
+    final idx = list.indexOf(exist);
+    list[idx] = message;
+    messages[roomId] = list;
   } else {
-    messages[roomId].add(message);
+    messages[roomId] = messages[roomId].toList()..add(message);
   }
   return messages;
 }

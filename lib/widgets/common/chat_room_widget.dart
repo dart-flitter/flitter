@@ -8,7 +8,7 @@ import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:intl/intl.dart';
 
 class ChatRoomWidget extends StatefulWidget {
-  final List<Message> messages;
+  final Iterable<Message> messages;
   final StreamController<Null> _onNeedData;
 
   @override
@@ -39,14 +39,17 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
   }
 
   _buildListItem(BuildContext context, int index) {
-    Message message = widget.messages[index];
+    Message message = widget.messages.elementAt(index);
     if (widget.messages.length >= 50 && index == widget.messages.length - 5) {
       widget.onNeedDataController.add(null);
     }
 
     if (index != widget.messages.length - 1 &&
-        widget.messages[index + 1].fromUser.id == message.fromUser.id &&
-        message.sent.difference(widget.messages[index + 1].sent).inMinutes <=
+        widget.messages.elementAt(index + 1).fromUser.id ==
+            message.fromUser.id &&
+        message.sent
+                .difference(widget.messages.elementAt(index + 1).sent)
+                .inMinutes <=
             10) {
       return new ChatMessageWidget(
         leading: new Container(),
@@ -117,7 +120,7 @@ class ChatMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final children = [];
+    final children = <Widget>[];
 
     if (leading != null) {
       children.add(_buildAvatar());
@@ -130,7 +133,7 @@ class ChatMessageWidget extends StatelessWidget {
     return _buildContainer(children);
   }
 
-  Widget _buildContainer(List<Widget> body) {
+  Widget _buildContainer(Iterable<Widget> body) {
     final children = <Widget>[];
 
     if (withDivider) {

@@ -27,7 +27,7 @@ class Room {
   bool lurk;
   String url;
   String githubType;
-  List<String> tags;
+  Iterable<String> tags;
   num v;
   String avatarUrl;
 

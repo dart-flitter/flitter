@@ -19,7 +19,7 @@ class User {
   String avatarUrlSmall;
   String avatarUrlMedium;
   bool staff;
-  List<String> providers;
+  Iterable<String> providers;
   num v;
   String gv;
 

@@ -1,7 +1,7 @@
 import 'package:flitter/services/gitter/gitter.dart';
 
 class SearchState {
-  final List result;
+  final Iterable result;
   final bool requesting;
   final bool searching;
 
@@ -12,7 +12,7 @@ class SearchState {
         requesting = false,
         searching = false;
 
-  SearchState apply({List result, bool requesting, bool searching}) {
+  SearchState apply({Iterable result, bool requesting, bool searching}) {
     return new SearchState(
         result: result ?? this.result,
         requesting: requesting ?? this.requesting,
@@ -22,11 +22,11 @@ class SearchState {
 
 class CurrentRoomState {
   final Room room;
-  final List<Message> messages;
+  final Iterable<Message> messages;
 
   CurrentRoomState({this.room, this.messages});
 
-  CurrentRoomState apply({Room room, List<Message> messages}) {
+  CurrentRoomState apply({Room room, Iterable<Message> messages}) {
     return new CurrentRoomState(
         room: room ?? this.room, messages: messages ?? this.messages);
   }
@@ -34,21 +34,21 @@ class CurrentRoomState {
 
 class CurrentGroupState {
   final Group group;
-  final List<Room> rooms;
+  final Iterable<Room> rooms;
 
   CurrentGroupState({this.group, this.rooms});
 
-  CurrentGroupState apply({Group group, List<Room> rooms}) {
+  CurrentGroupState apply({Group group, Iterable<Room> rooms}) {
     return new CurrentGroupState(
         group: group ?? this.group, rooms: rooms ?? this.rooms);
   }
 }
 
 class FlitterAppState {
-  final List<Room> rooms;
-  final List<Group> groups;
+  final Iterable<Room> rooms;
+  final Iterable<Group> groups;
   final User user;
-  final Map<String, List<Message>> messages;
+  final Map<String, Iterable<Message>> messages;
   final CurrentRoomState selectedRoom;
   final SearchState search;
   final CurrentGroupState selectedGroup;
@@ -72,16 +72,16 @@ class FlitterAppState {
         rooms = null,
         groups = null,
         user = null,
-        messages = const <String, List<Message>>{},
+        messages = const <String, Iterable<Message>>{},
         selectedRoom = null,
         search = new SearchState.initial(),
         selectedGroup = null;
 
   FlitterAppState apply(
-      {List<Room> rooms,
-      List<Group> groups,
+      {Iterable<Room> rooms,
+      Iterable<Group> groups,
       User user,
-      Map<String, List<Message>> messages,
+      Map<String, Iterable<Message>> messages,
       bool init,
       CurrentRoomState selectedRoom,
       SearchState search,

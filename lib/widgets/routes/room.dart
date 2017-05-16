@@ -21,7 +21,7 @@ class RoomView extends StatefulWidget {
 }
 
 class _RoomViewState extends State<RoomView> {
-  List<Message> get messages => flitterStore.state.selectedRoom.messages;
+  Iterable<Message> get messages => flitterStore.state.selectedRoom.messages;
 
   Room get room => flitterStore.state.selectedRoom.room;
 
@@ -61,7 +61,7 @@ class _RoomViewState extends State<RoomView> {
 
     if (messages != null) {
       final ChatRoomWidget chatRoom =
-          new ChatRoomWidget(messages: messages.reversed.toList());
+          new ChatRoomWidget(messages: messages.toList().reversed);
       chatRoom.onNeedDataStream.listen((_) => _fetchMessages());
       body = chatRoom;
     } else {

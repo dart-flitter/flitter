@@ -12,7 +12,7 @@ class ListRoomWidget extends StatelessWidget {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
-  final List<Room> rooms;
+  final Iterable<Room> rooms;
   final RefreshCallback onRefresh;
 
   ListRoomWidget({@required this.rooms, this.onRefresh});
@@ -38,7 +38,7 @@ class ListRoomWidget extends StatelessWidget {
   }
 
   Widget _buildListTile(BuildContext context, int index) {
-    return roomTile(context, rooms[index]);
+    return roomTile(context, rooms.elementAt(index));
   }
 }
 

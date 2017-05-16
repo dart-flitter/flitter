@@ -41,7 +41,7 @@ class SearchBar extends StatelessWidget {
 }
 
 class ListSearchResult extends StatelessWidget {
-  final List results;
+  final Iterable results;
 
   ListSearchResult(this.results);
 
@@ -53,7 +53,7 @@ class ListSearchResult extends StatelessWidget {
       );
 
   Widget _buildListTile(BuildContext context, int index) {
-    final result = results[index];
+    final result = results.elementAt(index);
     if (result is Room) {
       return roomTile(context, result);
     } else if (result is User) {

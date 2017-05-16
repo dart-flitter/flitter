@@ -48,7 +48,7 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
 
   ////////
 
-  List<Widget> _drawerCommunities(BuildContext context) {
+  Iterable<Widget> _drawerCommunities(BuildContext context) {
     final communities = <Widget>[
       new Divider(),
       new ListTile(title: new Text(intl.communities()), dense: true)
@@ -59,7 +59,7 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
     return communities;
   }
 
-  List<Widget> _drawerFooter(BuildContext context) => [
+  Iterable<Widget> _drawerFooter(BuildContext context) => [
         new Divider(),
         new ListTile(
             leading: new Icon(Icons.exit_to_app),
@@ -82,7 +82,7 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
                   image: new AssetImage('assets/images/banner.jpg'),
                   fit: BoxFit.cover)));
 
-  List<Widget> _buildCommunities(BuildContext context) {
+  Iterable<Widget> _buildCommunities(BuildContext context) {
     if (flitterStore.state.groups == null) {
       return [];
     }
