@@ -4,7 +4,7 @@ import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_auth.dart';
 import 'package:flitter/services/gitter/gitter.dart';
-import 'package:flitter/widgets/routes/group_room.dart';
+import 'package:flitter/widgets/routes/group.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/painting.dart';
@@ -145,7 +145,7 @@ class FlitterDrawerCommunityTile extends StatelessWidget {
         trailing: null, //TODO: unread inside roomsOf(group)
         onTap: () {
           flitterStore.dispatch(new SelectGroupAction(group));
-          GroupRoomView.go(context, group);
+          GroupView.go(context, group);
         });
   }
 }

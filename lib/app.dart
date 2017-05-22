@@ -5,7 +5,7 @@ import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_auth.dart';
 import 'package:flitter/services/flitter_request.dart';
-import 'package:flitter/widgets/routes/group_room.dart';
+import 'package:flitter/widgets/routes/group.dart';
 import 'package:flitter/widgets/routes/home.dart';
 import 'package:flitter/widgets/routes/login.dart';
 import 'package:flitter/widgets/routes/people.dart';
@@ -76,7 +76,7 @@ class _AppState extends State<App> {
         routes: {
           HomeView.path: (BuildContext context) => new HomeView(),
           PeopleView.path: (BuildContext context) => new PeopleView(),
-          GroupRoomView.path: (BuildContext context) => new GroupRoomView(),
+          GroupView.path: (BuildContext context) => new GroupView(),
         });
   }
 }

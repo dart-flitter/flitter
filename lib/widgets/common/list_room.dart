@@ -45,7 +45,8 @@ class RoomTile extends StatelessWidget {
       dense: false,
       title: new Text(room.name),
       leading: new CircleAvatar(
-          backgroundImage: room.avatarUrl != null ? new NetworkImage(room.avatarUrl) : null,
+          backgroundImage:
+              room.avatarUrl != null ? new NetworkImage(room.avatarUrl) : null,
           backgroundColor: Theme.of(context).canvasColor),
       trailing: room?.unreadItems != null && room.unreadItems > 0
           ? new Chip(label: new Text("${room.unreadItems}"))

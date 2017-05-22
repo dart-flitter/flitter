@@ -22,7 +22,6 @@ class PeopleView extends StatefulWidget {
         path: PeopleView.path, replace: replace);
   }
 
-
   PeopleView({this.onRefresh});
 
   @override

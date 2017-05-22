@@ -12,19 +12,20 @@ import 'package:flitter/widgets/routes/home.dart';
 import 'package:flitter/widgets/routes/people.dart';
 import 'package:flitter/app.dart';
 
-class GroupRoomView extends StatefulWidget {
+class GroupView extends StatefulWidget {
   static const path = "/group";
 
   static go(BuildContext context, Group group, {bool replace: true}) {
-    navigateTo(context, new GroupRoomView(),
-        path: GroupRoomView.path, replace: replace);
+    fetchRoomsOfGroup();
+    navigateTo(context, new GroupView(),
+        path: GroupView.path, replace: replace);
   }
 
   @override
   _GroupRoomViewState createState() => new _GroupRoomViewState();
 }
 
-class _GroupRoomViewState extends State<GroupRoomView> {
+class _GroupRoomViewState extends State<GroupView> {
   var _subscription;
 
   CurrentGroupState get groupState => flitterStore.state.selectedGroup;
@@ -35,10 +36,6 @@ class _GroupRoomViewState extends State<GroupRoomView> {
     _subscription = flitterStore.onChange.listen((_) {
       setState(() {});
     });
-
-    if (groupState.rooms == null) {
-      fetchRoomsOfGroup();
-    }
   }
 
   @override
@@ -52,17 +49,16 @@ class _GroupRoomViewState extends State<GroupRoomView> {
     var body;
 
     if (groupState?.rooms != null) {
-      final children = <Widget>[];
-
-      children.addAll(groupState.rooms.map((room) => new RoomTile(room: room)));
-
-      body = new ListView(children: children);
+      body = new ListView(
+          children: groupState.rooms
+              .map((room) => new RoomTile(room: room))
+              .toList());
     } else {
       body = new LoadingView();
     }
 
     return new Scaffold(
-      appBar: new AppBar(title: new Text(groupState.group.name)),
+      appBar: new AppBar(title: new Text(groupState?.group?.name ?? "")),
       body: body,
       drawer: new FlitterDrawer(onTapAllConversation: () {
         HomeView.go(context);
