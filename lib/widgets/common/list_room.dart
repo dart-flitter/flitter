@@ -38,11 +38,18 @@ class ListRoomWidget extends StatelessWidget {
   }
 
   Widget _buildListTile(BuildContext context, int index) {
-    return roomTile(context, rooms.elementAt(index));
+    return new RoomTile(room: rooms.elementAt(index));
   }
 }
 
-Widget roomTile(BuildContext context, Room room) => new ListTile(
+class RoomTile extends StatelessWidget {
+  final Room room;
+
+  RoomTile({@required this.room});
+
+  @override
+  Widget build(BuildContext context) {
+    return new ListTile(
       dense: false,
       title: new Text(room.name),
       leading: new CircleAvatar(
@@ -56,8 +63,17 @@ Widget roomTile(BuildContext context, Room room) => new ListTile(
         materialNavigateTo(context, new RoomView(), path: RoomView.path);
       },
     );
+  }
+}
 
-Widget userTile(BuildContext context, User user) => new ListTile(
+class UserTile extends StatelessWidget {
+  final User user;
+
+  UserTile({@required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    return new ListTile(
       dense: false,
       title: new Text(user.username),
       leading: new CircleAvatar(
@@ -70,3 +86,5 @@ Widget userTile(BuildContext context, User user) => new ListTile(
         });
       },
     );
+  }
+}

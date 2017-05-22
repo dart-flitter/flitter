@@ -54,8 +54,7 @@ class _GroupRoomViewState extends State<GroupRoomView> {
     if (groupState?.rooms != null) {
       final children = <Widget>[];
 
-      children.addAll(
-          groupState.rooms.map((room) => roomTile(context, room)).toList());
+      children.addAll(groupState.rooms.map((room) => new RoomTile(room: room)));
 
       body = new ListView(children: children);
     } else {

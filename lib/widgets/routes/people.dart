@@ -1,7 +1,7 @@
 library flitter.routes.people;
 
 import 'package:flitter/widgets/common/list_room.dart';
-import 'package:flitter/widgets/common/scaffold_with_searchbar.dart';
+import 'package:flitter/widgets/common/search.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';

@@ -126,7 +126,6 @@ main() {
       }
     });
 
-
     testWidgets("Tap logout", (WidgetTester tester) async {
       await tester.pumpWidget(new MockableApp(
           drawer: new FlitterDrawer(
@@ -157,6 +156,5 @@ main() {
       final progressFinder = find.byType(CircularProgressIndicator);
       expect(progressFinder, findsOneWidget);
     });
-
   });
 }

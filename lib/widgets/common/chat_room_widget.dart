@@ -3,6 +3,7 @@ library flitter.common.chat_room_widget;
 import 'dart:async';
 import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:intl/intl.dart';
@@ -54,20 +55,14 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
     }
 
     if (_shouldMergeMessages(message, index)) {
-      return new ChatMessageWidget(
-        leading: new Container(),
+      return new ChatMessage(
         withDivider: false,
-        body: new Text(message.text, softWrap: true),
+        withAvatar: false,
+        message: message,
       );
     }
 
-    return new ChatMessageWidget(
-        leading: new CircleAvatar(
-            backgroundImage: new NetworkImage(message.fromUser.avatarUrlSmall),
-            backgroundColor: Colors.grey[200]),
-        body: new Text(message.text, softWrap: true),
-        title: message.fromUser.displayName,
-        date: message.sent);
+    return new ChatMessage(message: message);
   }
 }
 
@@ -101,21 +96,64 @@ class _ChatInputState extends State<ChatInput> {
   }
 }
 
-class ChatMessageWidget extends StatelessWidget {
-  final Widget leading;
-  final String title;
-  final DateTime date;
-  final Widget body;
+final _dateFormat = new DateFormat.MMMd()..add_Hm();
+
+class ChatMessage extends StatelessWidget {
+  final Message message;
   final bool withDivider;
+  final bool withAvatar;
 
-  final _dateFormat = new DateFormat.MMMd()..add_Hm();
+  ChatMessage(
+      {@required this.message, this.withDivider: true, this.withAvatar: true});
 
-  ChatMessageWidget(
-      {this.leading,
-      @required this.body,
-      this.title,
-      this.withDivider: true,
-      this.date});
+  @override
+  Widget build(BuildContext context) {
+    final row = <Widget>[];
+
+    if (withAvatar != null) {
+      row.add(new ChatMessageAvatar(
+          avatar: new NetworkImage(message.fromUser.avatarUrlSmall)));
+    }
+
+    row.add(new Expanded(child: new ChatMessageContent(message: message)));
+
+    final column = <Widget>[];
+
+    if (withDivider) {
+      column.add(new Divider(color: Colors.grey[200]));
+    }
+
+    column.add(new Padding(
+        child: new Row(
+            children: row, crossAxisAlignment: CrossAxisAlignment.start),
+        padding: new EdgeInsets.only(bottom: 4.0, top: 4.0, right: 12.0)));
+
+    return new Column(children: column);
+  }
+}
+
+class ChatMessageAvatar extends StatelessWidget {
+  final ImageProvider avatar;
+
+  ChatMessageAvatar({@required this.avatar});
+
+  @override
+  Widget build(BuildContext context) {
+    return new Column(children: [
+      new Container(
+        margin: new EdgeInsets.only(left: 12.0, right: 12.0, top: 12.0),
+        width: 40.0,
+        child: new CircleAvatar(
+            backgroundImage: avatar, backgroundColor: Colors.grey[200]),
+      )
+    ], crossAxisAlignment: CrossAxisAlignment.start);
+  }
+}
+
+class ChatMessageContent extends StatelessWidget {
+  final Message message;
+
+  ChatMessageContent({@required this.message});
 
   TextStyle _titleTextStyle() {
     return new TextStyle(color: Colors.grey);
@@ -123,62 +161,27 @@ class ChatMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final children = <Widget>[];
+    final column = [];
 
-    if (leading != null) {
-      children.add(_buildAvatar());
-    }
-
-    final content = _buildContent();
-
-    children.add(new Expanded(child: content));
-
-    return _buildContainer(children);
-  }
-
-  Widget _buildContainer(Iterable<Widget> body) {
-    final children = <Widget>[];
-
-    if (withDivider) {
-      children.add(new Divider(color: Colors.grey[200]));
-    }
-
-    children.add(new Padding(
-        child: new Row(
-            children: body, crossAxisAlignment: CrossAxisAlignment.start),
-        padding: new EdgeInsets.only(bottom: 4.0, top: 4.0, right: 12.0)));
-
-    return new Column(children: children);
-  }
-
-  Widget _buildAvatar() {
-    return new Column(children: [
-      new Container(
-          margin: new EdgeInsets.only(left: 12.0, right: 12.0, top: 12.0),
-          width: 40.0,
-          child: leading)
-    ], crossAxisAlignment: CrossAxisAlignment.start);
-  }
-
-  Widget _buildContent() {
-    final children = [];
-
-    if (title != null) {
-      children.add(new AnimatedDefaultTextStyle(
+    if (message.fromUser.displayName != null) {
+      column.add(new AnimatedDefaultTextStyle(
           style: _titleTextStyle(),
           duration: kThemeChangeDuration,
           child: new Container(
               padding: new EdgeInsets.only(bottom: 6.0),
               child: new Row(children: [
-                new Expanded(child: new Text(title, softWrap: true)),
-                new Text(_dateFormat.format(date))
+                new Expanded(
+                    child:
+                        new Text(message.fromUser.displayName, softWrap: true)),
+                new Text(_dateFormat.format(message.sent))
               ]))));
     }
-    children.add(body);
+
+    column.add(new Text(message.text, softWrap: true));
 
     return new Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: children);
+        children: column);
   }
 }

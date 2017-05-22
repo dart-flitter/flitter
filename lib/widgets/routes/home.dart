@@ -6,7 +6,7 @@ import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
 import 'package:flitter/widgets/common/drawer.dart';
 import 'package:flitter/widgets/common/list_room.dart';
-import 'package:flitter/widgets/common/scaffold_with_searchbar.dart';
+import 'package:flitter/widgets/common/search.dart';
 import 'package:flitter/widgets/common/utils.dart';
 import 'package:flitter/widgets/routes/people.dart';
 import 'package:flutter/material.dart';
