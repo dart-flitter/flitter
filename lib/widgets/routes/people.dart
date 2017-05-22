@@ -14,12 +14,16 @@ import 'package:flitter/app.dart';
 
 class PeopleView extends StatefulWidget {
   static const String path = "/people";
+  final RefreshCallback onRefresh;
 
   static void go(BuildContext context, {bool replace: true}) {
     fetchRooms();
     navigateTo(context, new PeopleView(),
         path: PeopleView.path, replace: replace);
   }
+
+
+  PeopleView({this.onRefresh});
 
   @override
   _PeopleViewState createState() => new _PeopleViewState();
@@ -58,6 +62,9 @@ class _PeopleViewState extends State<PeopleView> {
               .where((Room room) => room.oneToOne)
               .toList(),
           onRefresh: () {
+            if (widget.onRefresh != null) {
+              return widget.onRefresh();
+            }
             return fetchRooms();
           });
     } else {

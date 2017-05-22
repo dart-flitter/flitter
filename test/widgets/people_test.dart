@@ -4,17 +4,19 @@ import 'package:flitter/redux/store.dart';
 import 'package:flitter/widgets/common/list_room.dart';
 import 'package:flitter/widgets/common/search.dart';
 import 'package:flitter/widgets/routes/home.dart';
+import 'package:flitter/widgets/routes/people.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flitter/intl/messages_all.dart' as intl;
 
 main() {
-  group("$HomeView Widget", () {
+  group("$PeopleView Widget", () {
 
     setUpAll(initFlitterStore);
 
     testWidgets("No Rooms", (WidgetTester tester) async {
       await tester.pumpWidget(new MockableApp(
-          scaffold: new HomeView()));
+          scaffold: new PeopleView()));
 
       final scaff = find.byType(ScaffoldWithSearchbar);
 
@@ -24,7 +26,7 @@ main() {
 
     testWidgets("Fetching Rooms", (WidgetTester tester) async {
       await tester.pumpWidget(new MockableApp(
-          scaffold: new HomeView()));
+          scaffold: new PeopleView()));
 
       final scaff = find.byType(ScaffoldWithSearchbar);
 
@@ -36,7 +38,7 @@ main() {
 
       expect(find.descendant(of: scaff, matching: find.byType(LoadingView)), findsNothing);
       expect(find.descendant(of: scaff, matching: find.byType(ListRoom)), findsOneWidget);
-      expect(find.descendant(of: scaff, matching: find.byType(RoomTile)), findsNWidgets(4));
+      expect(find.descendant(of: scaff, matching: find.byType(RoomTile)), findsNWidgets(1));
     });
 
 
@@ -45,7 +47,7 @@ main() {
       flitterStore = new FlitterStore(initialState: flitterStore.state.apply(rooms: []));
 
       await tester.pumpWidget(new MockableApp(
-          scaffold: new HomeView(onRefresh: () async {
+          scaffold: new PeopleView(onRefresh: () async {
             fetchRooms();
           })));
 
@@ -60,7 +62,7 @@ main() {
       await tester.pump(const Duration(seconds: 1));
       await tester.pump(const Duration(seconds: 1));
 
-      expect(find.byType(RoomTile), findsNWidgets(4));
+      expect(find.byType(RoomTile), findsNWidgets(1));
     });
 
   });
