@@ -9,10 +9,11 @@ import 'package:redux/redux.dart' as redux;
 class FlitterStore extends redux.Store<FlitterAppState, FlitterAction> {
   FlitterStore(
       {FlitterAppState initialState,
-      redux.Reducer<FlitterAppState, FlitterAction> reducer})
+      redux.Reducer<FlitterAppState, FlitterAction> reducer,
+      List<redux.Middleware> middlewares: const [const FlitterLoggingMiddleware()]})
       : super(reducer ?? new FlitterAppReducer(),
             initialState: initialState ?? new FlitterAppState.initial(),
-            middleware: [new FlitterLoggingMiddleware()]);
+            middleware: middlewares);
 }
 
 class ThemeStore extends redux.Store<ThemeState, FlitterAction> {

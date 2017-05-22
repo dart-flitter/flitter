@@ -16,6 +16,7 @@ class PeopleView extends StatefulWidget {
   static const String path = "/people";
 
   static void go(BuildContext context, {bool replace: true}) {
+    fetchRooms();
     navigateTo(context, new PeopleView(),
         path: PeopleView.path, replace: replace);
   }
@@ -52,20 +53,18 @@ class _PeopleViewState extends State<PeopleView> {
     });
 
     if (flitterStore.state.rooms != null) {
-      body = _buildListRooms();
+      body = new ListRoom(
+          rooms: flitterStore.state.rooms
+              .where((Room room) => room.oneToOne)
+              .toList(),
+          onRefresh: () {
+            return fetchRooms();
+          });
     } else {
       body = new LoadingView();
-      fetchRooms();
     }
 
     return new ScaffoldWithSearchbar(
         body: body, title: intl.people(), drawer: drawer);
   }
-
-  _buildListRooms() => new ListRoomWidget(
-      rooms:
-          flitterStore.state.rooms.where((Room room) => room.oneToOne).toList(),
-      onRefresh: () {
-        return fetchRooms();
-      });
 }

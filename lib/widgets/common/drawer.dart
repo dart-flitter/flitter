@@ -123,7 +123,6 @@ class FlitterDrawerFooter extends StatelessWidget {
         leading: new Icon(Icons.exit_to_app),
         title: new Text(intl.logout()),
         onTap: () {
-          print("logout");
           Navigator.of(context).pop();
           FlitterAuth.logout();
         });

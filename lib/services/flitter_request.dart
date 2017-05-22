@@ -68,10 +68,13 @@ Future<Iterable> search(String query) async {
 }
 
 initBasicData() async {
+  if (flitterStore.state.rooms == null) {
+    await fetchRooms();
+  }
   if (flitterStore.state.user == null) {
-    await fetchUser();
+    fetchUser();
   }
   if (flitterStore.state.groups == null) {
-    await fetchGroups();
+    fetchGroups();
   }
 }

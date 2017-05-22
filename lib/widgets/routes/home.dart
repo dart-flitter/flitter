@@ -15,10 +15,14 @@ import 'package:flitter/intl/messages_all.dart' as intl;
 
 class HomeView extends StatefulWidget {
   static final String path = "/";
+  final RefreshCallback onRefresh;
 
   static void go(BuildContext context, {bool replace: true}) {
+    fetchRooms();
     navigateTo(context, new HomeView(), path: HomeView.path, replace: replace);
   }
+
+  HomeView({this.onRefresh});
 
   @override
   _HomeViewState createState() => new _HomeViewState();
@@ -52,19 +56,19 @@ class _HomeViewState extends State<HomeView> {
     });
 
     if (flitterStore.state.rooms != null) {
-      body = _buildListRooms();
+      body = new ListRoom(
+          rooms: flitterStore.state.rooms,
+          onRefresh: () {
+            if (widget.onRefresh != null) {
+              return widget.onRefresh();
+            }
+            return fetchRooms();
+          });
     } else {
       body = new LoadingView();
-      fetchRooms();
     }
 
     return new ScaffoldWithSearchbar(
         body: body, title: intl.allConversations(), drawer: drawer);
   }
-
-  _buildListRooms() => new ListRoomWidget(
-      rooms: flitterStore.state.rooms,
-      onRefresh: () {
-        return fetchRooms();
-      });
 }

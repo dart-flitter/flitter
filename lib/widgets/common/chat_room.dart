@@ -8,14 +8,14 @@ import 'package:meta/meta.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:intl/intl.dart';
 
-class ChatRoomWidget extends StatefulWidget {
+class ChatRoom extends StatefulWidget {
   final Iterable<Message> messages;
   final _onNeedData;
 
   @override
   _ChatRoomWidgetState createState() => new _ChatRoomWidgetState();
 
-  ChatRoomWidget({@required this.messages: const []})
+  ChatRoom({@required this.messages: const []})
       : _onNeedData = new StreamController();
 
   Stream<Null> get onNeedDataStream => onNeedDataController.stream;
@@ -23,7 +23,7 @@ class ChatRoomWidget extends StatefulWidget {
   StreamController<Null> get onNeedDataController => _onNeedData;
 }
 
-class _ChatRoomWidgetState extends State<ChatRoomWidget> {
+class _ChatRoomWidgetState extends State<ChatRoom> {
   @override
   Widget build(BuildContext context) {
     if (widget.messages.isEmpty) {

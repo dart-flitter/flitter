@@ -5,7 +5,7 @@ import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
 import 'package:flitter/services/gitter/gitter.dart';
-import 'package:flitter/widgets/common/chat_room_widget.dart';
+import 'package:flitter/widgets/common/chat_room.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/app.dart';
 
@@ -60,8 +60,8 @@ class _RoomViewState extends State<RoomView> {
     var body;
 
     if (messages != null) {
-      final ChatRoomWidget chatRoom =
-          new ChatRoomWidget(messages: messages.toList().reversed);
+      final ChatRoom chatRoom =
+          new ChatRoom(messages: messages.toList().reversed);
       chatRoom.onNeedDataStream.listen((_) => _fetchMessages());
       body = chatRoom;
     } else {

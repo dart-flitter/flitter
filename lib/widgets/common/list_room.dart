@@ -8,25 +8,17 @@ import 'package:flitter/services/gitter/gitter.dart';
 import 'package:flitter/widgets/routes/room.dart';
 import 'package:flitter/redux/actions.dart';
 
-class ListRoomWidget extends StatelessWidget {
+class ListRoom extends StatelessWidget {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
   final Iterable<Room> rooms;
   final RefreshCallback onRefresh;
 
-  ListRoomWidget({@required this.rooms, this.onRefresh});
+  ListRoom({@required this.rooms, @required this.onRefresh});
 
   @override
   Widget build(BuildContext context) {
-    if (onRefresh == null) {
-      return new ListView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
-        key: _refreshIndicatorKey,
-        itemCount: rooms.length,
-        itemBuilder: _buildListTile,
-      );
-    }
     return new RefreshIndicator(
         child: new ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -53,7 +45,7 @@ class RoomTile extends StatelessWidget {
       dense: false,
       title: new Text(room.name),
       leading: new CircleAvatar(
-          backgroundImage: new NetworkImage(room.avatarUrl),
+          backgroundImage: room.avatarUrl != null ? new NetworkImage(room.avatarUrl) : null,
           backgroundColor: Theme.of(context).canvasColor),
       trailing: room?.unreadItems != null && room.unreadItems > 0
           ? new Chip(label: new Text("${room.unreadItems}"))
