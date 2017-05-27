@@ -110,7 +110,7 @@ class ChatMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     final row = <Widget>[];
 
-    if (withAvatar != null) {
+    if (withAvatar) {
       row.add(new ChatMessageAvatar(
           avatar: new NetworkImage(message.fromUser.avatarUrlSmall)));
     }
