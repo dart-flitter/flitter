@@ -27,7 +27,7 @@ main() {
 
       final scaff = find.byType(Scaffold);
 
-     fetchRoomsOfGroup();
+      fetchRoomsOfGroup();
 
       expect(find.descendant(of: scaff, matching: find.byType(LoadingView)),
           findsOneWidget);

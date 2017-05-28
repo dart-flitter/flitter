@@ -58,6 +58,7 @@ class _ChatRoomWidgetState extends State<ChatRoom> {
       return new ChatMessage(
         withDivider: false,
         withAvatar: false,
+        withTitle: true,
         message: message,
       );
     }
@@ -102,9 +103,13 @@ class ChatMessage extends StatelessWidget {
   final Message message;
   final bool withDivider;
   final bool withAvatar;
+  final bool withTitle;
 
   ChatMessage(
-      {@required this.message, this.withDivider: true, this.withAvatar: true});
+      {@required this.message,
+      this.withDivider: true,
+      this.withAvatar: true,
+      this.withTitle: true});
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +120,8 @@ class ChatMessage extends StatelessWidget {
           avatar: new NetworkImage(message.fromUser.avatarUrlSmall)));
     }
 
-    row.add(new Expanded(child: new ChatMessageContent(message: message)));
+    row.add(new Expanded(
+        child: new ChatMessageContent(message: message, withTitle: withTitle)));
 
     final column = <Widget>[];
 
@@ -152,8 +158,9 @@ class ChatMessageAvatar extends StatelessWidget {
 
 class ChatMessageContent extends StatelessWidget {
   final Message message;
+  final bool withTitle;
 
-  ChatMessageContent({@required this.message});
+  ChatMessageContent({@required this.message, this.withTitle: true});
 
   TextStyle _titleTextStyle() {
     return new TextStyle(color: Colors.grey);
@@ -163,7 +170,7 @@ class ChatMessageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final column = [];
 
-    if (message.fromUser.displayName != null) {
+    if (message.fromUser.displayName != null && withTitle) {
       column.add(new AnimatedDefaultTextStyle(
           style: _titleTextStyle(),
           duration: kThemeChangeDuration,
