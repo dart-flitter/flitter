@@ -58,7 +58,7 @@ class _ChatRoomWidgetState extends State<ChatRoom> {
       return new ChatMessage(
         withDivider: false,
         withAvatar: false,
-        withTitle: true,
+        withTitle: false,
         message: message,
       );
     }
@@ -118,6 +118,8 @@ class ChatMessage extends StatelessWidget {
     if (withAvatar) {
       row.add(new ChatMessageAvatar(
           avatar: new NetworkImage(message.fromUser.avatarUrlSmall)));
+    } else {
+      row.add(new Container(width: 64.0));
     }
 
     row.add(new Expanded(
@@ -132,7 +134,10 @@ class ChatMessage extends StatelessWidget {
     column.add(new Padding(
         child: new Row(
             children: row, crossAxisAlignment: CrossAxisAlignment.start),
-        padding: new EdgeInsets.only(bottom: 4.0, top: 4.0, right: 12.0)));
+        padding: new EdgeInsets.only(
+            bottom: withTitle ? 4.0 : 0.0,
+            top: withTitle ? 4.0 : 0.0,
+            right: 12.0)));
 
     return new Column(children: column);
   }
@@ -170,18 +175,20 @@ class ChatMessageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final column = [];
 
-    if (message.fromUser.displayName != null && withTitle) {
+    if (message.fromUser.displayName != null) {
       column.add(new AnimatedDefaultTextStyle(
           style: _titleTextStyle(),
           duration: kThemeChangeDuration,
           child: new Container(
               padding: new EdgeInsets.only(bottom: 6.0),
-              child: new Row(children: [
-                new Expanded(
-                    child:
-                        new Text(message.fromUser.displayName, softWrap: true)),
-                new Text(_dateFormat.format(message.sent))
-              ]))));
+              child: withTitle
+                  ? new Row(children: [
+                      new Expanded(
+                          child: new Text(message.fromUser.displayName,
+                              softWrap: true)),
+                      new Text(_dateFormat.format(message.sent))
+                    ])
+                  : null)));
     }
 
     column.add(new Text(message.text, softWrap: true));
