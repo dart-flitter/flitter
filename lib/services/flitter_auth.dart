@@ -43,8 +43,7 @@ class FlitterAuth {
   }
 
   static Future<Null> logout() async {
-    await saveToken(null);
-    flitterStore.dispatch(new LogoutAction());
+    saveToken(null);
     flitterStore.dispatch(new LogoutAction());
   }
 }

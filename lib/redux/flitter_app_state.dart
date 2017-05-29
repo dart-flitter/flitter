@@ -21,7 +21,9 @@ class ThemeState {
       secondarySwatch: Colors.pink);
 
   ThemeState apply(
-      {Brightness brightness, MaterialColor primarySwatch, MaterialColor secondarySwatch}) {
+      {Brightness brightness,
+      MaterialColor primarySwatch,
+      MaterialColor secondarySwatch}) {
     return new ThemeState(
         brightness: brightness ?? this.brightness,
         primarySwatch: primarySwatch ?? this.primarySwatch,

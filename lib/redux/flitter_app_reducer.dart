@@ -24,6 +24,8 @@ ThemeState _changeThemeAction(ThemeState state, ChangeThemeAction action) {
 
 class FlitterLoggingMiddleware
     implements redux.Middleware<FlitterAppState, FlitterAction> {
+  const FlitterLoggingMiddleware();
+
   call(redux.Store<FlitterAppState, FlitterAction> store, FlitterAction action,
       next) {
     debugPrint('${new DateTime.now()}: $action');
