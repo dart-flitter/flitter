@@ -5,8 +5,8 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:flitter/services/gitter/gitter.dart';
-import 'package:flitter/services/oauth/oauth.dart';
+import 'package:gitter/gitter.dart';
+import 'package:gitter/src/oauth/oauth.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 Future<String> getContent() async {

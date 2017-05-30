@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flitter/redux/flitter_app_state.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
-import 'package:flitter/services/gitter/gitter.dart';
+import 'package:gitter/gitter.dart';
 import 'package:flitter/widgets/routes/home.dart';
 import 'package:flitter/widgets/routes/people.dart';
 import 'package:flitter/app.dart';
@@ -36,6 +36,7 @@ class _GroupRoomViewState extends State<GroupView> {
     _subscription = flitterStore.onChange.listen((_) {
       setState(() {});
     });
+    fetchGroups();
   }
 
   @override

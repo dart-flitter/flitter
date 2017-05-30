@@ -7,7 +7,7 @@ import 'package:flitter/intl/messages_all.dart' as intl;
 
 main() {
   group("$FlitterDrawer Widget", () {
-    setUpAll(initFlitterStore);
+    setUpAll(initStores);
 
     testWidgets("No user", (WidgetTester tester) async {
       await tester.pumpWidget(new MockableApp(

@@ -5,7 +5,7 @@ import 'package:flitter/widgets/common/search.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
-import 'package:flitter/services/gitter/gitter.dart';
+import 'package:gitter/gitter.dart';
 import 'package:flitter/widgets/common/drawer.dart';
 import 'package:flitter/widgets/common/utils.dart';
 import 'package:flitter/widgets/routes/home.dart';
@@ -36,6 +36,9 @@ class _PeopleViewState extends State<PeopleView> {
     super.initState();
     _subscription = flitterStore.onChange.listen((_) {
       setState(() {});
+    });
+    fetchRooms().then((Iterable rooms) {
+      subscribeToUnreadMessages(rooms);
     });
   }
 

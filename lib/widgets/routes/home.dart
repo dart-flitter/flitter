@@ -37,6 +37,9 @@ class _HomeViewState extends State<HomeView> {
     _subscription = flitterStore.onChange.listen((_) {
       setState(() {});
     });
+    fetchRooms().then((Iterable rooms) {
+      subscribeToUnreadMessages(rooms);
+    });
   }
 
   @override

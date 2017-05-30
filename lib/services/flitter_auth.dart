@@ -5,10 +5,10 @@ import 'dart:convert';
 
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_config.dart';
-import 'package:flitter/services/gitter/gitter.dart';
-import 'package:flitter/services/oauth/oauth.dart';
+import 'package:gitter/gitter.dart';
 import 'package:flitter/services/flutter_gitter_auth.dart';
 import 'package:flitter/redux/actions.dart';
+import 'package:gitter/src/oauth/oauth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FlitterAuth {
@@ -44,6 +44,6 @@ class FlitterAuth {
 
   static Future<Null> logout() async {
     saveToken(null);
-    flitterStore.dispatch(new LogoutAction());
+    gitterStore.dispatch(new LogoutAction());
   }
 }

@@ -1,30 +1,31 @@
 library flitter.redux.actions;
 
-import 'package:flitter/services/gitter/gitter.dart';
-import 'package:flitter/services/gitter/src/models/token.dart';
+import 'package:gitter/gitter.dart';
 import 'package:flutter/material.dart';
+import 'package:gitter/src/faye.dart';
 
 abstract class FlitterAction {
   FlitterAction();
+
   String toString() => '$runtimeType';
 }
 
 class AuthGitterAction extends FlitterAction {
   final GitterToken token;
-  AuthGitterAction(this.token);
-}
+  final GitterFayeSubscriber subscriber;
 
-class InitAppAction extends FlitterAction {
-  InitAppAction();
+  AuthGitterAction(this.token, this.subscriber);
 }
 
 class FetchRoomsAction extends FlitterAction {
   final Iterable<Room> rooms;
+
   FetchRoomsAction(this.rooms);
 }
 
 class FetchGroupsAction extends FlitterAction {
   final Iterable<Group> groups;
+
   FetchGroupsAction(this.groups);
 }
 
@@ -34,55 +35,61 @@ class LogoutAction extends FlitterAction {
 
 class FetchUser extends FlitterAction {
   final User user;
+
   FetchUser(this.user);
 }
 
 class SelectRoomAction extends FlitterAction {
   final Room room;
+
   SelectRoomAction(this.room);
 }
 
-class FetchMessagesForRoomAction extends FlitterAction {
+class FetchMessagesForCurrentRoomAction extends FlitterAction {
   final Iterable<Message> messages;
-  final String roomId;
-  FetchMessagesForRoomAction(this.messages, this.roomId);
+
+  FetchMessagesForCurrentRoomAction(this.messages);
 }
 
-class OnMessagesForRoom extends FlitterAction {
+class OnMessagesForCurrentRoom extends FlitterAction {
   final Iterable<Message> messages;
-  final String roomId;
-  OnMessagesForRoom(this.messages, this.roomId);
+
+  OnMessagesForCurrentRoom(this.messages);
 }
 
-class OnMessage extends FlitterAction {
+class OnMessageForCurrentRoom extends FlitterAction {
   final Message message;
-  final String roomId;
-  OnMessage(this.message, this.roomId);
+
+  OnMessageForCurrentRoom(this.message);
 }
 
 class JoinRoomAction extends FlitterAction {
   final Room room;
+
   JoinRoomAction(this.room);
 }
 
 class LeaveRoomAction extends FlitterAction {
   final Room room;
+
   LeaveRoomAction(this.room);
 }
 
 class OnSendMessage extends FlitterAction {
   final Message message;
-  final String roomId;
-  OnSendMessage(this.message, this.roomId);
+
+  OnSendMessage(this.message);
 }
 
 class FetchRoomsOfGroup extends FlitterAction {
   final Iterable<Room> rooms;
+
   FetchRoomsOfGroup(this.rooms);
 }
 
 class SelectGroupAction extends FlitterAction {
   final Group group;
+
   SelectGroupAction(this.group);
 }
 
@@ -100,6 +107,7 @@ class EndSearchAction extends FlitterAction {
 
 class FetchSearchAction<T> extends FlitterAction {
   final Iterable<T> result;
+
   FetchSearchAction(this.result);
 }
 
@@ -109,4 +117,13 @@ class ChangeThemeAction extends FlitterAction {
   final MaterialColor secondarySwatch;
 
   ChangeThemeAction(this.brightness, this.primarySwatch, this.secondarySwatch);
+}
+
+class UnreadMessagesForRoom extends FlitterAction {
+  final String roomId;
+  final num addMessage;
+  final num removeMessage;
+
+  UnreadMessagesForRoom(
+      {this.roomId, this.addMessage: 0, this.removeMessage: 0});
 }

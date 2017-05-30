@@ -2,7 +2,7 @@ library flitter.common.search;
 
 import 'package:flitter/widgets/common/list_room.dart';
 import 'package:flutter/material.dart';
-import 'package:flitter/services/gitter/gitter.dart';
+import 'package:gitter/gitter.dart';
 import 'package:meta/meta.dart';
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';

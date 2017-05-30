@@ -4,10 +4,11 @@ import 'dart:async';
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
-import 'package:flitter/services/gitter/gitter.dart';
+import 'package:gitter/gitter.dart';
 import 'package:flitter/widgets/common/chat_room.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/app.dart';
+import 'package:gitter/src/models/faye_message.dart';
 
 enum RoomMenuAction { leave }
 
@@ -26,7 +27,6 @@ class _RoomViewState extends State<RoomView> {
   Room get room => flitterStore.state.selectedRoom.room;
 
   var _subscription;
-  var _subscriptionMessages;
 
   @override
   void initState() {
@@ -35,25 +35,25 @@ class _RoomViewState extends State<RoomView> {
       setState(() {});
     });
 
-    if (messages == null) {
-      _fetchMessages();
-    }
+    _fetchMessages();
 
-    _getStreamedMessages();
+    gitterSubscriber.subscribeToChatMessages(room.id, _onMessageHandler);
   }
 
-  Future<Null> _getStreamedMessages() async {
-    Stream<Message> stream = await gitterApi.room.streamMessagesOfRoom(room.id);
-    _subscriptionMessages = stream.listen((Message msg) {
-      flitterStore.dispatch(new OnMessage(msg, room.id));
-    });
+  _onMessageHandler(List<GitterFayeMessage> msgs) {
+    for (GitterFayeMessage msg in msgs) {
+      if (msg.data != null && msg.data["operation"] == "create") {
+        flitterStore.dispatch(new OnMessageForCurrentRoom(
+            new Message.fromJson(msg.data["model"])));
+      }
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
     _subscription.cancel();
-    _subscriptionMessages?.cancel();
+    gitterSubscriber.unsubscribeToChatMessages(room.id);
   }
 
   @override
@@ -79,7 +79,8 @@ class _RoomViewState extends State<RoomView> {
   }
 
   _fetchMessages() {
-    fetchMessagesOfRoom(room.id, messages?.first?.id);
+    String id = messages?.isNotEmpty == true ? messages.first.id : null;
+    fetchMessagesOfRoom(room.id, id);
   }
 
   Widget _buildMenu() => new PopupMenuButton(

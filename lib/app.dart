@@ -49,7 +49,7 @@ class _AppState extends State<App> {
   var _themeSubscription;
 
   _AppState() {
-    _subscription = flitterStore.onChange.listen((_) {
+    _subscription = gitterStore.onChange.listen((_) async {
       setState(() {});
     });
     _themeSubscription = themeStore.onChange.listen((_) {
@@ -90,11 +90,10 @@ Future run() async {
 }
 
 Future<Null> _init() async {
-  flitterStore = new FlitterStore();
+  gitterStore = new GitterStore();
   themeStore = new ThemeStore();
   final token = await FlitterAuth.getToken();
   if (token != null) {
-    flitterStore.dispatch(new AuthGitterAction(token));
-    await initBasicData();
+    await initStores(token);
   }
 }

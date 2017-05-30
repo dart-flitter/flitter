@@ -1,7 +1,7 @@
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/flitter_app_state.dart';
 import 'package:flitter/redux/store.dart';
-import 'package:flitter/services/gitter/gitter.dart';
+import 'package:gitter/gitter.dart';
 import 'package:flutter/material.dart';
 
 class MockableApp extends StatelessWidget {
@@ -22,15 +22,16 @@ class MockableApp extends StatelessWidget {
   }
 }
 
-initFlitterStore() {
+initStores() {
   final token = new GitterToken()
     ..access = "xxx"
     ..type = "xxx";
   final api = new GitterApi(token);
+  gitterStore =
+  new GitterStore(initialState: new GitterState(api: api, token: token));
 
   flitterStore = new FlitterStore(
-      initialState: new FlitterAppState(
-          api: api, token: token, search: new SearchState.initial()),
+      initialState: new FlitterAppState(search: new SearchState.initial()),
       middlewares: const []);
 }
 
@@ -53,7 +54,7 @@ final groups = <Group>[
     "uri": "gitterHQ",
     "backedBy": {"type": "GH_ORG", "linkPath": "gitterHQ"},
     "avatarUrl":
-        "http://gitter.im/api/private/avatars/group/i/577ef7e4e897e2a459b1b881"
+    "http://gitter.im/api/private/avatars/group/i/577ef7e4e897e2a459b1b881"
   }),
   new Group.fromJson({
     "id": "577faf61a7d5727908337209",
@@ -61,7 +62,7 @@ final groups = <Group>[
     "uri": "i-love-cats",
     "backedBy": {"type": null},
     "avatarUrl":
-        "http://gitter.im/api/private/avatars/group/i/577faf61a7d5727908337209"
+    "http://gitter.im/api/private/avatars/group/i/577faf61a7d5727908337209"
   })
 ];
 

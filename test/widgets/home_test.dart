@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 main() {
   group("$HomeView Widget", () {
-    setUpAll(initFlitterStore);
+    setUpAll(initStores);
 
     testWidgets("No Rooms", (WidgetTester tester) async {
       await tester.pumpWidget(new MockableApp(scaffold: new HomeView()));
