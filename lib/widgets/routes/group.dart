@@ -36,7 +36,7 @@ class _GroupRoomViewState extends State<GroupView> {
     _subscription = flitterStore.onChange.listen((_) {
       setState(() {});
     });
-    fetchGroups();
+    fetchRoomsOfGroup();
   }
 
   @override
