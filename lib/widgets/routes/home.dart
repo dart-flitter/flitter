@@ -18,7 +18,9 @@ class HomeView extends StatefulWidget {
   final RefreshCallback onRefresh;
 
   static void go(BuildContext context, {bool replace: true}) {
-    fetchRooms();
+    fetchRooms().then((Iterable rooms) {
+      subscribeToUnreadMessages(rooms);
+    });
     navigateTo(context, new HomeView(), path: HomeView.path, replace: replace);
   }
 
@@ -36,9 +38,6 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
     _subscription = flitterStore.onChange.listen((_) {
       setState(() {});
-    });
-    fetchRooms().then((Iterable rooms) {
-      subscribeToUnreadMessages(rooms);
     });
   }
 

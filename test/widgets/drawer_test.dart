@@ -151,10 +151,6 @@ main() {
       logoutButton.onTap();
 
       await tester.pump();
-
-      // drawer with a Loader
-      final progressFinder = find.byType(CircularProgressIndicator);
-      expect(progressFinder, findsOneWidget);
     });
   });
 }

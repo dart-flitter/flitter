@@ -3,6 +3,7 @@ import 'package:flitter/redux/flitter_app_state.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:gitter/gitter.dart';
 import 'package:flutter/material.dart';
+import 'package:gitter/src/faye.dart';
 
 class MockableApp extends StatelessWidget {
   final Widget drawer;
@@ -28,7 +29,7 @@ initStores() {
     ..type = "xxx";
   final api = new GitterApi(token);
   gitterStore =
-  new GitterStore(initialState: new GitterState(api: api, token: token));
+  new GitterStore(initialState: new GitterState(api: api, token: token, subscriber: new GitterFayeSubscriber(token.access)));
 
   flitterStore = new FlitterStore(
       initialState: new FlitterAppState(search: new SearchState.initial()),

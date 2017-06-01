@@ -16,7 +16,9 @@ class GroupView extends StatefulWidget {
   static const path = "/group";
 
   static go(BuildContext context, Group group, {bool replace: true}) {
-    fetchRoomsOfGroup();
+    fetchRoomsOfGroup().then((Iterable rooms) {
+      subscribeToUnreadMessages(rooms);
+    });
     navigateTo(context, new GroupView(),
         path: GroupView.path, replace: replace);
   }
@@ -36,7 +38,6 @@ class _GroupRoomViewState extends State<GroupView> {
     _subscription = flitterStore.onChange.listen((_) {
       setState(() {});
     });
-    fetchRoomsOfGroup();
   }
 
   @override

@@ -17,7 +17,9 @@ class PeopleView extends StatefulWidget {
   final RefreshCallback onRefresh;
 
   static void go(BuildContext context, {bool replace: true}) {
-    fetchRooms();
+    fetchRooms().then((Iterable rooms) {
+      subscribeToUnreadMessages(rooms);
+    });
     navigateTo(context, new PeopleView(),
         path: PeopleView.path, replace: replace);
   }
@@ -36,9 +38,6 @@ class _PeopleViewState extends State<PeopleView> {
     super.initState();
     _subscription = flitterStore.onChange.listen((_) {
       setState(() {});
-    });
-    fetchRooms().then((Iterable rooms) {
-      subscribeToUnreadMessages(rooms);
     });
   }
 
