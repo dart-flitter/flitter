@@ -28,4 +28,6 @@ main() {
 }
 ```
 
+As `GITTER_REDIRECTION_URL` value use "http://localhost:8080".
+
 [More Infos](https://developer.gitter.im/docs/welcome)
