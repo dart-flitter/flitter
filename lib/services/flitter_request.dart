@@ -73,6 +73,7 @@ initStores(GitterToken token) async {
   flitterStore = new FlitterStore();
   gitterStore.dispatch(
       new AuthGitterAction(token, await initWebSocket(token.access)));
+  fetchGroups();
 }
 
 List<String> _mapperUnreads;
