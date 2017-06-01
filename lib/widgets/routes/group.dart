@@ -16,10 +16,8 @@ class GroupView extends StatefulWidget {
   static const path = "/group";
 
   static go(BuildContext context, Group group, {bool replace: true}) {
-    fetchRoomsOfGroup().then((Iterable rooms) {
-      subscribeToUnreadMessages(rooms);
-    });
-    navigateTo(context, new GroupView(),
+    fetchRoomsOfGroup();
+    materialNavigateTo(context, new GroupView(),
         path: GroupView.path, replace: replace);
   }
 

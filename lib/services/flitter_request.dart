@@ -8,6 +8,7 @@ import 'package:gitter/src/models/faye_message.dart';
 Future<Iterable<Room>> fetchRooms() async {
   final rooms = await gitterApi.user.me.rooms();
   flitterStore.dispatch(new FetchRoomsAction(rooms));
+  subscribeToUnreadMessages(rooms);
   return rooms;
 }
 
@@ -27,6 +28,7 @@ Future<Iterable<Room>> fetchRoomsOfGroup() async {
   final groupId = flitterStore.state.selectedGroup.group.id;
   final rooms = await gitterApi.group.suggestedRoomsOf(groupId);
   flitterStore.dispatch(new FetchRoomsOfGroup(rooms));
+  subscribeToUnreadMessages(rooms);
   return rooms;
 }
 
@@ -73,6 +75,7 @@ initStores(GitterToken token) async {
   flitterStore = new FlitterStore();
   gitterStore.dispatch(
       new AuthGitterAction(token, await initWebSocket(token.access)));
+  fetchRooms();
   fetchGroups();
 }
 

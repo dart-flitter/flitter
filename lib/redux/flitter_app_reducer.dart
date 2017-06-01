@@ -76,16 +76,20 @@ class FlitterAppReducer extends redux.Reducer<FlitterAppState, FlitterAction> {
 
 FlitterAppState _unreadMessageForRoom(
     FlitterAppState state, UnreadMessagesForRoom action) {
-  Room room = state.rooms
-      .firstWhere((Room room) => room.id == action.roomId, orElse: orElseNull);
-  room.unreadItems += action.addMessage;
-  room.unreadItems -= action.removeMessage;
+  if (action.roomId != null) {
+    Room room = state.rooms
+        .firstWhere((Room room) => room.id == action.roomId,
+        orElse: orElseNull);
+    room.unreadItems += action.addMessage;
+    room.unreadItems -= action.removeMessage;
 
-  List<Room> rooms =
-      state.rooms.where((Room room) => room.id != action.roomId).toList();
-  rooms.add(room);
+    List<Room> rooms =
+    state.rooms.where((Room room) => room.id != action.roomId).toList();
+    rooms.add(room);
 
-  return state.apply(rooms: _sortRooms(rooms));
+    return state.apply(rooms: _sortRooms(rooms));
+  }
+  return state;
 }
 
 FlitterAppState _showSearchBar(

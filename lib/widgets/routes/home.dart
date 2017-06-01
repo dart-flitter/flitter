@@ -18,10 +18,8 @@ class HomeView extends StatefulWidget {
   final RefreshCallback onRefresh;
 
   static void go(BuildContext context, {bool replace: true}) {
-    fetchRooms().then((Iterable rooms) {
-      subscribeToUnreadMessages(rooms);
-    });
-    navigateTo(context, new HomeView(), path: HomeView.path, replace: replace);
+    fetchRooms();
+    materialNavigateTo(context, new HomeView(), path: HomeView.path, replace: replace);
   }
 
   HomeView({this.onRefresh});
