@@ -19,7 +19,7 @@ class HomeView extends StatefulWidget {
 
   static void go(BuildContext context, {bool replace: true}) {
     fetchRooms();
-    navigateTo(context, new HomeView(), path: HomeView.path, replace: replace);
+    materialNavigateTo(context, new HomeView(), path: HomeView.path, replace: replace);
   }
 
   HomeView({this.onRefresh});

@@ -1,6 +1,8 @@
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/flitter_app_state.dart';
-import 'package:flitter/services/gitter/gitter.dart';
+import 'package:flitter/redux/store.dart';
+import 'package:flitter/services/flitter_request.dart';
+import 'package:gitter/gitter.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart' as redux;
 
@@ -33,15 +35,26 @@ class FlitterLoggingMiddleware
   }
 }
 
+class GitterLoggingMiddleware
+    implements redux.Middleware<GitterState, FlitterAction> {
+  const GitterLoggingMiddleware();
+
+  call(redux.Store<GitterState, FlitterAction> store, FlitterAction action,
+      next) {
+    debugPrint('${new DateTime.now()}: $action');
+    next(action);
+  }
+}
+
 class FlitterAppReducer extends redux.Reducer<FlitterAppState, FlitterAction> {
   final _mapper = const <Type, Function>{
     FetchRoomsAction: _fetchRooms,
     FetchGroupsAction: _fetchGroups,
     FetchUser: _fetchUser,
     SelectRoomAction: _selectRoom,
-    OnMessagesForRoom: _onMessages,
+    OnMessagesForCurrentRoom: _onMessages,
     OnSendMessage: _onSendMessage,
-    FetchMessagesForRoomAction: _fetchMessages,
+    FetchMessagesForCurrentRoomAction: _fetchMessages,
     JoinRoomAction: _joinRoom,
     LeaveRoomAction: _leaveRoom,
     SelectGroupAction: _selectGroup,
@@ -50,9 +63,8 @@ class FlitterAppReducer extends redux.Reducer<FlitterAppState, FlitterAction> {
     StartSearchAction: _startSearch,
     EndSearchAction: _endSearch,
     FetchSearchAction: _fetchSearch,
-    LogoutAction: _logout,
-    AuthGitterAction: _initGitter,
-    OnMessage: _onMessage
+    OnMessageForCurrentRoom: _onMessageForCurrentRoom,
+    UnreadMessagesForRoom: _unreadMessageForRoom
   };
 
   @override
@@ -60,6 +72,24 @@ class FlitterAppReducer extends redux.Reducer<FlitterAppState, FlitterAction> {
     Function reducer = _mapper[action.runtimeType];
     return reducer != null ? reducer(state, action) : state;
   }
+}
+
+FlitterAppState _unreadMessageForRoom(
+    FlitterAppState state, UnreadMessagesForRoom action) {
+  if (action.roomId != null) {
+    Room room = state.rooms
+        .firstWhere((Room room) => room.id == action.roomId,
+        orElse: orElseNull);
+    room.unreadItems += action.addMessage;
+    room.unreadItems -= action.removeMessage;
+
+    List<Room> rooms =
+    state.rooms.where((Room room) => room.id != action.roomId).toList();
+    rooms.add(room);
+
+    return state.apply(rooms: _sortRooms(rooms));
+  }
+  return state;
 }
 
 FlitterAppState _showSearchBar(
@@ -85,8 +115,31 @@ FlitterAppState _endSearch(FlitterAppState state, EndSearchAction action) {
           state.search.apply(searching: false, requesting: false, result: []));
 }
 
+List<Room> _sortRooms(List<Room> rooms) {
+  final unreadRooms = rooms.where((Room r) => r.unreadItems > 0).toList();
+  unreadRooms.sort((Room a, Room b) {
+    return b.unreadItems - a.unreadItems;
+  });
+
+  final readedRooms = rooms.where((Room r) => r.unreadItems == 0).toList();
+  readedRooms.sort((Room a, Room b) {
+    if (a.lastAccessTime != null && b.lastAccessTime != null) {
+      DateTime lA = parseLastAccessTime(a.lastAccessTime);
+      DateTime lB = parseLastAccessTime(b.lastAccessTime);
+      return lB.millisecondsSinceEpoch - lA.millisecondsSinceEpoch;
+    }
+    return 0;
+  });
+
+  final _rooms = [];
+  _rooms.addAll(unreadRooms);
+  _rooms.addAll(readedRooms);
+
+  return _rooms;
+}
+
 FlitterAppState _fetchRooms(FlitterAppState state, FetchRoomsAction action) {
-  return state.apply(rooms: action.rooms);
+  return state.apply(rooms: _sortRooms(action.rooms));
 }
 
 FlitterAppState _fetchGroups(FlitterAppState state, FetchGroupsAction action) {
@@ -98,26 +151,24 @@ FlitterAppState _fetchUser(FlitterAppState state, FetchUser action) {
 }
 
 FlitterAppState _selectRoom(FlitterAppState state, SelectRoomAction action) {
-  CurrentRoomState current = new CurrentRoomState(
-      room: action.room, messages: state.messages[action.room.id]);
+  CurrentRoomState current =
+      new CurrentRoomState(room: action.room, messages: null);
   return state.apply(selectedRoom: current);
 }
 
 FlitterAppState _fetchMessages(
-    FlitterAppState state, FetchMessagesForRoomAction action) {
-  Map<String, Iterable<Message>> messages = state.messages;
-  messages[action.roomId] = action.messages;
-  return state.apply(messages: messages);
+    FlitterAppState state, FetchMessagesForCurrentRoomAction action) {
+  final currentRoom = state.selectedRoom?.apply(messages: action.messages);
+  return state.apply(selectedRoom: currentRoom);
 }
 
-FlitterAppState _onMessages(FlitterAppState state, OnMessagesForRoom action) {
+FlitterAppState _onMessages(
+    FlitterAppState state, OnMessagesForCurrentRoom action) {
   final messages = new List<Message>.from(action.messages);
-  final messagesByRooms = new Map.from(state.messages);
-  messages.addAll(state.messages[action.roomId] ?? []);
-  messagesByRooms[action.roomId] = messages;
-  final currentRoom =
-      state.selectedRoom?.apply(messages: messagesByRooms[action.roomId]);
-  return state.apply(messages: messagesByRooms, selectedRoom: currentRoom);
+  final messagesRooms = new List<Message>.from(state.selectedRoom.messages ?? []);
+  messages.addAll(messagesRooms ?? []);
+  final currentRoom = state.selectedRoom?.apply(messages: messages);
+  return state.apply(selectedRoom: currentRoom);
 }
 
 FlitterAppState _joinRoom(FlitterAppState state, JoinRoomAction action) {
@@ -133,11 +184,9 @@ FlitterAppState _leaveRoom(FlitterAppState state, LeaveRoomAction action) {
 }
 
 FlitterAppState _onSendMessage(FlitterAppState state, OnSendMessage action) {
-  Map<String, Iterable<Message>> messages =
-      _addOrUpdateMessage(state, action.message, action.roomId);
-  CurrentRoomState currentRoom =
-      state.selectedRoom?.apply(messages: messages[action.roomId]);
-  return state.apply(messages: messages, selectedRoom: currentRoom);
+  Iterable<Message> messages = _addOrUpdateMessage(state, action.message);
+  CurrentRoomState currentRoom = state.selectedRoom?.apply(messages: messages);
+  return state.apply(selectedRoom: currentRoom);
 }
 
 FlitterAppState _selectGroup(FlitterAppState state, SelectGroupAction action) {
@@ -152,45 +201,53 @@ FlitterAppState _fetchRoomsOfGroup(
   return state.apply(selectedGroup: current);
 }
 
-FlitterAppState _logout(FlitterAppState state, LogoutAction action) {
-  return new FlitterAppState.initial();
+FlitterAppState _onMessageForCurrentRoom(
+    FlitterAppState state, OnMessageForCurrentRoom action) {
+  Iterable<Message> messages = _addOrUpdateMessage(state, action.message);
+
+  final currentRoom = state.selectedRoom?.apply(messages: messages);
+  return state.apply(selectedRoom: currentRoom);
 }
 
-FlitterAppState _initGitter(FlitterAppState state, AuthGitterAction action) {
+Iterable<Message> _addOrUpdateMessage(FlitterAppState state, Message message) {
+  List<Message> messages = new List.from(state.selectedRoom.messages ?? []);
+
+  final exist =
+      messages.firstWhere((msg) => msg.id == message.id, orElse: orElseNull);
+
+  if (exist != null) {
+    final idx = messages.indexOf(exist);
+    messages[idx] = message;
+  } else {
+    messages.add(message);
+  }
+  return messages;
+}
+
+class GitterReducer extends redux.Reducer<GitterState, FlitterAction> {
+  final _mapper = const <Type, Function>{
+    AuthGitterAction: _initGitter,
+    LogoutAction: _logout
+  };
+
+  @override
+  GitterState reduce(GitterState state, FlitterAction action) {
+    Function reducer = _mapper[action.runtimeType];
+    return reducer != null ? reducer(state, action) : state;
+  }
+}
+
+
+GitterState _initGitter(GitterState state, AuthGitterAction action) {
   GitterApi api;
   if (action.token != null) {
     api = new GitterApi(action.token);
   }
-  return state.apply(api: api, token: action.token);
+  return state.apply(api: api, token: action.token, subscriber: action.subscriber);
 }
 
-FlitterAppState _onMessage(FlitterAppState state, OnMessage action) {
-  Map<String, Iterable<Message>> messages =
-      _addOrUpdateMessage(state, action.message, action.roomId);
-
-  final currentRoom =
-      state.selectedRoom?.apply(messages: messages[action.roomId]);
-  if (currentRoom?.room?.id == action.roomId) {
-    return state.apply(messages: messages, selectedRoom: currentRoom);
-  }
-  return state.apply(messages: messages);
-}
-
-Map<String, Iterable<Message>> _addOrUpdateMessage(
-    FlitterAppState state, Message message, String roomId) {
-  Map<String, Iterable<Message>> messages = new Map.from(state.messages);
-  messages[roomId] ??= [];
-
-  final exist = messages[roomId]
-      .firstWhere((msg) => msg.id == message.id, orElse: orElseNull);
-
-  if (exist != null) {
-    final list = messages[roomId].toList();
-    final idx = list.indexOf(exist);
-    list[idx] = message;
-    messages[roomId] = list;
-  } else {
-    messages[roomId] = messages[roomId].toList()..add(message);
-  }
-  return messages;
+GitterState _logout(GitterState state, LogoutAction action) {
+  state.subscriber?.close();
+  flitterStore = null;
+  return new GitterState.initial();
 }

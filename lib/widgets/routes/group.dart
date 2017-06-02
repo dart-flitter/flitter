@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flitter/redux/flitter_app_state.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
-import 'package:flitter/services/gitter/gitter.dart';
+import 'package:gitter/gitter.dart';
 import 'package:flitter/widgets/routes/home.dart';
 import 'package:flitter/widgets/routes/people.dart';
 import 'package:flitter/app.dart';
@@ -17,7 +17,7 @@ class GroupView extends StatefulWidget {
 
   static go(BuildContext context, Group group, {bool replace: true}) {
     fetchRoomsOfGroup();
-    navigateTo(context, new GroupView(),
+    materialNavigateTo(context, new GroupView(),
         path: GroupView.path, replace: replace);
   }
 

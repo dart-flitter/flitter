@@ -3,15 +3,13 @@ import 'package:flitter/app.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/widgets/common/list_room.dart';
 import 'package:flitter/widgets/common/search.dart';
-import 'package:flitter/widgets/routes/home.dart';
 import 'package:flitter/widgets/routes/people.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flitter/intl/messages_all.dart' as intl;
 
 main() {
   group("$PeopleView Widget", () {
-    setUpAll(initFlitterStore);
+    setUpAll(initStores);
 
     testWidgets("No Rooms", (WidgetTester tester) async {
       await tester.pumpWidget(new MockableApp(scaffold: new PeopleView()));

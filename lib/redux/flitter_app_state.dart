@@ -1,5 +1,6 @@
-import 'package:flitter/services/gitter/gitter.dart';
+import 'package:gitter/gitter.dart';
 import 'package:flutter/material.dart';
+import 'package:gitter/src/faye.dart';
 
 class ThemeState {
   final Brightness brightness;
@@ -79,31 +80,22 @@ class FlitterAppState {
   final Iterable<Room> rooms;
   final Iterable<Group> groups;
   final User user;
-  final Map<String, Iterable<Message>> messages;
   final CurrentRoomState selectedRoom;
-  final SearchState search;
   final CurrentGroupState selectedGroup;
-  final GitterApi api;
-  final GitterToken token;
+  final SearchState search;
 
   FlitterAppState(
-      {this.api,
-      this.token,
-      this.rooms,
+      {this.rooms,
       this.groups,
       this.user,
-      this.messages,
       this.search,
       this.selectedRoom,
       this.selectedGroup});
 
   FlitterAppState.initial()
-      : api = null,
-        token = null,
-        rooms = null,
+      : rooms = null,
         groups = null,
         user = null,
-        messages = const <String, Iterable<Message>>{},
         selectedRoom = null,
         search = new SearchState.initial(),
         selectedGroup = null;
@@ -112,7 +104,6 @@ class FlitterAppState {
       {Iterable<Room> rooms,
       Iterable<Group> groups,
       User user,
-      Map<String, Iterable<Message>> messages,
       bool init,
       CurrentRoomState selectedRoom,
       SearchState search,
@@ -123,11 +114,25 @@ class FlitterAppState {
         rooms: rooms ?? this.rooms,
         groups: groups ?? this.groups,
         user: user ?? this.user,
-        messages: messages ?? this.messages,
         selectedRoom: selectedRoom ?? this.selectedRoom,
         search: search ?? this.search,
-        selectedGroup: selectedGroup ?? this.selectedGroup,
-        api: api ?? this.api,
-        token: token ?? this.token);
+        selectedGroup: selectedGroup ?? this.selectedGroup);
   }
+}
+
+class GitterState {
+  final GitterApi api;
+  final GitterToken token;
+ final GitterFayeSubscriber subscriber;
+
+  GitterState({this.api, this.token, this.subscriber});
+
+  GitterState apply({GitterApi api, GitterToken token, GitterFayeSubscriber subscriber}) {
+    return new GitterState(api: api ?? this.api, token: token ?? this.token, subscriber: subscriber ?? this.subscriber);
+  }
+
+  GitterState.initial()
+      : api = null,
+        token = null,
+  subscriber = null;
 }

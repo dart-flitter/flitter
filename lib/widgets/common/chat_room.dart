@@ -1,7 +1,7 @@
 library flitter.common.chat_room_widget;
 
 import 'dart:async';
-import 'package:flitter/services/gitter/gitter.dart';
+import 'package:gitter/gitter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';

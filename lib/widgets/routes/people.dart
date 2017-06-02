@@ -5,7 +5,7 @@ import 'package:flitter/widgets/common/search.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
-import 'package:flitter/services/gitter/gitter.dart';
+import 'package:gitter/gitter.dart';
 import 'package:flitter/widgets/common/drawer.dart';
 import 'package:flitter/widgets/common/utils.dart';
 import 'package:flitter/widgets/routes/home.dart';
@@ -18,7 +18,7 @@ class PeopleView extends StatefulWidget {
 
   static void go(BuildContext context, {bool replace: true}) {
     fetchRooms();
-    navigateTo(context, new PeopleView(),
+    materialNavigateTo(context, new PeopleView(),
         path: PeopleView.path, replace: replace);
   }
 

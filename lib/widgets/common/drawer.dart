@@ -3,7 +3,7 @@ library flitter.common.drawer;
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_auth.dart';
-import 'package:flitter/services/gitter/gitter.dart';
+import 'package:gitter/gitter.dart';
 import 'package:flitter/widgets/routes/group.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';

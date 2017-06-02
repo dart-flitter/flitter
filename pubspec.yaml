@@ -12,6 +12,7 @@ dependencies:
   redux: ^1.1.0
   shared_preferences: ">=0.2.0 <1.0.0"
   url_launcher: ">=0.4.0 <1.0.0"
+  gitter: ^0.1.0
 
 dev_dependencies:
   flutter_test:

@@ -6,7 +6,7 @@ import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_auth.dart';
 import 'package:flitter/services/flitter_request.dart';
 import 'package:flutter/material.dart';
-import 'package:flitter/services/gitter/gitter.dart';
+import 'package:gitter/gitter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
@@ -25,7 +25,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   void initState() {
     super.initState();
-    _subscription = flitterStore.onChange.listen((_) {
+    _subscription = gitterStore.onChange.listen((_) {
       setState(() {});
     });
   }
@@ -38,8 +38,7 @@ class _LoginViewState extends State<LoginView> {
 
   Future<Null> _auth() async {
     GitterToken token = await FlitterAuth.auth();
-    initBasicData();
-    flitterStore.dispatch(new AuthGitterAction(token));
+    initStores(token);
   }
 
   Future<Null> _catchOnBackPressed() async {
@@ -50,7 +49,7 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    if (flitterStore.state.token == null) {
+    if (gitterToken == null) {
       _auth();
 
       _catchOnBackPressed();
