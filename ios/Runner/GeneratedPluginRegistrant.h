@@ -7,10 +7,6 @@
 
 #import <Flutter/Flutter.h>
 
-#import "FlutterWebviewPlugin.h"
-#import "SharedPreferencesPlugin.h"
-#import "UrlLauncherPlugin.h"
-
 @interface GeneratedPluginRegistrant : NSObject
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry;
 @end

@@ -3,6 +3,9 @@
 //
 
 #import "GeneratedPluginRegistrant.h"
+#import <flutter_webview_plugin/FlutterWebviewPlugin.h>
+#import <shared_preferences/SharedPreferencesPlugin.h>
+#import <url_launcher/UrlLauncherPlugin.h>
 
 @implementation GeneratedPluginRegistrant
 
