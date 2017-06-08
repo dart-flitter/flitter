@@ -123,16 +123,20 @@ class FlitterAppState {
 class GitterState {
   final GitterApi api;
   final GitterToken token;
- final GitterFayeSubscriber subscriber;
+  final GitterFayeSubscriber subscriber;
 
   GitterState({this.api, this.token, this.subscriber});
 
-  GitterState apply({GitterApi api, GitterToken token, GitterFayeSubscriber subscriber}) {
-    return new GitterState(api: api ?? this.api, token: token ?? this.token, subscriber: subscriber ?? this.subscriber);
+  GitterState apply(
+      {GitterApi api, GitterToken token, GitterFayeSubscriber subscriber}) {
+    return new GitterState(
+        api: api ?? this.api,
+        token: token ?? this.token,
+        subscriber: subscriber ?? this.subscriber);
   }
 
   GitterState.initial()
       : api = null,
         token = null,
-  subscriber = null;
+        subscriber = null;
 }

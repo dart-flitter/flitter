@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:intl/intl.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 class ChatRoom extends StatefulWidget {
   final Iterable<Message> messages;
@@ -191,7 +193,15 @@ class ChatMessageContent extends StatelessWidget {
                   : null)));
     }
 
-    column.add(new Text(message.text, softWrap: true));
+    column.add(new MarkdownBody(
+        data: message.text,
+        onTapLink: (String url) async {
+          bool can =
+              await url_launcher.canLaunch(url); //fixme does not seem to work
+          if (can) {
+            url_launcher.launch(url);
+          }
+        }));
 
     return new Column(
         mainAxisSize: MainAxisSize.min,

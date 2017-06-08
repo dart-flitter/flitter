@@ -32,17 +32,17 @@ Future<Iterable<Room>> fetchRoomsOfGroup() async {
   return rooms;
 }
 
-Future<Iterable<Message>> fetchMessagesOfRoom(String roomId,
-    String beforeId) async {
+Future<Iterable<Message>> fetchMessagesOfRoom(
+    String roomId, String beforeId) async {
   final messages =
-  await gitterApi.room.messagesFromRoomId(roomId, beforeId: beforeId);
+      await gitterApi.room.messagesFromRoomId(roomId, beforeId: beforeId);
   flitterStore.dispatch(new OnMessagesForCurrentRoom(messages));
   return messages;
 }
 
 Future<bool> leaveRoom(Room room) async {
   final success =
-  await gitterApi.room.removeUserFrom(room.id, flitterStore.state.user.id);
+      await gitterApi.room.removeUserFrom(room.id, flitterStore.state.user.id);
   if (success == true) {
     flitterStore.dispatch(new LeaveRoomAction(room));
   }
@@ -51,7 +51,7 @@ Future<bool> leaveRoom(Room room) async {
 
 Future<Room> joinRoom(Room room) async {
   final joinedRoom =
-  await gitterApi.user.userJoinRoom(flitterStore.state.user.id, room.id);
+      await gitterApi.user.userJoinRoom(flitterStore.state.user.id, room.id);
   flitterStore.dispatch(new JoinRoomAction(room));
   return joinedRoom;
 }
@@ -73,8 +73,8 @@ Future<Iterable> search(String query) async {
 
 initStores(GitterToken token) async {
   flitterStore = new FlitterStore();
-  gitterStore.dispatch(
-      new AuthGitterAction(token, await initWebSocket(token.access)));
+  gitterStore
+      .dispatch(new AuthGitterAction(token, await initWebSocket(token.access)));
   fetchRooms();
   fetchGroups();
 }
@@ -92,7 +92,7 @@ Future<GitterFayeSubscriber> initWebSocket(String token) async {
 
 subscribeToUnreadMessages(List<Room> rooms) {
   final newRooms =
-  rooms.map((r) => r.id).where((r) => !_mapperUnreads.contains(r)).toList();
+      rooms.map((r) => r.id).where((r) => !_mapperUnreads.contains(r)).toList();
   _mapperUnreads.addAll(newRooms);
   for (String roomId in newRooms) {
     gitterSubscriber.subscribeToUserRoomUnreadItems(

@@ -1,8 +1,0 @@
-serializers:
-  - lib/services/gitter/src/models/group.dart
-  - lib/services/gitter/src/models/issue.dart
-  - lib/services/gitter/src/models/mention.dart
-  - lib/services/gitter/src/models/message.dart
-  - lib/services/gitter/src/models/user.dart
-  - lib/services/gitter/src/models/room.dart
-  - lib/services/gitter/src/models/token.dart
