@@ -1,6 +1,7 @@
 library flitter.common.chat_room_widget;
 
 import 'dart:async';
+import 'package:flitter/services/flitter_request.dart';
 import 'package:gitter/gitter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,14 +9,17 @@ import 'package:meta/meta.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:intl/intl.dart';
 
+final _dateFormat = new DateFormat.MMMd()..add_Hm();
+
 class ChatRoom extends StatefulWidget {
   final Iterable<Message> messages;
+  final Room room;
   final _onNeedData;
 
   @override
   _ChatRoomWidgetState createState() => new _ChatRoomWidgetState();
 
-  ChatRoom({@required this.messages: const []})
+  ChatRoom({@required this.messages, @required this.room})
       : _onNeedData = new StreamController();
 
   Stream<Null> get onNeedDataStream => onNeedDataController.stream;
@@ -26,18 +30,25 @@ class ChatRoom extends StatefulWidget {
 class _ChatRoomWidgetState extends State<ChatRoom> {
   @override
   Widget build(BuildContext context) {
-    if (widget.messages.isEmpty) {
-      return new Container(color: Colors.white);
-    }
-    return new Container(
-      color: Colors.white,
-      child: new ListView.builder(
+    return new Column(children: [
+      new Flexible(
+          child: new ListView.builder(
         reverse: true,
         itemCount: widget.messages.length,
         itemBuilder: _buildListItem,
-      ),
-    );
+      )),
+      new Divider(height: 1.0),
+      new Container(
+          decoration: new BoxDecoration(color: Theme.of(context).cardColor),
+          child: _buildChatInput()),
+    ]);
   }
+
+  Widget _buildChatInput() => new ChatInput(
+        onSubmit: (String value) async {
+          sendMessage(value, widget.room);
+        },
+      );
 
   _shouldMergeMessages(Message message, int index) =>
       index != widget.messages.length - 1 &&
@@ -56,14 +67,14 @@ class _ChatRoomWidgetState extends State<ChatRoom> {
 
     if (_shouldMergeMessages(message, index)) {
       return new ChatMessage(
-        withDivider: false,
-        withAvatar: false,
-        withTitle: false,
-        message: message,
-      );
+          withDivider: false,
+          withAvatar: false,
+          withTitle: false,
+          message: message,
+          atBottom: index == 0);
     }
 
-    return new ChatMessage(message: message);
+    return new ChatMessage(message: message, atBottom: index == 0);
   }
 }
 
@@ -81,35 +92,51 @@ class _ChatInputState extends State<ChatInput> {
 
   @override
   Widget build(BuildContext context) {
-    return new Form(
-      child: new Container(
-        padding: new EdgeInsets.only(left: 8.0, right: 8.0),
-        child: new TextField(
-          controller: _textController,
-          decoration: new InputDecoration(hintText: intl.typeChatMessage()),
-          onSubmitted: (String value) {
-            _textController.clear();
-            widget.onSubmit(value);
-          },
-        ),
-      ),
-    );
+    return new Container(
+        padding: new EdgeInsets.all(8.0),
+        decoration: new BoxDecoration(color: Theme.of(context).cardColor),
+        child: new IconTheme(
+            data: new IconThemeData(color: Theme.of(context).accentColor),
+            child: new Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: new Row(children: [
+                  new Flexible(
+                    child: new TextField(
+                      onSubmitted: (_) => _handleSubmitted(),
+                      controller: _textController,
+                      decoration: new InputDecoration.collapsed(
+                          hintText: intl.typeChatMessage()),
+                      maxLines: 10,
+                    ),
+                  ),
+                  new Container(
+                      margin: new EdgeInsets.symmetric(horizontal: 4.0),
+                      child: new IconButton(
+                          icon: new Icon(Icons.send),
+                          onPressed: _handleSubmitted)),
+                ]))));
+  }
+
+  _handleSubmitted() {
+    String value = _textController.text;
+    _textController.clear();
+    widget.onSubmit(value);
   }
 }
-
-final _dateFormat = new DateFormat.MMMd()..add_Hm();
 
 class ChatMessage extends StatelessWidget {
   final Message message;
   final bool withDivider;
   final bool withAvatar;
   final bool withTitle;
+  final bool atBottom;
 
   ChatMessage(
       {@required this.message,
       this.withDivider: true,
       this.withAvatar: true,
-      this.withTitle: true});
+      this.withTitle: true,
+      this.atBottom: false});
 
   @override
   Widget build(BuildContext context) {
@@ -135,9 +162,7 @@ class ChatMessage extends StatelessWidget {
         child: new Row(
             children: row, crossAxisAlignment: CrossAxisAlignment.start),
         padding: new EdgeInsets.only(
-            bottom: withTitle ? 4.0 : 0.0,
-            top: withTitle ? 4.0 : 0.0,
-            right: 12.0)));
+            bottom: withTitle || atBottom ? 8.0 : 0.0, right: 12.0)));
 
     return new Column(children: column);
   }

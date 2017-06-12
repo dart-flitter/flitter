@@ -77,14 +77,13 @@ class FlitterAppReducer extends redux.Reducer<FlitterAppState, FlitterAction> {
 FlitterAppState _unreadMessageForRoom(
     FlitterAppState state, UnreadMessagesForRoom action) {
   if (action.roomId != null) {
-    Room room = state.rooms
-        .firstWhere((Room room) => room.id == action.roomId,
+    Room room = state.rooms.firstWhere((Room room) => room.id == action.roomId,
         orElse: orElseNull);
     room.unreadItems += action.addMessage;
     room.unreadItems -= action.removeMessage;
 
     List<Room> rooms =
-    state.rooms.where((Room room) => room.id != action.roomId).toList();
+        state.rooms.where((Room room) => room.id != action.roomId).toList();
     rooms.add(room);
 
     return state.apply(rooms: _sortRooms(rooms));
@@ -165,7 +164,8 @@ FlitterAppState _fetchMessages(
 FlitterAppState _onMessages(
     FlitterAppState state, OnMessagesForCurrentRoom action) {
   final messages = new List<Message>.from(action.messages);
-  final messagesRooms = new List<Message>.from(state.selectedRoom.messages ?? []);
+  final messagesRooms =
+      new List<Message>.from(state.selectedRoom.messages ?? []);
   messages.addAll(messagesRooms ?? []);
   final currentRoom = state.selectedRoom?.apply(messages: messages);
   return state.apply(selectedRoom: currentRoom);
@@ -237,13 +237,13 @@ class GitterReducer extends redux.Reducer<GitterState, FlitterAction> {
   }
 }
 
-
 GitterState _initGitter(GitterState state, AuthGitterAction action) {
   GitterApi api;
   if (action.token != null) {
     api = new GitterApi(action.token);
   }
-  return state.apply(api: api, token: action.token, subscriber: action.subscriber);
+  return state.apply(
+      api: api, token: action.token, subscriber: action.subscriber);
 }
 
 GitterState _logout(GitterState state, LogoutAction action) {

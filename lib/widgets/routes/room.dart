@@ -62,7 +62,7 @@ class _RoomViewState extends State<RoomView> {
 
     if (messages != null) {
       final ChatRoom chatRoom =
-          new ChatRoom(messages: messages.toList().reversed);
+          new ChatRoom(messages: messages.toList().reversed, room: room);
       chatRoom.onNeedDataStream.listen((_) => _fetchMessages());
       body = chatRoom;
     } else {
@@ -73,9 +73,7 @@ class _RoomViewState extends State<RoomView> {
         appBar: new AppBar(title: new Text(room.name), actions: [_buildMenu()]),
         body: body,
         floatingActionButton:
-            _userHasJoined || messages == null ? null : _joinRoomButton(),
-        bottomNavigationBar:
-            _userHasJoined && messages != null ? _buildChatInput() : null);
+            _userHasJoined || messages == null ? null : _joinRoomButton());
   }
 
   _fetchMessages() {
@@ -117,10 +115,4 @@ class _RoomViewState extends State<RoomView> {
 
   bool get _userHasJoined =>
       flitterStore.state.rooms.any((Room r) => r.id == room.id);
-
-  Widget _buildChatInput() => new ChatInput(
-        onSubmit: (String value) async {
-          sendMessage(value, room);
-        },
-      );
 }

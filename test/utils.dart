@@ -28,8 +28,11 @@ initStores() {
     ..access = "xxx"
     ..type = "xxx";
   final api = new GitterApi(token);
-  gitterStore =
-  new GitterStore(initialState: new GitterState(api: api, token: token, subscriber: new GitterFayeSubscriber(token.access)));
+  gitterStore = new GitterStore(
+      initialState: new GitterState(
+          api: api,
+          token: token,
+          subscriber: new GitterFayeSubscriber(token.access)));
 
   flitterStore = new FlitterStore(
       initialState: new FlitterAppState(search: new SearchState.initial()),
@@ -55,7 +58,7 @@ final groups = <Group>[
     "uri": "gitterHQ",
     "backedBy": {"type": "GH_ORG", "linkPath": "gitterHQ"},
     "avatarUrl":
-    "http://gitter.im/api/private/avatars/group/i/577ef7e4e897e2a459b1b881"
+        "http://gitter.im/api/private/avatars/group/i/577ef7e4e897e2a459b1b881"
   }),
   new Group.fromJson({
     "id": "577faf61a7d5727908337209",
@@ -63,7 +66,7 @@ final groups = <Group>[
     "uri": "i-love-cats",
     "backedBy": {"type": null},
     "avatarUrl":
-    "http://gitter.im/api/private/avatars/group/i/577faf61a7d5727908337209"
+        "http://gitter.im/api/private/avatars/group/i/577faf61a7d5727908337209"
   })
 ];
 
