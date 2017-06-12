@@ -7,12 +7,12 @@ dependencies:
     sdk: flutter
   intl: ^0.14.0
   http: ^0.11.3+13
-  jaguar_serializer: ^0.3.0
   flutter_webview_plugin: ^0.0.3
   redux: ^1.1.0
   shared_preferences: ">=0.2.0 <1.0.0"
   url_launcher: ">=0.4.0 <1.0.0"
   gitter: ^0.1.0
+  flutter_markdown: "^0.0.9"
 
 dev_dependencies:
   flutter_test:
