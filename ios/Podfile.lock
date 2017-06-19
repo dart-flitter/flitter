@@ -1,0 +1,34 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_webview_plugin (0.0.1):
+    - Flutter
+  - shared_preferences (0.0.1):
+    - Flutter
+  - url_launcher (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `/Users/lejard_h/flutter/bin/cache/artifacts/engine/ios`)
+  - flutter_webview_plugin (from `/Users/lejard_h/.pub-cache/git/flutter_webview_plugin-1b501eef015bccbbf992dc9f68f4725b62ab1a37/ios`)
+  - shared_preferences (from `/Users/lejard_h/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.2.4+1/ios`)
+  - url_launcher (from `/Users/lejard_h/.pub-cache/hosted/pub.dartlang.org/url_launcher-0.4.2+1/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: /Users/lejard_h/flutter/bin/cache/artifacts/engine/ios
+  flutter_webview_plugin:
+    :path: /Users/lejard_h/.pub-cache/git/flutter_webview_plugin-1b501eef015bccbbf992dc9f68f4725b62ab1a37/ios
+  shared_preferences:
+    :path: /Users/lejard_h/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.2.4+1/ios
+  url_launcher:
+    :path: /Users/lejard_h/.pub-cache/hosted/pub.dartlang.org/url_launcher-0.4.2+1/ios
+
+SPEC CHECKSUMS:
+  Flutter: d674e78c937094a75ac71dd77e921e840bea3dbf
+  flutter_webview_plugin: ed9e8a6a96baf0c867e90e1bce2673913eeac694
+  shared_preferences: 1feebfa37bb57264736e16865e7ffae7fc99b523
+  url_launcher: 0067ddb8f10d36786672aa0722a21717dba3a298
+
+PODFILE CHECKSUM: da0a90142b97ff5764bbe022af2a7676460e1454
+
+COCOAPODS: 1.2.0

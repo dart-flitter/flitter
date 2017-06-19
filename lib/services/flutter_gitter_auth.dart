@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:gitter/gitter.dart';
 import 'package:gitter/src/oauth/oauth.dart';
-import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 Future<String> getContent() async {
   final content = await rootBundle.loadString("assets/html/success.html");
@@ -38,25 +37,9 @@ class FlutterGitterOAuth extends GitterOAuth {
   FlutterGitterOAuth(AppInformations appInformations, {bool force: false})
       : super(appInformations, force: force);
 
-  // fixme: Will be remove when flutter_webview_plugin will be compatible with IOS
-  Future _ios() async {
-    // init server
-    _server = await _createServer();
-    _listenCode(_server);
-
-    // construct url
-    final String urlParams = constructUrlParams();
-
-    await url_launcher.launch("${codeInformations.url}?$urlParams");
-
-    code = await onCode.first;
-    _close();
-  }
 
   Future<String> requestCode() async {
-    if (Platform.isIOS && shouldRequestCode()) {
-      await _ios();
-    } else if (shouldRequestCode() && !_isOpen) {
+    if (shouldRequestCode() && !_isOpen) {
       // close any open browser (happen on hot reload)
       await flutterWebviewPlugin.close();
       _isOpen = true;
@@ -74,8 +57,8 @@ class FlutterGitterOAuth extends GitterOAuth {
       });
 
       // launch url inside webview
-      flutterWebviewPlugin.launch("${codeInformations.url}?$urlParams",
-          clearCookies: true);
+      flutterWebviewPlugin.launch(
+          "${codeInformations.url}?$urlParams", clearCookies: true);
 
       code = await onCode.first;
       _close();
@@ -88,11 +71,7 @@ class FlutterGitterOAuth extends GitterOAuth {
       // close server
       _server.close(force: true);
 
-      // fixme: condition will be remove when flutter_webview_plugin will be compatible with IOS
-      if (!Platform.isIOS) {
-        // close Webview
-        flutterWebviewPlugin.close();
-      }
+      flutterWebviewPlugin.close();
     }
     _isOpen = false;
   }

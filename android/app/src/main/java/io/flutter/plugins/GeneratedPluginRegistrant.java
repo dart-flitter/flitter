@@ -2,7 +2,7 @@ package io.flutter.plugins;
 
 import io.flutter.plugin.common.PluginRegistry;
 import com.flutter_webview_plugin.FlutterWebviewPlugin;
-import io.flutter.plugins.shared_preferences.SharedPreferencesPlugin;
+import io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin;
 import io.flutter.plugins.url_launcher.UrlLauncherPlugin;
 
 /**
@@ -11,7 +11,7 @@ import io.flutter.plugins.url_launcher.UrlLauncherPlugin;
 public final class GeneratedPluginRegistrant {
   public static void registerWith(PluginRegistry registry) {
     FlutterWebviewPlugin.registerWith(registry.registrarFor("com.flutter_webview_plugin.FlutterWebviewPlugin"));
-    SharedPreferencesPlugin.registerWith(registry.registrarFor("io.flutter.plugins.shared_preferences.SharedPreferencesPlugin"));
+    SharedPreferencesPlugin.registerWith(registry.registrarFor("io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin"));
     UrlLauncherPlugin.registerWith(registry.registrarFor("io.flutter.plugins.url_launcher.UrlLauncherPlugin"));
   }
 }
