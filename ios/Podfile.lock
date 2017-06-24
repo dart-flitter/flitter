@@ -9,7 +9,7 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `/Users/lejard_h/flutter/bin/cache/artifacts/engine/ios`)
-  - flutter_webview_plugin (from `/Users/lejard_h/.pub-cache/git/flutter_webview_plugin-1b501eef015bccbbf992dc9f68f4725b62ab1a37/ios`)
+  - flutter_webview_plugin (from `/Users/lejard_h/.pub-cache/hosted/pub.dartlang.org/flutter_webview_plugin-0.0.5/ios`)
   - shared_preferences (from `/Users/lejard_h/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.2.4+1/ios`)
   - url_launcher (from `/Users/lejard_h/.pub-cache/hosted/pub.dartlang.org/url_launcher-0.4.2+1/ios`)
 
@@ -17,7 +17,7 @@ EXTERNAL SOURCES:
   Flutter:
     :path: /Users/lejard_h/flutter/bin/cache/artifacts/engine/ios
   flutter_webview_plugin:
-    :path: /Users/lejard_h/.pub-cache/git/flutter_webview_plugin-1b501eef015bccbbf992dc9f68f4725b62ab1a37/ios
+    :path: /Users/lejard_h/.pub-cache/hosted/pub.dartlang.org/flutter_webview_plugin-0.0.5/ios
   shared_preferences:
     :path: /Users/lejard_h/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.2.4+1/ios
   url_launcher:
