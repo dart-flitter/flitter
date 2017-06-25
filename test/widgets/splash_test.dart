@@ -36,9 +36,9 @@ main() {
     });
 
     testWidgets("CustomColor Color", (WidgetTester tester) async {
-      themeStore = new ThemeStore(
+/*      themeStore = new ThemeStore(
           initialState: new ThemeState(secondarySwatch: Colors.green));
-      expect(themeStore.state.secondarySwatch, equals(Colors.green));
+      expect(themeStore.state.theme.secondarySwatch, equals(Colors.green));*/
 
       await tester.pumpWidget(new Splash());
 

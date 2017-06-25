@@ -9,6 +9,7 @@ import 'package:flitter/widgets/common/list_room.dart';
 import 'package:flitter/widgets/common/search.dart';
 import 'package:flitter/widgets/common/utils.dart';
 import 'package:flitter/widgets/routes/people.dart';
+import 'package:flitter/widgets/routes/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/app.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
@@ -54,6 +55,8 @@ class _HomeViewState extends State<HomeView> {
       Navigator.pop(context);
     }, onTapPeoples: () {
       PeopleView.go(context);
+    }, onTapSettings: () {
+      SettingsView.go(context);
     });
 
     if (flitterStore.state.rooms != null) {

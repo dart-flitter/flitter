@@ -12,7 +12,7 @@ main() {
     testWidgets("No user", (WidgetTester tester) async {
       await tester.pumpWidget(new MockableApp(
           drawer: new FlitterDrawer(
-              onTapAllConversation: () {}, onTapPeoples: () {})));
+              onTapAllConversation: () {}, onTapPeoples: () {}, onTapSettings: () {})));
 
       // open drawer
       final ScaffoldState state = tester.firstState(find.byType(Scaffold));
@@ -28,7 +28,7 @@ main() {
     testWidgets("fetch user", (WidgetTester tester) async {
       await tester.pumpWidget(new MockableApp(
           drawer: new FlitterDrawer(
-              onTapAllConversation: () {}, onTapPeoples: () {})));
+              onTapAllConversation: () {}, onTapPeoples: () {}, onTapSettings: () {})));
 
       // open drawer
       final ScaffoldState state = tester.firstState(find.byType(Scaffold));
@@ -46,7 +46,7 @@ main() {
     testWidgets("Header", (WidgetTester tester) async {
       await tester.pumpWidget(new MockableApp(
           drawer: new FlitterDrawer(
-              onTapAllConversation: () {}, onTapPeoples: () {})));
+              onTapAllConversation: () {}, onTapPeoples: () {}, onTapSettings: () {})));
 
       // open drawer
       final ScaffoldState state = tester.firstState(find.byType(Scaffold));
@@ -70,7 +70,7 @@ main() {
     testWidgets("Footer", (WidgetTester tester) async {
       await tester.pumpWidget(new MockableApp(
           drawer: new FlitterDrawer(
-              onTapAllConversation: () {}, onTapPeoples: () {})));
+              onTapAllConversation: () {}, onTapPeoples: () {}, onTapSettings: () {})));
 
       // open drawer
       final ScaffoldState state = tester.firstState(find.byType(Scaffold));
@@ -97,7 +97,7 @@ main() {
     testWidgets("Communities", (WidgetTester tester) async {
       await tester.pumpWidget(new MockableApp(
           drawer: new FlitterDrawer(
-              onTapAllConversation: () {}, onTapPeoples: () {})));
+              onTapAllConversation: () {}, onTapPeoples: () {}, onTapSettings: () {})));
 
       // open drawer
       final ScaffoldState state = tester.firstState(find.byType(Scaffold));
@@ -129,7 +129,7 @@ main() {
     testWidgets("Tap logout", (WidgetTester tester) async {
       await tester.pumpWidget(new MockableApp(
           drawer: new FlitterDrawer(
-              onTapAllConversation: () {}, onTapPeoples: () {})));
+              onTapAllConversation: () {}, onTapPeoples: () {}, onTapSettings: () {})));
 
       // open drawer
       final ScaffoldState state = tester.firstState(find.byType(Scaffold));

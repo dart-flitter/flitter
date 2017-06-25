@@ -2,6 +2,7 @@ library flitter.routes.people;
 
 import 'package:flitter/widgets/common/list_room.dart';
 import 'package:flitter/widgets/common/search.dart';
+import 'package:flitter/widgets/routes/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
@@ -53,6 +54,8 @@ class _PeopleViewState extends State<PeopleView> {
       HomeView.go(context);
     }, onTapPeoples: () {
       Navigator.pop(context);
+    }, onTapSettings: () {
+      SettingsView.go(context);
     });
 
     if (flitterStore.state.rooms != null) {

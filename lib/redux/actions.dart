@@ -113,10 +113,10 @@ class FetchSearchAction<T> extends FlitterAction {
 
 class ChangeThemeAction extends FlitterAction {
   final Brightness brightness;
-  final MaterialColor primarySwatch;
-  final MaterialColor secondarySwatch;
+  final MaterialColor primaryColor;
+  final MaterialAccentColor accentColor;
 
-  ChangeThemeAction(this.brightness, this.primarySwatch, this.secondarySwatch);
+  ChangeThemeAction({this.brightness, this.primaryColor, this.accentColor});
 }
 
 class UnreadMessagesForRoom extends FlitterAction {

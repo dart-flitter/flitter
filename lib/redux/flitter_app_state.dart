@@ -3,32 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:gitter/src/faye.dart';
 
 class ThemeState {
-  final Brightness brightness;
-  final MaterialColor primarySwatch;
-  final MaterialColor secondarySwatch;
+
+  static final kBrightnessKey = "BrightnessKey";
+  static final kPrimaryColorKey = "PrimaryColorKey";
+  static final kAccentColorKey = "kAccentColorKey";
+
   final ThemeData _theme;
+  final Brightness brightness;
+  final MaterialColor primaryColor;
+  final MaterialAccentColor accentColor;
 
   ThemeData get theme => _theme;
 
-  ThemeState({this.brightness, this.primarySwatch, this.secondarySwatch})
+  ThemeState({this.brightness, this.primaryColor, this.accentColor})
       : _theme = new ThemeData(
-            brightness: brightness,
-            primarySwatch: primarySwatch,
-            accentColor: secondarySwatch[500]);
+      brightness: brightness,
+      primarySwatch: primaryColor,
+      accentColor: accentColor);
 
-  factory ThemeState.initial() => new ThemeState(
-      brightness: Brightness.light,
-      primarySwatch: Colors.indigo,
-      secondarySwatch: Colors.pink);
+  factory ThemeState.initial() =>
+      new ThemeState(
+          brightness: Brightness.light,
+          primaryColor: Colors.indigo,
+          accentColor: Colors.pinkAccent);
 
-  ThemeState apply(
-      {Brightness brightness,
-      MaterialColor primarySwatch,
-      MaterialColor secondarySwatch}) {
+  ThemeState apply({Brightness brightness,
+    MaterialColor primaryColor,
+    MaterialAccentColor accentColor}) {
     return new ThemeState(
         brightness: brightness ?? this.brightness,
-        primarySwatch: primarySwatch ?? this.primarySwatch,
-        secondarySwatch: secondarySwatch ?? this.secondarySwatch);
+        primaryColor: primaryColor ?? this.primaryColor,
+        accentColor: accentColor ?? this.accentColor);
   }
 }
 
@@ -84,13 +89,12 @@ class FlitterAppState {
   final CurrentGroupState selectedGroup;
   final SearchState search;
 
-  FlitterAppState(
-      {this.rooms,
-      this.groups,
-      this.user,
-      this.search,
-      this.selectedRoom,
-      this.selectedGroup});
+  FlitterAppState({this.rooms,
+    this.groups,
+    this.user,
+    this.search,
+    this.selectedRoom,
+    this.selectedGroup});
 
   FlitterAppState.initial()
       : rooms = null,
@@ -100,16 +104,15 @@ class FlitterAppState {
         search = new SearchState.initial(),
         selectedGroup = null;
 
-  FlitterAppState apply(
-      {Iterable<Room> rooms,
-      Iterable<Group> groups,
-      User user,
-      bool init,
-      CurrentRoomState selectedRoom,
-      SearchState search,
-      CurrentGroupState selectedGroup,
-      GitterApi api,
-      GitterToken token}) {
+  FlitterAppState apply({Iterable<Room> rooms,
+    Iterable<Group> groups,
+    User user,
+    bool init,
+    CurrentRoomState selectedRoom,
+    SearchState search,
+    CurrentGroupState selectedGroup,
+    GitterApi api,
+    GitterToken token}) {
     return new FlitterAppState(
         rooms: rooms ?? this.rooms,
         groups: groups ?? this.groups,

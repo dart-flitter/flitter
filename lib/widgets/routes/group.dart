@@ -3,6 +3,7 @@ library flitter.routes.group_room;
 import 'package:flitter/widgets/common/drawer.dart';
 import 'package:flitter/widgets/common/list_room.dart';
 import 'package:flitter/widgets/common/utils.dart';
+import 'package:flitter/widgets/routes/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flitter/redux/flitter_app_state.dart';
 import 'package:flitter/redux/store.dart';
@@ -64,6 +65,8 @@ class _GroupRoomViewState extends State<GroupView> {
         HomeView.go(context);
       }, onTapPeoples: () {
         PeopleView.go(context);
+      }, onTapSettings: () {
+        SettingsView.go(context);
       }),
     );
   }

@@ -3,6 +3,9 @@ library flitter.common.drawer;
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_auth.dart';
+import 'package:flitter/widgets/routes/settings.dart';
+import 'package:flutter/src/rendering/sliver.dart';
+import 'package:flutter/src/rendering/sliver_grid.dart';
 import 'package:gitter/gitter.dart';
 import 'package:flitter/widgets/routes/group.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +16,10 @@ import 'package:flitter/intl/messages_all.dart' as intl;
 class FlitterDrawer extends StatefulWidget {
   final VoidCallback onTapAllConversation;
   final VoidCallback onTapPeoples;
+  final VoidCallback onTapSettings;
 
   FlitterDrawer(
-      {@required this.onTapAllConversation, @required this.onTapPeoples});
+      {@required this.onTapAllConversation, @required this.onTapPeoples, @required this.onTapSettings});
 
   @override
   _FlitterDrawerState createState() => new _FlitterDrawerState();
@@ -30,7 +34,8 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
       return new Drawer(
           child: new FlitterDrawerContent(
               onTapAllConversation: widget.onTapAllConversation,
-              onTapPeoples: widget.onTapPeoples));
+              onTapPeoples: widget.onTapPeoples,
+              onTapSettings: widget.onTapSettings));
     }
     return new Center(child: new CircularProgressIndicator());
   }
@@ -55,9 +60,10 @@ class _FlitterDrawerState extends State<FlitterDrawer> {
 class FlitterDrawerContent extends StatelessWidget {
   final VoidCallback onTapAllConversation;
   final VoidCallback onTapPeoples;
+  final VoidCallback onTapSettings;
 
   FlitterDrawerContent(
-      {@required this.onTapAllConversation, @required this.onTapPeoples});
+      {@required this.onTapAllConversation, @required this.onTapPeoples, @required this.onTapSettings});
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +77,10 @@ class FlitterDrawerContent extends StatelessWidget {
           leading: new Icon(Icons.person),
           title: new Text(intl.people()),
           onTap: onTapPeoples),
+      new ListTile(
+          leading: new Icon(Icons.settings),
+          title: new Text(intl.settings()),
+          onTap: onTapSettings)
     ];
     child.addAll(_drawerCommunities(context));
     child.addAll(_drawerFooter(context));
@@ -108,7 +118,7 @@ class FlitterDrawerHeader extends StatelessWidget {
         accountEmail: new Text(flitterStore.state.user.displayName),
         currentAccountPicture: new CircleAvatar(
             backgroundImage:
-                new NetworkImage(flitterStore.state.user.avatarUrlMedium)),
+            new NetworkImage(flitterStore.state.user.avatarUrlMedium)),
         decoration: new BoxDecoration(
             image: new DecorationImage(
                 image: new AssetImage('assets/images/banner.jpg'),
@@ -141,11 +151,51 @@ class FlitterDrawerCommunityTile extends StatelessWidget {
         title: new Text(group.name),
         leading: new CircleAvatar(
             backgroundImage: new NetworkImage(group.avatarUrl),
-            backgroundColor: Theme.of(context).canvasColor),
-        trailing: null, //TODO: unread inside roomsOf(group)
+            backgroundColor: Theme
+                .of(context)
+                .canvasColor),
+        trailing: null,
+        //TODO: unread inside roomsOf(group)
         onTap: () {
           flitterStore.dispatch(new SelectGroupAction(group));
           GroupView.go(context, group);
         });
+  }
+}
+
+class ThemeEditorDialog extends StatefulWidget {
+  @override
+  _ThemeEditorDialogState createState() => new _ThemeEditorDialogState();
+}
+
+class _ThemeEditorDialogState extends State<ThemeEditorDialog> {
+
+  var _themeSubscription;
+
+  @override
+  Widget build(BuildContext context) {
+    return new SimpleDialog(
+        title: new Text(intl.theme()), children: <Widget>[
+      new MaterialPrimaryColorGrid(onTap: (ColorSwatch color) {
+        themeStore.dispatch(new ChangeThemeAction(primaryColor: color));
+      }),
+      new MaterialAccentColorGrid(onTap: (ColorSwatch color) {
+        themeStore.dispatch(new ChangeThemeAction(accentColor: color));
+      })
+    ]);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _themeSubscription = themeStore.onChange.listen((_) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _themeSubscription.cancel();
   }
 }
