@@ -1,6 +1,7 @@
 library flitter.common.chat_room_widget;
 
 import 'dart:async';
+import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
 import 'package:gitter/gitter.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,8 @@ import 'package:intl/intl.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
-final _dateFormat = new DateFormat.MMMd()..add_Hm();
+final _dateFormat = new DateFormat.MMMd()
+  ..add_Hm();
 
 class ChatRoom extends StatefulWidget {
   final Iterable<Message> messages;
@@ -30,23 +32,36 @@ class ChatRoom extends StatefulWidget {
 }
 
 class _ChatRoomWidgetState extends State<ChatRoom> {
+  bool get _userHasJoined =>
+      flitterStore.state.rooms.any((Room r) => r.id == widget.room.id);
+
   @override
   Widget build(BuildContext context) {
-    return new Column(children: [
+    var children = <Widget>[
       new Flexible(
           child: new ListView.builder(
-        reverse: true,
-        itemCount: widget.messages.length,
-        itemBuilder: _buildListItem,
-      )),
-      new Divider(height: 1.0),
-      new Container(
-          decoration: new BoxDecoration(color: Theme.of(context).cardColor),
-          child: _buildChatInput()),
-    ]);
+            reverse: true,
+            itemCount: widget.messages.length,
+            itemBuilder: _buildListItem,
+          )),
+    ];
+
+    if (_userHasJoined) {
+      children.addAll([
+        new Divider(height: 1.0),
+        new Container(
+            decoration: new BoxDecoration(color: Theme
+                .of(context)
+                .cardColor),
+            child: _buildChatInput())
+      ]);
+    }
+
+    return new Column(children: children);
   }
 
-  Widget _buildChatInput() => new ChatInput(
+  Widget _buildChatInput() =>
+      new ChatInput(
         onSubmit: (String value) async {
           sendMessage(value, widget.room);
         },
@@ -54,11 +69,16 @@ class _ChatRoomWidgetState extends State<ChatRoom> {
 
   _shouldMergeMessages(Message message, int index) =>
       index != widget.messages.length - 1 &&
-      widget.messages.elementAt(index + 1).fromUser.id == message.fromUser.id &&
-      message.sent
-              .difference(widget.messages.elementAt(index + 1).sent)
+          widget.messages
+              .elementAt(index + 1)
+              .fromUser
+              .id == message.fromUser.id &&
+          message.sent
+              .difference(widget.messages
+              .elementAt(index + 1)
+              .sent)
               .inMinutes <=
-          10;
+              10;
 
   _buildListItem(BuildContext context, int index) {
     final message = widget.messages.elementAt(index);
@@ -96,9 +116,13 @@ class _ChatInputState extends State<ChatInput> {
   Widget build(BuildContext context) {
     return new Container(
         padding: new EdgeInsets.all(8.0),
-        decoration: new BoxDecoration(color: Theme.of(context).cardColor),
+        decoration: new BoxDecoration(color: Theme
+            .of(context)
+            .cardColor),
         child: new IconTheme(
-            data: new IconThemeData(color: Theme.of(context).accentColor),
+            data: new IconThemeData(color: Theme
+                .of(context)
+                .accentColor),
             child: new Container(
                 margin: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: new Row(children: [
@@ -108,7 +132,7 @@ class _ChatInputState extends State<ChatInput> {
                       controller: _textController,
                       decoration: new InputDecoration.collapsed(
                           hintText: intl.typeChatMessage()),
-                      maxLines: 10,
+                      maxLines: 3,
                     ),
                   ),
                   new Container(
@@ -133,12 +157,11 @@ class ChatMessage extends StatelessWidget {
   final bool withTitle;
   final bool atBottom;
 
-  ChatMessage(
-      {@required this.message,
-      this.withDivider: true,
-      this.withAvatar: true,
-      this.withTitle: true,
-      this.atBottom: false});
+  ChatMessage({@required this.message,
+    this.withDivider: true,
+    this.withAvatar: true,
+    this.withTitle: true,
+    this.atBottom: false});
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +171,7 @@ class ChatMessage extends StatelessWidget {
       row.add(new ChatMessageAvatar(
           avatar: new NetworkImage(message.fromUser.avatarUrlSmall)));
     } else {
-      row.add(new Container(width: 64.0));
+      row.add(new Container(width: 54.0));
     }
 
     row.add(new Expanded(
@@ -180,7 +203,7 @@ class ChatMessageAvatar extends StatelessWidget {
     return new Column(children: [
       new Container(
         margin: new EdgeInsets.only(left: 12.0, right: 12.0, top: 12.0),
-        width: 40.0,
+        width: 30.0,
         child: new CircleAvatar(
             backgroundImage: avatar, backgroundColor: Colors.grey[200]),
       )
@@ -210,11 +233,11 @@ class ChatMessageContent extends StatelessWidget {
               padding: new EdgeInsets.only(bottom: 6.0),
               child: withTitle
                   ? new Row(children: [
-                      new Expanded(
-                          child: new Text(message.fromUser.displayName,
-                              softWrap: true)),
-                      new Text(_dateFormat.format(message.sent))
-                    ])
+                new Expanded(
+                    child: new Text(message.fromUser.displayName,
+                        softWrap: true)),
+                new Text(_dateFormat.format(message.sent))
+              ])
                   : null)));
     }
 
@@ -222,7 +245,7 @@ class ChatMessageContent extends StatelessWidget {
         data: message.text,
         onTapLink: (String url) async {
           bool can =
-              await url_launcher.canLaunch(url); //fixme does not seem to work
+          await url_launcher.canLaunch(url); //fixme does not seem to work
           if (can) {
             url_launcher.launch(url);
           }
