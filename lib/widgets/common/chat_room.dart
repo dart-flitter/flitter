@@ -146,7 +146,9 @@ class _ChatInputState extends State<ChatInput> {
   _handleSubmitted() {
     String value = _textController.text;
     _textController.clear();
-    widget.onSubmit(value);
+    if (value.isNotEmpty) {
+      widget.onSubmit(value);
+    }
   }
 }
 
@@ -243,9 +245,10 @@ class ChatMessageContent extends StatelessWidget {
 
     column.add(new MarkdownBody(
         data: message.text,
+        //fixme does not seem to work
         onTapLink: (String url) async {
           bool can =
-          await url_launcher.canLaunch(url); //fixme does not seem to work
+          await url_launcher.canLaunch(url);
           if (can) {
             url_launcher.launch(url);
           }
