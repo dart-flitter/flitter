@@ -1,8 +1,35 @@
 # flitter
 
+Gitter Client for Mobile made with Flutter
+
 [![Build Status](https://travis-ci.org/dart-flitter/flitter.svg?branch=master)](https://travis-ci.org/dart-flitter/flitter)
 
-A new flutter project.
+<div style="text-align: center"><table><tr>
+    <td style="text-align: center">
+<img src="https://github.com/dart-flitter/flitter/blob/master/screenshots/flutter_01.png" height="400">
+</td>
+<td style="text-align: center">
+<img src="https://github.com/dart-flitter/flitter/blob/master/screenshots/flutter_02.png" height="400">
+</td>
+<td style="text-align: center">
+<img src="https://github.com/dart-flitter/flitter/blob/master/screenshots/flutter_03.png" height="400">
+</td>
+</tr>
+</table>
+</div>
+<div style="text-align: center"><table><tr>
+<td style="text-align: center">
+<img src="https://github.com/dart-flitter/flitter/blob/master/screenshots/flutter_04.png" height="400">
+</td>
+<td style="text-align: center">
+<img src="https://github.com/dart-flitter/flitter/blob/master/screenshots/flutter_05.png" height="400">
+</td>
+<td style="text-align: center">
+<img src="https://github.com/dart-flitter/flitter/blob/master/screenshots/flutter_07.png" height="400">
+</td>
+</tr>
+</table>
+</div>
 
 ## Getting Started
 
