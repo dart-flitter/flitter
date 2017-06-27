@@ -13,6 +13,7 @@ dependencies:
   url_launcher: ">=0.4.0 <1.0.0"
   gitter: ^0.1.0
   flutter_markdown: "^0.0.9"
+  flutter_color_picker: "^0.0.1"
 
 dev_dependencies:
   flutter_test:

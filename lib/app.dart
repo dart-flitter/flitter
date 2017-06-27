@@ -22,18 +22,16 @@ class Splash extends StatelessWidget {
     return new MaterialApp(
         home: new Scaffold(
             body: new Column(children: [
-              new Center(
-                  child: new FlutterLogo(
-                      colors: themeStore?.state?.theme?.accentColor ??
-                          Colors.pink,
-                      size: 80.0)),
-              new Center(
-                  child: new Text(
-                      appName, style: new TextStyle(fontSize: 32.0))),
-              new Center(
-                  child:
+          new Center(
+              child: new FlutterLogo(
+                  colors: themeStore?.state?.theme?.accentColor ?? Colors.pink,
+                  size: 80.0)),
+          new Center(
+              child: new Text(appName, style: new TextStyle(fontSize: 32.0))),
+          new Center(
+              child:
                   new Text("for Gitter", style: new TextStyle(fontSize: 16.0)))
-            ], mainAxisAlignment: MainAxisAlignment.center)),
+        ], mainAxisAlignment: MainAxisAlignment.center)),
         theme: themeStore?.state?.theme);
   }
 }
@@ -110,8 +108,13 @@ Future<Null> _init() async {
   int accent = prefs.getInt(ThemeState.kAccentColorKey);
 
   themeStore.dispatch(new ChangeThemeAction(
-      brightness: bright == true ? Brightness
-          .dark : Brightness.light,
-      primaryColor: primary != null ? Colors.primaries[primary] : null,
-      accentColor: accent != null ? Colors.accents[accent] : null));
+      brightness: bright == true ? Brightness.dark : Brightness.light,
+      primaryColor:
+          primary != null && primary >= 0 && primary > Colors.primaries.length
+              ? Colors.primaries[primary]
+              : null,
+      accentColor:
+          accent != null && accent >= 0 && accent > Colors.accents.length
+              ? Colors.accents[accent]
+              : null));
 }

@@ -15,12 +15,12 @@ main() {
 
       // Scaffold exist
       final scaffoldFinder =
-      find.descendant(of: appFinder, matching: find.byType(Scaffold));
+          find.descendant(of: appFinder, matching: find.byType(Scaffold));
       expect(scaffoldFinder, findsOneWidget);
 
       // Text is correct
       final titleFinder =
-      find.descendant(of: scaffoldFinder, matching: find.byType(Text));
+          find.descendant(of: scaffoldFinder, matching: find.byType(Text));
       expect(titleFinder, findsNWidgets(2));
       final title = tester.firstWidget(titleFinder) as Text;
       expect(title.data, equals(appName));

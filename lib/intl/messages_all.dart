@@ -19,6 +19,8 @@ String settings() => Intl.message("Settings", name: "settings", args: []);
 
 String darkMode() => Intl.message("Dark mode", name: "darkMode", args: []);
 
-String primaryColor() => Intl.message("Primary Color", name: "primaryColor", args: []);
+String primaryColor() =>
+    Intl.message("Primary Color", name: "primaryColor", args: []);
 
-String accentColor() => Intl.message("Accent Color", name: "accentColor", args: []);
+String accentColor() =>
+    Intl.message("Accent Color", name: "accentColor", args: []);

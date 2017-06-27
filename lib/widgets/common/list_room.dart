@@ -10,7 +10,7 @@ import 'package:flitter/redux/actions.dart';
 
 class ListRoom extends StatelessWidget {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-  new GlobalKey<RefreshIndicatorState>();
+      new GlobalKey<RefreshIndicatorState>();
 
   final Iterable<Room> rooms;
   final RefreshCallback onRefresh;
@@ -46,10 +46,8 @@ class RoomTile extends StatelessWidget {
       title: new Text(room.name),
       leading: new CircleAvatar(
           backgroundImage:
-          room.avatarUrl != null ? new NetworkImage(room.avatarUrl) : null,
-          backgroundColor: Theme
-              .of(context)
-              .canvasColor),
+              room.avatarUrl != null ? new NetworkImage(room.avatarUrl) : null,
+          backgroundColor: Theme.of(context).canvasColor),
       trailing: room?.unreadItems != null && room.unreadItems > 0
           ? new MessageCount(room.unreadItems)
           : null,
@@ -73,9 +71,7 @@ class UserTile extends StatelessWidget {
       title: new Text(user.username),
       leading: new CircleAvatar(
           backgroundImage: new NetworkImage(user.avatarUrlSmall),
-          backgroundColor: Theme
-              .of(context)
-              .canvasColor),
+          backgroundColor: Theme.of(context).canvasColor),
       onTap: () async {
         final Room room = await gitterApi.room.roomFromUri(user.url);
         flitterStore.dispatch(new SelectRoomAction(room));
@@ -84,7 +80,6 @@ class UserTile extends StatelessWidget {
     );
   }
 }
-
 
 class MessageCount extends StatelessWidget {
   final int count;
@@ -96,14 +91,12 @@ class MessageCount extends StatelessWidget {
     return new Row(children: <Widget>[
       new Container(
           decoration: new BoxDecoration(
-              color: Theme
-                  .of(context)
-                  .accentColor,
-              borderRadius: new BorderRadius.circular(16.0)
-          ),
-          padding: new EdgeInsets.only(left: 6.0, right: 6.0, top: 4.0, bottom: 4.0),
-          child: new DefaultTextStyle(style: new TextStyle(fontSize: 10.0),
-              child: new Text("$count")))
+              color: Theme.of(context).accentColor,
+              borderRadius: new BorderRadius.circular(16.0)),
+          padding:
+              new EdgeInsets.only(left: 6.0, right: 6.0, top: 4.0, bottom: 4.0),
+          child: new DefaultTextStyle(
+              style: new TextStyle(fontSize: 10.0), child: new Text("$count")))
     ]);
   }
 }

@@ -19,7 +19,9 @@ class FlitterDrawer extends StatefulWidget {
   final VoidCallback onTapSettings;
 
   FlitterDrawer(
-      {@required this.onTapAllConversation, @required this.onTapPeoples, @required this.onTapSettings});
+      {@required this.onTapAllConversation,
+      @required this.onTapPeoples,
+      @required this.onTapSettings});
 
   @override
   _FlitterDrawerState createState() => new _FlitterDrawerState();
@@ -63,7 +65,9 @@ class FlitterDrawerContent extends StatelessWidget {
   final VoidCallback onTapSettings;
 
   FlitterDrawerContent(
-      {@required this.onTapAllConversation, @required this.onTapPeoples, @required this.onTapSettings});
+      {@required this.onTapAllConversation,
+      @required this.onTapPeoples,
+      @required this.onTapSettings});
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +122,7 @@ class FlitterDrawerHeader extends StatelessWidget {
         accountEmail: new Text(flitterStore.state.user.displayName),
         currentAccountPicture: new CircleAvatar(
             backgroundImage:
-            new NetworkImage(flitterStore.state.user.avatarUrlMedium)),
+                new NetworkImage(flitterStore.state.user.avatarUrlMedium)),
         decoration: new BoxDecoration(
             image: new DecorationImage(
                 image: new AssetImage('assets/images/banner.jpg'),
@@ -151,51 +155,12 @@ class FlitterDrawerCommunityTile extends StatelessWidget {
         title: new Text(group.name),
         leading: new CircleAvatar(
             backgroundImage: new NetworkImage(group.avatarUrl),
-            backgroundColor: Theme
-                .of(context)
-                .canvasColor),
+            backgroundColor: Theme.of(context).canvasColor),
         trailing: null,
         //TODO: unread inside roomsOf(group)
         onTap: () {
           flitterStore.dispatch(new SelectGroupAction(group));
           GroupView.go(context, group);
         });
-  }
-}
-
-class ThemeEditorDialog extends StatefulWidget {
-  @override
-  _ThemeEditorDialogState createState() => new _ThemeEditorDialogState();
-}
-
-class _ThemeEditorDialogState extends State<ThemeEditorDialog> {
-
-  var _themeSubscription;
-
-  @override
-  Widget build(BuildContext context) {
-    return new SimpleDialog(
-        title: new Text(intl.theme()), children: <Widget>[
-      new MaterialPrimaryColorGrid(onTap: (ColorSwatch color) {
-        themeStore.dispatch(new ChangeThemeAction(primaryColor: color));
-      }),
-      new MaterialAccentColorGrid(onTap: (ColorSwatch color) {
-        themeStore.dispatch(new ChangeThemeAction(accentColor: color));
-      })
-    ]);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _themeSubscription = themeStore.onChange.listen((_) {
-      setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _themeSubscription.cancel();
   }
 }

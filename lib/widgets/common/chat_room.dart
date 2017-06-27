@@ -12,8 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
-final _dateFormat = new DateFormat.MMMd()
-  ..add_Hm();
+final _dateFormat = new DateFormat.MMMd()..add_Hm();
 
 class ChatRoom extends StatefulWidget {
   final Iterable<Message> messages;
@@ -40,19 +39,17 @@ class _ChatRoomWidgetState extends State<ChatRoom> {
     var children = <Widget>[
       new Flexible(
           child: new ListView.builder(
-            reverse: true,
-            itemCount: widget.messages.length,
-            itemBuilder: _buildListItem,
-          )),
+        reverse: true,
+        itemCount: widget.messages.length,
+        itemBuilder: _buildListItem,
+      )),
     ];
 
     if (_userHasJoined) {
       children.addAll([
         new Divider(height: 1.0),
         new Container(
-            decoration: new BoxDecoration(color: Theme
-                .of(context)
-                .cardColor),
+            decoration: new BoxDecoration(color: Theme.of(context).cardColor),
             child: _buildChatInput())
       ]);
     }
@@ -60,8 +57,7 @@ class _ChatRoomWidgetState extends State<ChatRoom> {
     return new Column(children: children);
   }
 
-  Widget _buildChatInput() =>
-      new ChatInput(
+  Widget _buildChatInput() => new ChatInput(
         onSubmit: (String value) async {
           sendMessage(value, widget.room);
         },
@@ -69,16 +65,11 @@ class _ChatRoomWidgetState extends State<ChatRoom> {
 
   _shouldMergeMessages(Message message, int index) =>
       index != widget.messages.length - 1 &&
-          widget.messages
-              .elementAt(index + 1)
-              .fromUser
-              .id == message.fromUser.id &&
-          message.sent
-              .difference(widget.messages
-              .elementAt(index + 1)
-              .sent)
+      widget.messages.elementAt(index + 1).fromUser.id == message.fromUser.id &&
+      message.sent
+              .difference(widget.messages.elementAt(index + 1).sent)
               .inMinutes <=
-              10;
+          10;
 
   _buildListItem(BuildContext context, int index) {
     final message = widget.messages.elementAt(index);
@@ -116,13 +107,9 @@ class _ChatInputState extends State<ChatInput> {
   Widget build(BuildContext context) {
     return new Container(
         padding: new EdgeInsets.all(8.0),
-        decoration: new BoxDecoration(color: Theme
-            .of(context)
-            .cardColor),
+        decoration: new BoxDecoration(color: Theme.of(context).cardColor),
         child: new IconTheme(
-            data: new IconThemeData(color: Theme
-                .of(context)
-                .accentColor),
+            data: new IconThemeData(color: Theme.of(context).accentColor),
             child: new Container(
                 margin: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: new Row(children: [
@@ -159,11 +146,12 @@ class ChatMessage extends StatelessWidget {
   final bool withTitle;
   final bool atBottom;
 
-  ChatMessage({@required this.message,
-    this.withDivider: true,
-    this.withAvatar: true,
-    this.withTitle: true,
-    this.atBottom: false});
+  ChatMessage(
+      {@required this.message,
+      this.withDivider: true,
+      this.withAvatar: true,
+      this.withTitle: true,
+      this.atBottom: false});
 
   @override
   Widget build(BuildContext context) {
@@ -235,11 +223,11 @@ class ChatMessageContent extends StatelessWidget {
               padding: new EdgeInsets.only(bottom: 6.0),
               child: withTitle
                   ? new Row(children: [
-                new Expanded(
-                    child: new Text(message.fromUser.displayName,
-                        softWrap: true)),
-                new Text(_dateFormat.format(message.sent))
-              ])
+                      new Expanded(
+                          child: new Text(message.fromUser.displayName,
+                              softWrap: true)),
+                      new Text(_dateFormat.format(message.sent))
+                    ])
                   : null)));
     }
 
@@ -247,8 +235,7 @@ class ChatMessageContent extends StatelessWidget {
         data: message.text,
         //fixme does not seem to work
         onTapLink: (String url) async {
-          bool can =
-          await url_launcher.canLaunch(url);
+          bool can = await url_launcher.canLaunch(url);
           if (can) {
             url_launcher.launch(url);
           }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gitter/src/faye.dart';
 
 class ThemeState {
-
   static final kBrightnessKey = "BrightnessKey";
   static final kPrimaryColorKey = "PrimaryColorKey";
   static final kAccentColorKey = "kAccentColorKey";
@@ -17,19 +16,19 @@ class ThemeState {
 
   ThemeState({this.brightness, this.primaryColor, this.accentColor})
       : _theme = new ThemeData(
-      brightness: brightness,
-      primarySwatch: primaryColor,
-      accentColor: accentColor);
+            brightness: brightness,
+            primarySwatch: primaryColor,
+            accentColor: accentColor);
 
-  factory ThemeState.initial() =>
-      new ThemeState(
-          brightness: Brightness.light,
-          primaryColor: Colors.indigo,
-          accentColor: Colors.pinkAccent);
+  factory ThemeState.initial() => new ThemeState(
+      brightness: Brightness.light,
+      primaryColor: Colors.indigo,
+      accentColor: Colors.pinkAccent);
 
-  ThemeState apply({Brightness brightness,
-    MaterialColor primaryColor,
-    MaterialAccentColor accentColor}) {
+  ThemeState apply(
+      {Brightness brightness,
+      MaterialColor primaryColor,
+      MaterialAccentColor accentColor}) {
     return new ThemeState(
         brightness: brightness ?? this.brightness,
         primaryColor: primaryColor ?? this.primaryColor,
@@ -89,12 +88,13 @@ class FlitterAppState {
   final CurrentGroupState selectedGroup;
   final SearchState search;
 
-  FlitterAppState({this.rooms,
-    this.groups,
-    this.user,
-    this.search,
-    this.selectedRoom,
-    this.selectedGroup});
+  FlitterAppState(
+      {this.rooms,
+      this.groups,
+      this.user,
+      this.search,
+      this.selectedRoom,
+      this.selectedGroup});
 
   FlitterAppState.initial()
       : rooms = null,
@@ -104,15 +104,16 @@ class FlitterAppState {
         search = new SearchState.initial(),
         selectedGroup = null;
 
-  FlitterAppState apply({Iterable<Room> rooms,
-    Iterable<Group> groups,
-    User user,
-    bool init,
-    CurrentRoomState selectedRoom,
-    SearchState search,
-    CurrentGroupState selectedGroup,
-    GitterApi api,
-    GitterToken token}) {
+  FlitterAppState apply(
+      {Iterable<Room> rooms,
+      Iterable<Group> groups,
+      User user,
+      bool init,
+      CurrentRoomState selectedRoom,
+      SearchState search,
+      CurrentGroupState selectedGroup,
+      GitterApi api,
+      GitterToken token}) {
     return new FlitterAppState(
         rooms: rooms ?? this.rooms,
         groups: groups ?? this.groups,
