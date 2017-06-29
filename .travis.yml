@@ -61,8 +61,8 @@ matrix:
         - export GRADLE_HOME=$PWD/gradle-3.5
         - export PATH=$GRADLE_HOME/bin:$PATH
         - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
-        - ./flutter/bin/cache/dart-sdk/bin/dart generate_main_from_env.dart
       script:
+        - ./flutter/bin/cache/dart-sdk/bin/dart generate_main_from_env.dart
         - ./flutter/bin/flutter -v build apk
 
     # Builds an IPA.
@@ -77,8 +77,8 @@ matrix:
         - brew install ideviceinstaller
         - brew install ios-deploy
         - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
-        - ./flutter/bin/cache/dart-sdk/bin/dart generate_main_from_env.dart
       script:
+        - ./flutter/bin/cache/dart-sdk/bin/dart generate_main_from_env.dart
         - ./flutter/bin/flutter -v build ios --no-codesign
 
 cache:
