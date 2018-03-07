@@ -57,7 +57,7 @@ class FlutterGitterOAuth extends GitterOAuth {
 
       // launch url inside webview
       flutterWebviewPlugin.launch("${codeInformations.url}?$urlParams",
-          clearCookies: true, fullScreen: true);
+          clearCookies: true, rect: null);
 
       code = await onCode.first;
       _close();

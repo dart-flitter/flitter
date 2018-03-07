@@ -43,7 +43,7 @@ class _LoginViewState extends State<LoginView> {
 
   Future<Null> _catchOnBackPressed() async {
     // catch onBackPressed for Android
-    await flutterWebviewPlugin.onBackPressed.first;
+    // FIXME: await flutterWebviewPlugin.onBackPressed.first;
     return SystemNavigator.pop();
   }
 
