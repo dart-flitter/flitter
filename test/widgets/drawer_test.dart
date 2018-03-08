@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/intl/messages_all.dart' as intl;
+import 'package:flutter/services.dart' show createHttpClient;
 
 main() {
   group("$FlitterDrawer Widget", () {
-    setUpAll(initStores);
+    setUpAll(() {
+      initStores();
+      createHttpClient = createMockImageHttpClient;
+    });
 
     testWidgets("No user", (WidgetTester tester) async {
       await tester.pumpWidget(new MockableApp(

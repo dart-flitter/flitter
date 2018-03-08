@@ -23,7 +23,7 @@ matrix:
             - libstdc++6
             - fonts-droid
       before_script:
-        - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
+        - git clone https://github.com/flutter/flutter.git -b beta --depth 1
       script:
         - ./flutter/bin/flutter test
 
@@ -39,8 +39,8 @@ matrix:
         components:
           - tools
           - platform-tools
-          - build-tools-25.0.3
-          - android-25
+          - build-tools-27.0.3
+          - android-27
           - sys-img-armeabi-v7a-google_apis-25
           - extra-android-m2repository
           - extra-google-m2repository
@@ -60,7 +60,7 @@ matrix:
         - unzip -qq gradle-3.5-bin.zip
         - export GRADLE_HOME=$PWD/gradle-3.5
         - export PATH=$GRADLE_HOME/bin:$PATH
-        - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
+        - git clone https://github.com/flutter/flutter.git -b beta --depth 1
       script:
         - ./flutter/bin/internal/update_dart_sdk.sh
         - ./flutter/bin/cache/dart-sdk/bin/dart generate_main_from_env.dart
@@ -77,7 +77,7 @@ matrix:
         - brew install --HEAD libimobiledevice
         - brew install ideviceinstaller
         - brew install ios-deploy
-        - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
+        - git clone https://github.com/flutter/flutter.git -b beta --depth 1
       script:
         - ./flutter/bin/internal/update_dart_sdk.sh
         - ./flutter/bin/cache/dart-sdk/bin/dart generate_main_from_env.dart
