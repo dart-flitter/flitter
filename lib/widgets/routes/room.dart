@@ -1,6 +1,5 @@
 library flitter.routes.room;
 
-import 'dart:async';
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
@@ -22,7 +21,7 @@ class RoomView extends StatefulWidget {
 }
 
 class _RoomViewState extends State<RoomView> {
-  Iterable<Message> get messages => flitterStore.state.selectedRoom.messages;
+  Iterable<Message> messages = flitterStore.state.selectedRoom.messages;
 
   Room get room => flitterStore.state.selectedRoom.room;
 
@@ -32,7 +31,9 @@ class _RoomViewState extends State<RoomView> {
   void initState() {
     super.initState();
     _subscription = flitterStore.onChange.listen((_) {
-      setState(() {});
+      setState(() {
+        messages = flitterStore.state.selectedRoom.messages;
+      });
     });
 
     _fetchMessages();
@@ -42,9 +43,18 @@ class _RoomViewState extends State<RoomView> {
 
   _onMessageHandler(List<GitterFayeMessage> msgs) {
     for (GitterFayeMessage msg in msgs) {
-      if (msg.data != null && msg.data["operation"] == "create") {
-        flitterStore.dispatch(new OnMessageForCurrentRoom(
-            new Message.fromJson(msg.data["model"])));
+      String roomId = msg.channel.split("/api/v1/rooms/").last.split("/").first;
+      if (msg.data != null && roomId == room.id) {
+        switch (msg.data["operation"]) {
+          case "create":
+            flitterStore.dispatch(new OnMessageForCurrentRoom(
+                new Message.fromJson(msg.data["model"])));
+            break;
+          case "remove":
+            flitterStore.dispatch(new OnDeleteMessage(new Message.fromJson(msg.data["model"])));
+            break;
+        }
+
       }
     }
   }

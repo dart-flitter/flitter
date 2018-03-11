@@ -81,6 +81,12 @@ class OnSendMessage extends FlitterAction {
   OnSendMessage(this.message);
 }
 
+class OnDeleteMessage extends FlitterAction {
+  final Message message;
+
+  OnDeleteMessage(this.message);
+}
+
 class FetchRoomsOfGroup extends FlitterAction {
   final Iterable<Room> rooms;
 
