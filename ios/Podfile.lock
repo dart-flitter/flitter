@@ -10,7 +10,7 @@ PODS:
 DEPENDENCIES:
   - Flutter (from `/Users/izambasiron/Workspace/flutter/bin/cache/artifacts/engine/ios`)
   - flutter_webview_plugin (from `/Users/izambasiron/.pub-cache/hosted/pub.dartlang.org/flutter_webview_plugin-0.1.2/ios`)
-  - shared_preferences (from `/Users/izambasiron/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.3.3/ios`)
+  - shared_preferences (from `/Users/izambasiron/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.4.0/ios`)
   - url_launcher (from `/Users/izambasiron/.pub-cache/hosted/pub.dartlang.org/url_launcher-2.0.2/ios`)
 
 EXTERNAL SOURCES:
@@ -19,7 +19,7 @@ EXTERNAL SOURCES:
   flutter_webview_plugin:
     :path: /Users/izambasiron/.pub-cache/hosted/pub.dartlang.org/flutter_webview_plugin-0.1.2/ios
   shared_preferences:
-    :path: /Users/izambasiron/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.3.3/ios
+    :path: /Users/izambasiron/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.4.0/ios
   url_launcher:
     :path: /Users/izambasiron/.pub-cache/hosted/pub.dartlang.org/url_launcher-2.0.2/ios
 

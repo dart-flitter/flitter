@@ -15,7 +15,7 @@ dependencies:
     git:
       url: "git@github.com:izambasiron/gitter_dart.git"
       ref: "update-faye"
-  flutter_markdown: "^0.0.9"
+  flutter_markdown: any
   flutter_color_picker: "^0.0.1"
 
 dev_dependencies:
