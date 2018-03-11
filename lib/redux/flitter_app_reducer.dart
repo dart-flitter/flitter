@@ -1,18 +1,17 @@
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/flitter_app_state.dart';
 import 'package:flitter/redux/store.dart';
-import 'package:flitter/services/flitter_request.dart';
-import 'package:gitter/gitter.dart';
 import 'package:flutter/material.dart';
+import 'package:gitter/gitter.dart';
 import 'package:redux/redux.dart' as redux;
 
 T orElseNull<T>() => null;
 
-class ThemeReducer extends redux.Reducer<ThemeState, FlitterAction> {
+class ThemeReducer extends redux.ReducerClass<ThemeState> {
   final _mapper = const <Type, Function>{ChangeThemeAction: _changeThemeAction};
 
   @override
-  ThemeState reduce(ThemeState state, FlitterAction action) {
+  ThemeState call(ThemeState state, action) {
     Function reducer = _mapper[action.runtimeType];
     return reducer != null ? reducer(state, action) : state;
   }
@@ -26,28 +25,26 @@ ThemeState _changeThemeAction(ThemeState state, ChangeThemeAction action) {
 }
 
 class FlitterLoggingMiddleware
-    implements redux.Middleware<FlitterAppState, FlitterAction> {
+    implements redux.MiddlewareClass<FlitterAppState> {
   const FlitterLoggingMiddleware();
 
-  call(redux.Store<FlitterAppState, FlitterAction> store, FlitterAction action,
-      next) {
+  call(redux.Store<FlitterAppState> store, action, next) {
     debugPrint('${new DateTime.now()}: $action');
     next(action);
   }
 }
 
 class GitterLoggingMiddleware
-    implements redux.Middleware<GitterState, FlitterAction> {
+    implements redux.MiddlewareClass<GitterState> {
   const GitterLoggingMiddleware();
 
-  call(redux.Store<GitterState, FlitterAction> store, FlitterAction action,
-      next) {
+  call(redux.Store<GitterState> store, action, next) {
     debugPrint('${new DateTime.now()}: $action');
     next(action);
   }
 }
 
-class FlitterAppReducer extends redux.Reducer<FlitterAppState, FlitterAction> {
+class FlitterAppReducer extends redux.ReducerClass<FlitterAppState> {
   final _mapper = const <Type, Function>{
     FetchRoomsAction: _fetchRooms,
     FetchGroupsAction: _fetchGroups,
@@ -69,7 +66,7 @@ class FlitterAppReducer extends redux.Reducer<FlitterAppState, FlitterAction> {
   };
 
   @override
-  FlitterAppState reduce(FlitterAppState state, FlitterAction action) {
+  FlitterAppState call(FlitterAppState state, action) {
     Function reducer = _mapper[action.runtimeType];
     return reducer != null ? reducer(state, action) : state;
   }
@@ -225,14 +222,14 @@ Iterable<Message> _addOrUpdateMessage(FlitterAppState state, Message message) {
   return messages;
 }
 
-class GitterReducer extends redux.Reducer<GitterState, FlitterAction> {
+class GitterReducer extends redux.ReducerClass<GitterState> {
   final _mapper = const <Type, Function>{
     AuthGitterAction: _initGitter,
     LogoutAction: _logout
   };
 
   @override
-  GitterState reduce(GitterState state, FlitterAction action) {
+  GitterState call(GitterState state, action) {
     Function reducer = _mapper[action.runtimeType];
     return reducer != null ? reducer(state, action) : state;
   }

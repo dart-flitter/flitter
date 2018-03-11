@@ -1,14 +1,12 @@
 library flitter.routes.login;
 
-import 'package:flutter/services.dart';
-import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_auth.dart';
 import 'package:flitter/services/flitter_request.dart';
 import 'package:flutter/material.dart';
-import 'package:gitter/gitter.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:gitter/gitter.dart';
 
 typedef void OnLoginCallback(GitterToken token);
 
@@ -20,7 +18,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   var _subscription;
 
-  final FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
+  // FIXME: final FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
 
   @override
   void initState() {
@@ -43,7 +41,7 @@ class _LoginViewState extends State<LoginView> {
 
   Future<Null> _catchOnBackPressed() async {
     // catch onBackPressed for Android
-    await flutterWebviewPlugin.onBackPressed.first;
+    // FIXME: await flutterWebviewPlugin.onBackPressed.first;
     return SystemNavigator.pop();
   }
 
@@ -52,7 +50,7 @@ class _LoginViewState extends State<LoginView> {
     if (gitterToken == null) {
       _auth();
 
-      _catchOnBackPressed();
+      // FIXME: _catchOnBackPressed();
     }
     return new MaterialApp(
         home: new Scaffold(

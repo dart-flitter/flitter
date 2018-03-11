@@ -37,10 +37,11 @@ class FlutterGitterOAuth extends GitterOAuth {
   FlutterGitterOAuth(AppInformations appInformations, {bool force: false})
       : super(appInformations, force: force);
 
+  @override
   Future<String> requestCode() async {
     if (shouldRequestCode() && !_isOpen) {
       // close any open browser (happen on hot reload)
-      await flutterWebviewPlugin.close();
+      // FIXME: await flutterWebviewPlugin.close();
       _isOpen = true;
 
       // init server
@@ -57,7 +58,7 @@ class FlutterGitterOAuth extends GitterOAuth {
 
       // launch url inside webview
       flutterWebviewPlugin.launch("${codeInformations.url}?$urlParams",
-          clearCookies: true, fullScreen: true);
+          clearCookies: true);
 
       code = await onCode.first;
       _close();
