@@ -11,11 +11,8 @@ dependencies:
   redux: ^2.1.1
   shared_preferences: ">=0.2.0 <1.0.0"
   url_launcher: ">=0.4.0 <=2.0.2"
-  gitter:
-    git:
-      url: "git@github.com:izambasiron/gitter_dart.git"
-      ref: "update-faye"
-  flutter_markdown: any
+  gitter: ^0.1.0
+  flutter_markdown: ^0.1.3
   flutter_color_picker: "^0.0.1"
 
 dev_dependencies:
