@@ -1,8 +1,6 @@
 import 'package:flitter/app.dart';
-import 'package:flitter/redux/flitter_app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flitter/redux/store.dart';
 
 main() {
   group("$Splash Widget", () {

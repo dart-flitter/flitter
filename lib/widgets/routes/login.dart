@@ -4,7 +4,6 @@ import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_auth.dart';
 import 'package:flitter/services/flitter_request.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gitter/gitter.dart';
 
@@ -37,12 +36,6 @@ class _LoginViewState extends State<LoginView> {
   Future<Null> _auth() async {
     GitterToken token = await FlitterAuth.auth();
     initStores(token);
-  }
-
-  Future<Null> _catchOnBackPressed() async {
-    // catch onBackPressed for Android
-    // FIXME: await flutterWebviewPlugin.onBackPressed.first;
-    return SystemNavigator.pop();
   }
 
   @override

@@ -1,17 +1,14 @@
 library flitter.common.drawer;
 
+import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:flitter/redux/actions.dart';
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_auth.dart';
-import 'package:flitter/widgets/routes/settings.dart';
-import 'package:flutter/src/rendering/sliver.dart';
-import 'package:flutter/src/rendering/sliver_grid.dart';
-import 'package:gitter/gitter.dart';
 import 'package:flitter/widgets/routes/group.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:flutter/painting.dart';
-import 'package:flitter/intl/messages_all.dart' as intl;
+import 'package:gitter/gitter.dart';
+import 'package:meta/meta.dart';
 
 class FlitterDrawer extends StatefulWidget {
   final VoidCallback onTapAllConversation;

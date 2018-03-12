@@ -1,15 +1,15 @@
 library flitter.common.chat_room_widget;
 
 import 'dart:async';
+
+import 'package:flitter/intl/messages_all.dart' as intl;
 import 'package:flitter/redux/store.dart';
 import 'package:flitter/services/flitter_request.dart';
-import 'package:gitter/gitter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:meta/meta.dart';
-import 'package:flitter/intl/messages_all.dart' as intl;
-import 'package:intl/intl.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:gitter/gitter.dart';
+import 'package:intl/intl.dart';
+import 'package:meta/meta.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 final _dateFormat = new DateFormat.MMMd()..add_Hm();
@@ -194,6 +194,7 @@ class ChatMessageAvatar extends StatelessWidget {
       new Container(
         margin: new EdgeInsets.only(left: 12.0, right: 12.0, top: 12.0),
         width: 30.0,
+        height: 30.0,
         child: new CircleAvatar(
             backgroundImage: avatar, backgroundColor: Colors.grey[200]),
       )
@@ -232,7 +233,7 @@ class ChatMessageContent extends StatelessWidget {
     }
 
     column.add(new MarkdownBody(
-        data: message.text,
+        data: message.text.replaceAll("[![", "[["),
         //fixme does not seem to work
         onTapLink: (String url) async {
           bool can = await url_launcher.canLaunch(url);

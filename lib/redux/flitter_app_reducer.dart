@@ -52,6 +52,7 @@ class FlitterAppReducer extends redux.ReducerClass<FlitterAppState> {
     SelectRoomAction: _selectRoom,
     OnMessagesForCurrentRoom: _onMessages,
     OnSendMessage: _onSendMessage,
+    OnDeletedMessageForCurrentRoom: _onDeletedMessageForCurrentRoom,
     FetchMessagesForCurrentRoomAction: _fetchMessages,
     JoinRoomAction: _joinRoom,
     LeaveRoomAction: _leaveRoom,
@@ -204,6 +205,16 @@ FlitterAppState _onMessageForCurrentRoom(
   Iterable<Message> messages = _addOrUpdateMessage(state, action.message);
 
   final currentRoom = state.selectedRoom?.apply(messages: messages);
+  return state.apply(selectedRoom: currentRoom);
+}
+
+FlitterAppState _onDeletedMessageForCurrentRoom(FlitterAppState state, OnDeletedMessageForCurrentRoom action) {
+  Message message = action.message;
+  List<Message> messages = new List.from(state.selectedRoom.messages ?? []);
+
+  messages.removeWhere((msg) => msg.id == message.id);
+
+  CurrentRoomState currentRoom = state.selectedRoom?.apply(messages: messages);
   return state.apply(selectedRoom: currentRoom);
 }
 
