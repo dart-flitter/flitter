@@ -43,7 +43,9 @@ class _RoomViewState extends State<RoomView> {
 
   _onMessageHandler(List<GitterFayeMessage> msgs) {
     for (GitterFayeMessage msg in msgs) {
-      String roomId = msg.channel.split("/api/v1/rooms/").last.split("/").first;
+      String roomId = msg.channel
+          .split("/api/v1/rooms/").last
+          .split("/").first;
       if (msg.data != null && roomId == room.id) {
         switch (msg.data["operation"]) {
           case "create":
@@ -51,10 +53,10 @@ class _RoomViewState extends State<RoomView> {
                 new Message.fromJson(msg.data["model"])));
             break;
           case "remove":
-            flitterStore.dispatch(new OnDeleteMessage(new Message.fromJson(msg.data["model"])));
+            flitterStore.dispatch(new OnDeletedMessageForCurrentRoom(
+                new Message.fromJson(msg.data["model"])));
             break;
         }
-
       }
     }
   }
@@ -83,7 +85,7 @@ class _RoomViewState extends State<RoomView> {
         appBar: new AppBar(title: new Text(room.name), actions: [_buildMenu()]),
         body: body,
         floatingActionButton:
-            _userHasJoined || messages == null ? null : _joinRoomButton());
+        _userHasJoined || messages == null ? null : _joinRoomButton());
   }
 
   _fetchMessages() {
@@ -97,13 +99,13 @@ class _RoomViewState extends State<RoomView> {
                 value: RoomMenuAction.leave,
                 child: new Text('Leave room')) //todo: intl
           ],
-      onSelected: (RoomMenuAction action) {
-        switch (action) {
-          case RoomMenuAction.leave:
-            _onLeaveRoom();
-            break;
-        }
-      });
+          onSelected: (RoomMenuAction action) {
+            switch (action) {
+              case RoomMenuAction.leave:
+                _onLeaveRoom();
+                break;
+            }
+          });
 
   _onLeaveRoom() async {
     bool success = await leaveRoom(room);

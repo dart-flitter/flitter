@@ -63,6 +63,12 @@ class OnMessageForCurrentRoom extends FlitterAction {
   OnMessageForCurrentRoom(this.message);
 }
 
+class OnDeletedMessageForCurrentRoom extends FlitterAction {
+  final Message message;
+
+  OnDeletedMessageForCurrentRoom(this.message);
+}
+
 class JoinRoomAction extends FlitterAction {
   final Room room;
 
@@ -79,12 +85,6 @@ class OnSendMessage extends FlitterAction {
   final Message message;
 
   OnSendMessage(this.message);
-}
-
-class OnDeleteMessage extends FlitterAction {
-  final Message message;
-
-  OnDeleteMessage(this.message);
 }
 
 class FetchRoomsOfGroup extends FlitterAction {
